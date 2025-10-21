@@ -6,42 +6,23 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useLocale } from "@/hooks/use-locale";
-import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
-import Autoplay from "embla-carousel-autoplay";
 
 export function Hero() {
-  const heroImages = getHeroImages().slice(0, 3);
+  const heroImage = getHeroImages()[0];
   const { t } = useLocale();
 
   return (
     <section className="relative h-[calc(100vh-4rem)] w-full overflow-hidden">
-      <Carousel
-        className="w-full h-full"
-        plugins={[
-          Autoplay({
-            delay: 5000,
-            stopOnInteraction: false,
-          }),
-        ]}
-        opts={{
-          loop: true,
-        }}
-      >
-        <CarouselContent className="h-full">
-          {heroImages.map((image, index) => (
-            <CarouselItem key={index} className="h-full relative">
-              <Image
-                src={image.imageUrl}
-                alt={image.description}
-                fill
-                priority={index === 0}
-                className="object-cover w-full h-full"
-                data-ai-hint={image.imageHint}
-              />
-            </CarouselItem>
-          ))}
-        </CarouselContent>
-      </Carousel>
+      {heroImage && (
+        <Image
+          src={heroImage.imageUrl}
+          alt={heroImage.description}
+          fill
+          priority
+          className="object-cover w-full h-full animate-kenburns"
+          data-ai-hint={heroImage.imageHint}
+        />
+      )}
 
       <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
       
