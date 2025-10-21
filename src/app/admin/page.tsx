@@ -88,6 +88,13 @@ export default function AdminPage() {
     setViewDialogOpen(true);
   }
 
+  const handleViewClientContract = (clientName: string) => {
+    const contract = contracts.find(c => c.client === clientName);
+    if (contract) {
+        handleViewContract(contract);
+    }
+  }
+
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
@@ -210,7 +217,7 @@ export default function AdminPage() {
                                         <TableCell>{client.package}</TableCell>
                                         <TableCell><Badge variant={client.status === 'Booked' ? 'default' : 'secondary'}>{client.status === 'Booked' ? t.admin.client_management.status_booked : t.admin.client_management.status_inquiry}</Badge></TableCell>
                                         <TableCell className="text-right">
-                                            <Button variant="outline" size="sm">{t.admin.client_management.view_button}</Button>
+                                            <Button variant="outline" size="sm" onClick={() => handleViewClientContract(client.name)}>{t.admin.client_management.view_button}</Button>
                                         </TableCell>
                                     </TableRow>
                                 ))}
