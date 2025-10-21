@@ -35,7 +35,7 @@ export function Hero() {
                   alt={image.description}
                   fill
                   priority={index === 0}
-                  className="object-cover animate-kenburns"
+                  className="object-cover"
                   data-ai-hint={image.imageHint}
                 />
               </div>
