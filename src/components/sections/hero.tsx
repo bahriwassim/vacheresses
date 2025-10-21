@@ -1,7 +1,7 @@
 
 "use client";
 
-import { VacheressesImages, getHeroImages } from "@/lib/vacheresses-images";
+import { getHeroImages } from "@/lib/vacheresses-images";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -46,7 +46,7 @@ export function Hero() {
 
       <div className="absolute inset-0 bg-black/50" />
       
-      <div className="relative z-10 flex items-center justify-center h-full text-center px-4 text-white">
+      <div className="absolute inset-0 z-10 flex items-center justify-center h-full text-center px-4 text-white">
         <div>
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-headline font-bold drop-shadow-lg animate-in fade-in slide-in-from-bottom-8 duration-1000">
             {t.hero.title}
