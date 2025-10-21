@@ -1,0 +1,130 @@
+{
+  "placeholderImages": [
+    {
+      "id": "hero",
+      "description": "A sweeping drone shot of the Vacheresses estate at sunset, showing the main building and surrounding gardens.",
+      "imageUrl": "https://images.unsplash.com/photo-1469371670807-013ccf25f16a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHx3ZWRkaW5nJTIwdmVudWV8ZW58MHx8fHwxNzYwOTE4ODM0fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "wedding venue"
+    },
+    {
+      "id": "package-classic",
+      "description": "An elegantly set table for a wedding reception in the main hall.",
+      "imageUrl": "https://images.unsplash.com/photo-1527529482837-4698179dc6ce?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHx3ZWRkaW5nJTIwcmVjZXB0aW9ufGVufDB8fHx8MTc2MDg2NDY3M3ww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "wedding reception"
+    },
+    {
+      "id": "package-premium",
+      "description": "An outdoor ceremony setup with a floral arch and guest seating.",
+      "imageUrl": "https://images.unsplash.com/photo-1583939003579-730e3918a45a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHx3ZWRkaW5nJTIwY2VyZW1vbnl8ZW58MHx8fHwxNzYwOTkyMzkxfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "wedding ceremony"
+    },
+    {
+      "id": "package-luxury",
+      "description": "Close-up of luxury wedding details, like custom stationery and champagne glasses.",
+      "imageUrl": "https://images.unsplash.com/photo-1520245787685-fb1e6732fb76?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHx3ZWRkaW5nJTIwZGV0YWlsc3xlbnwwfHx8fDE3NjA4OTE4MjR8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "wedding details"
+    },
+    {
+      "id": "gallery-1",
+      "description": "The main courtyard of the domaine, with the stone building in the background.",
+      "imageUrl": "https://images.unsplash.com/photo-1759489091787-0d8cb25da411?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHx2ZW51ZSUyMGNvdXJ0eWFyZHxlbnwwfHx8fDE3NjA5OTIzODh8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "venue courtyard"
+    },
+    {
+      "id": "gallery-2",
+      "description": "A rustic barn decorated with fairy lights for a reception.",
+      "imageUrl": "https://images.unsplash.com/photo-1711487288242-7bf1d2932717?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxyZWNlcHRpb24lMjBiYXJufGVufDB8fHx8MTc2MDk5MjQwNnww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "reception barn"
+    },
+    {
+      "id": "gallery-3",
+      "description": "A serene lake on the property, perfect for photos.",
+      "imageUrl": "https://images.unsplash.com/photo-1752988110880-fa720e2516df?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8dmVudWUlMjBsYWtlfGVufDB8fHx8MTc2MDk5MjM4OXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "venue lake"
+    },
+    {
+      "id": "gallery-4",
+      "description": "A couple dancing inside the elegant ballroom.",
+      "imageUrl": "https://images.unsplash.com/photo-1728713351269-79d2e63926f2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHx3ZWRkaW5nJTIwZGFuY2luZ3xlbnwwfHx8fDE3NjA5Nzg2MjN8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "wedding dancing"
+    },
+    {
+      "id": "gallery-5",
+      "description": "The bridal suite with a view of the gardens.",
+      "imageUrl": "https://images.unsplash.com/photo-1704241485844-5df18f026028?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxicmlkYWwlMjBzdWl0ZXxlbnwwfHx8fDE3NjA5OTIzODl8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "bridal suite"
+    },
+    {
+      "id": "gallery-6",
+      "description": "A table laden with gourmet wedding food.",
+      "imageUrl": "https://images.unsplash.com/photo-1580682197386-8746a263c370?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHx3ZWRkaW5nJTIwZm9vZHxlbnwwfHx8fDE3NjA5NTQ5MTZ8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "wedding food"
+    },
+    {
+      "id": "service-rolls",
+      "description": "A classic Rolls-Royce car for the wedding.",
+      "imageUrl": "https://images.unsplash.com/photo-1584345604325-f5091269a0d1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxjbGFzc2ljJTIwY2FyfGVufDB8fHx8MTc2MDk1MjQwM3ww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "classic car"
+    },
+    {
+      "id": "service-lanterns",
+      "description": "Elegant lanterns lighting up an evening event.",
+      "imageUrl": "https://images.unsplash.com/photo-1569776035029-eaf1f7ecb5f4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHx3ZWRkaW5nJTIwbGFudGVybnN8ZW58MHx8fHwxNzYxMDM4MDY0fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "wedding lanterns"
+    },
+    {
+      "id": "service-chairs",
+      "description": "Outdoor seating arrangement for a ceremony.",
+      "imageUrl": "https://images.unsplash.com/photo-1680745840784-318be3708374?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHx3ZWRkaW5nJTIwY2hhaXJzfGVufDB8fHx8MTc2MTAzODA2NHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "wedding chairs"
+    },
+    {
+      "id": "service-bbq",
+      "description": "An outdoor Ofyr BBQ setup.",
+      "imageUrl": "https://images.unsplash.com/photo-1559551082-3d2a032a03e3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxvdXRkb29yJTIwYmJxfGVufDB8fHx8MTc2MTAzODA2NHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "outdoor bbq"
+    },
+    {
+      "id": "service-flowers",
+      "description": "A flower bar with various arrangements.",
+      "imageUrl": "https://images.unsplash.com/photo-1663966616583-ebf788ce587e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxmbG93ZXIlMjBiYXJ8ZW58MHx8fHwxNzYxMDM4MDY0fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "flower bar"
+    },
+    {
+      "id": "service-balloon",
+      "description": "A hot air balloon in a field.",
+      "imageUrl": "https://images.unsplash.com/photo-1660479185829-0b2462def5ed?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxob3QtYWlyJTIwYmFsbG9vbnxlbnwwfHx8fDE3NjEwMzgwNjR8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "hot-air balloon"
+    },
+    {
+      "id": "blog-venue",
+      "description": "An elegant wedding venue setup.",
+      "imageUrl": "https://picsum.photos/seed/blog1/600/400",
+      "imageHint": "wedding venue"
+    },
+    {
+      "id": "blog-decor",
+      "description": "Stylish wedding decor with flowers and candles.",
+      "imageUrl": "https://images.unsplash.com/photo-1595436790404-ae5494edcf00?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHx3ZWRkaW5nJTIwZGVjb3J8ZW58MHx8fHwxNzYxMDM4NjY5fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "wedding decor"
+    },
+    {
+      "id": "blog-personalize",
+      "description": "A custom neon sign at a wedding reception.",
+      "imageUrl": "https://images.unsplash.com/photo-1600287792237-3f66db635a73?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHx3ZWRkaW5nJTIwZGV0YWlsc3xlbnwwfHx8fDE3NjEwMzg2Njh8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "wedding details"
+    },
+    {
+      "id": "blog-photos",
+      "description": "A photographer taking a picture of a wedding couple.",
+      "imageUrl": "https://images.unsplash.com/photo-1617724975854-70b5d0cedb0a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHx3ZWRkaW5nJTIwcGhvdG9ncmFwaHl8ZW58MHx8fHwxNzYwOTU0OTE2fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "wedding photography"
+    },
+    {
+      "id": "blog-catering",
+      "description": "A beautifully presented plate of wedding food.",
+      "imageUrl": "https://images.unsplash.com/photo-1561749747-b95cb7494987?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHx3ZWRkaW5nJTIwZm9vZHxlbnwwfHx8fDE3NjA5NTQ5MTZ8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "wedding food"
+    }
+  ]
+}
