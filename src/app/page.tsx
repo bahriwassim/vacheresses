@@ -9,6 +9,7 @@ import { VisualTour } from '@/components/sections/visual-tour';
 import { Availability } from '@/components/sections/availability';
 import { Testimonials } from '@/components/sections/testimonials';
 import { Access } from '@/components/sections/access';
+import { VideoSection } from '@/components/sections/video-section';
 
 export default function Home() {
   return (
@@ -17,6 +18,7 @@ export default function Home() {
       <main className="flex-1">
         <Hero />
         <Packages />
+        <VideoSection />
         <VisualTour />
         <Availability />
         <Testimonials />
