@@ -71,7 +71,7 @@ export default function AdminPage() {
   const handleCreateContract = () => {
     if (newContract.client && newContract.date && newContract.package) {
       const newClient = { ...newContract, status: 'Booked' };
-      const newContractEntry = { client: newContract.client, document: 'Main Venue Agreement', status: 'Awaiting Signature', dateSent: new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: '2024' }) };
+      const newContractEntry = { client: newContract.client, document: 'Main Venue Agreement', status: 'Awaiting Signature', dateSent: new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) };
 
       sharedState.setState({
         clients: [...sharedState.getState().clients, newClient],
