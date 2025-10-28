@@ -12,6 +12,7 @@ import { Availability } from '@/components/sections/availability';
 import { Testimonials } from '@/components/sections/testimonials';
 import { Access } from '@/components/sections/access';
 import { VideoSection } from '@/components/sections/video-section';
+import { ScrollToTop } from '@/components/ui/scroll-to-top';
 
 export default function Home() {
   return (
