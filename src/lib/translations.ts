@@ -24,7 +24,8 @@ export type Translation = {
   packages: {
     title: string;
     subtitle: string;
-    selectDatesReminder: string;
+    selectDatesInfo: string;
+    selectAndContinue: string;
     classic_title: string;
     classic_desc: string;
     classic_features: string[];
@@ -464,12 +465,12 @@ export type Translation = {
   dateSelector: {
     title: string;
     subtitle: string;
-    checkIn: string;
-    checkOut: string;
-    nights: string;
-    continueButton: string;
-    selectDatesButton: string;
+    selectedDate: string;
     helpText: string;
+    dialogTitle: string;
+    dialogDescription: string;
+    cancel: string;
+    confirm: string;
   };
 };
 
@@ -497,7 +498,8 @@ export const translations: Record<Locale, Translation> = {
     packages: {
         title: "Wedding Packages",
         subtitle: "Choose from one of our curated packages, or build your own for a truly bespoke experience.",
-        selectDatesReminder: "Please select your stay dates above to continue",
+        selectDatesInfo: "Select a date above or choose a package to select your event date",
+        selectAndContinue: "Select date & continue",
         classic_title: "Classic Elegance",
         classic_desc: "Our essential package for a beautiful and memorable day.",
         classic_features: [
@@ -953,14 +955,14 @@ export const translations: Record<Locale, Translation> = {
       legend: "Click on the points to discover our accommodations",
     },
     dateSelector: {
-      title: "Choose your stay dates",
-      subtitle: "Select your arrival and departure dates to discover our available packages",
-      checkIn: "Check-in",
-      checkOut: "Check-out",
-      nights: "nights",
-      continueButton: "Continue to packages",
-      selectDatesButton: "Select your dates",
-      helpText: "Click on a check-in date, then on a check-out date",
+      title: "Choose your event date",
+      subtitle: "Select the date of your wedding or event to discover our packages",
+      selectedDate: "Selected date",
+      helpText: "Click on a date to continue",
+      dialogTitle: "Select your event date",
+      dialogDescription: "Choose the date of your wedding or event to continue",
+      cancel: "Cancel",
+      confirm: "Confirm",
     },
   },
   fr: {
@@ -986,7 +988,8 @@ export const translations: Record<Locale, Translation> = {
     packages: {
         title: "Forfaits Mariage",
         subtitle: "Choisissez parmi nos forfaits organisés ou créez le vôtre pour une expérience vraiment sur mesure.",
-        selectDatesReminder: "Veuillez sélectionner vos dates de séjour ci-dessus pour continuer",
+        selectDatesInfo: "Sélectionnez une date ci-dessus ou choisissez un forfait pour sélectionner la date de votre événement",
+        selectAndContinue: "Sélectionner la date et continuer",
         classic_title: "Élégance Classique",
         classic_desc: "Notre forfait essentiel pour une journée magnifique et mémorable.",
         classic_features: [
@@ -1442,14 +1445,14 @@ export const translations: Record<Locale, Translation> = {
       legend: "Cliquez sur les points pour découvrir nos hébergements",
     },
     dateSelector: {
-      title: "Choisissez vos dates de séjour",
-      subtitle: "Sélectionnez votre date d'arrivée et de départ pour découvrir nos forfaits disponibles",
-      checkIn: "Arrivée",
-      checkOut: "Départ",
-      nights: "nuits",
-      continueButton: "Continuer vers les forfaits",
-      selectDatesButton: "Sélectionnez vos dates",
-      helpText: "Cliquez sur une date d'arrivée, puis sur une date de départ",
+      title: "Choisissez la date de votre événement",
+      subtitle: "Sélectionnez la date de votre mariage ou événement pour découvrir nos forfaits",
+      selectedDate: "Date sélectionnée",
+      helpText: "Cliquez sur une date pour continuer",
+      dialogTitle: "Sélectionnez la date de votre événement",
+      dialogDescription: "Choisissez la date de votre mariage ou événement pour continuer",
+      cancel: "Annuler",
+      confirm: "Confirmer",
     },
   },
 };

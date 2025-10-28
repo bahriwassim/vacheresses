@@ -6,10 +6,12 @@ import { CardImage } from "@/components/ui/animated-image";
 import Link from "next/link";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Check, AlertCircle } from "lucide-react";
+import { Check, Calendar as CalendarIcon } from "lucide-react";
 import { useLocale } from "@/hooks/use-locale";
 import { useBooking } from "@/contexts/booking-context";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+import { DatePickerDialog } from "./date-picker-dialog";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 const packagesData = (t: any) => [
   {
@@ -38,16 +40,38 @@ const packagesData = (t: any) => [
 
 export function Packages() {
   const { t } = useLocale();
-  const { dates } = useBooking();
+  const { dates, setDates } = useBooking();
+  const router = useRouter();
   const packages = packagesData(t);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [selectedPackageId, setSelectedPackageId] = useState<string | null>(null);
 
   const buildPackageUrl = (packageId: string) => {
     const params = new URLSearchParams({ package: packageId });
-    if (dates?.from && dates?.to) {
-      params.set('checkIn', dates.from.toISOString());
-      params.set('checkOut', dates.to.toISOString());
+    if (dates?.from) {
+      params.set('eventDate', dates.from.toISOString());
     }
     return `/configurator?${params.toString()}`;
+  };
+
+  const handlePackageClick = (packageId: string) => {
+    if (!dates) {
+      // Si pas de date sélectionnée, ouvrir la popup
+      setSelectedPackageId(packageId);
+      setIsDialogOpen(true);
+    } else {
+      // Si date déjà sélectionnée, aller directement au configurateur
+      router.push(buildPackageUrl(packageId));
+    }
+  };
+
+  const handleDateSelected = (date: Date) => {
+    setDates({ from: date, to: date });
+    if (selectedPackageId) {
+      const params = new URLSearchParams({ package: selectedPackageId });
+      params.set('eventDate', date.toISOString());
+      router.push(`/configurator?${params.toString()}`);
+    }
   };
 
   return (
@@ -63,12 +87,12 @@ export function Packages() {
         </div>
 
         {!dates && (
-          <Alert className="mb-8 max-w-2xl mx-auto animate-in fade-in slide-in-from-top-4 duration-500">
-            <AlertCircle className="h-4 w-4" />
-            <AlertDescription>
-              {t.packages.selectDatesReminder || "Veuillez sélectionner vos dates de séjour ci-dessus pour continuer"}
-            </AlertDescription>
-          </Alert>
+          <div className="mb-8 max-w-2xl mx-auto p-4 bg-muted/50 rounded-lg border animate-in fade-in slide-in-from-top-4 duration-500 text-center">
+            <CalendarIcon className="h-5 w-5 mx-auto mb-2 text-muted-foreground" />
+            <p className="text-sm text-muted-foreground">
+              {t.packages.selectDatesInfo || "Sélectionnez une date ci-dessus ou choisissez un forfait pour sélectionner votre date"}
+            </p>
+          </div>
         )}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {packages.map((pkg, index) => {
@@ -114,12 +138,11 @@ export function Packages() {
                 </CardContent>
                 <CardFooter>
                   <Button
-                    asChild
+                    onClick={() => handlePackageClick(pkg.id)}
                     className="w-full"
                     variant={pkg.highlighted ? 'default' : 'outline'}
-                    disabled={!dates}
                   >
-                    <Link href={buildPackageUrl(pkg.id)}>{t.packages.button}</Link>
+                    {dates ? t.packages.button : t.packages.selectAndContinue || t.packages.button}
                   </Button>
                 </CardFooter>
               </Card>
@@ -127,6 +150,13 @@ export function Packages() {
           })}
         </div>
       </div>
+
+      {/* Popup de sélection de date */}
+      <DatePickerDialog
+        open={isDialogOpen}
+        onOpenChange={setIsDialogOpen}
+        onDateSelected={handleDateSelected}
+      />
     </section>
   );
 }
