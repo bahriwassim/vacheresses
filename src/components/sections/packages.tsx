@@ -6,8 +6,10 @@ import { CardImage } from "@/components/ui/animated-image";
 import Link from "next/link";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Check } from "lucide-react";
+import { Check, AlertCircle } from "lucide-react";
 import { useLocale } from "@/hooks/use-locale";
+import { useBooking } from "@/contexts/booking-context";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 const packagesData = (t: any) => [
   {
@@ -36,7 +38,17 @@ const packagesData = (t: any) => [
 
 export function Packages() {
   const { t } = useLocale();
+  const { dates } = useBooking();
   const packages = packagesData(t);
+
+  const buildPackageUrl = (packageId: string) => {
+    const params = new URLSearchParams({ package: packageId });
+    if (dates?.from && dates?.to) {
+      params.set('checkIn', dates.from.toISOString());
+      params.set('checkOut', dates.to.toISOString());
+    }
+    return `/configurator?${params.toString()}`;
+  };
 
   return (
     <section id="packages" className="py-16 md:py-24 bg-secondary/50">
@@ -49,6 +61,15 @@ export function Packages() {
             {t.packages.subtitle}
           </p>
         </div>
+
+        {!dates && (
+          <Alert className="mb-8 max-w-2xl mx-auto animate-in fade-in slide-in-from-top-4 duration-500">
+            <AlertCircle className="h-4 w-4" />
+            <AlertDescription>
+              {t.packages.selectDatesReminder || "Veuillez sélectionner vos dates de séjour ci-dessus pour continuer"}
+            </AlertDescription>
+          </Alert>
+        )}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {packages.map((pkg, index) => {
             const image = getImageById(pkg.imageId);
@@ -92,8 +113,13 @@ export function Packages() {
                   </ul>
                 </CardContent>
                 <CardFooter>
-                  <Button asChild className="w-full" variant={pkg.highlighted ? 'default' : 'outline'}>
-                    <Link href={{ pathname: '/configurator', query: { package: pkg.id } }}>{t.packages.button}</Link>
+                  <Button
+                    asChild
+                    className="w-full"
+                    variant={pkg.highlighted ? 'default' : 'outline'}
+                    disabled={!dates}
+                  >
+                    <Link href={buildPackageUrl(pkg.id)}>{t.packages.button}</Link>
                   </Button>
                 </CardFooter>
               </Card>
