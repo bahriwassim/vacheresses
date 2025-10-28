@@ -10,6 +10,10 @@ export type Translation = {
     blog: string;
     availability: string;
     portal: string;
+    stay: string;
+    domain: string;
+    english: string;
+    french: string;
   };
   hero: {
     title: string;
@@ -30,6 +34,7 @@ export type Translation = {
     luxury_desc: string;
     luxury_features: string[];
     button: string;
+    discover: string;
   };
   visualTour: {
     title: string;
@@ -81,6 +86,7 @@ export type Translation = {
     option_balloon_title: string;
     option_balloon_desc: string;
     on_request: string;
+    learn_more: string;
   };
   configurator: {
     title: string;
@@ -352,6 +358,108 @@ export type Translation = {
       close: string;
     };
   };
+  stay: {
+    title: string;
+    subtitle: string;
+    intro_title: string;
+    intro_description: string;
+    maison_potager_title: string;
+    maison_potager_subtitle: string;
+    maison_potager_description: string;
+    maison_potager_common_area: string;
+    privatize_title: string;
+    privatize_description: string;
+    view_details: string;
+    reserve_online: string;
+    contact_us: string;
+    rooms: {
+      heures_du_jour: {
+        name: string;
+        type: string;
+        capacity: string;
+        bedding: string;
+        surface: string;
+        description: string;
+      };
+      ruines_antiques: {
+        name: string;
+        type: string;
+        capacity: string;
+        bedding: string;
+        surface: string;
+        description: string;
+      };
+      jardins_tivoli: {
+        name: string;
+        type: string;
+        capacity: string;
+        bedding: string;
+        surface: string;
+        description: string;
+      };
+      petit_trianon: {
+        name: string;
+        type: string;
+        capacity: string;
+        bedding: string;
+        surface: string;
+        description: string;
+      };
+      voyage_ballon: {
+        name: string;
+        type: string;
+        capacity: string;
+        bedding: string;
+        surface: string;
+        description: string;
+      };
+      la_loge: {
+        name: string;
+        type: string;
+        capacity: string;
+        bedding: string;
+        surface: string;
+        description: string;
+      };
+    };
+    equipment: {
+      title: string;
+      bathroom: string;
+      bed_queen: string;
+      bed_single: string;
+      curtains: string;
+      wifi: string;
+      courtesy_tray: string;
+      tv: string;
+      toiletries: string;
+      mirror: string;
+      hairdryer: string;
+      linens: string;
+    };
+  };
+  domain: {
+    title: string;
+    subtitle: string;
+    spirit_title: string;
+    spirit_content: string;
+    history_title: string;
+    discover_more: string;
+    age_or_title: string;
+    age_or_content: string;
+    renaissance_title: string;
+    renaissance_content: string;
+    noailles_title: string;
+    noailles_content: string;
+    modern_title: string;
+    modern_content: string;
+  };
+  interactiveMap: {
+    title: string;
+    subtitle: string;
+    discover: string;
+    close: string;
+    legend: string;
+  };
 };
 
 export const translations: Record<Locale, Translation> = {
@@ -364,6 +472,10 @@ export const translations: Record<Locale, Translation> = {
       blog: "Blog",
       availability: "Availability",
       portal: "Portal",
+      stay: "Stay",
+      domain: "The Estate",
+      english: "English",
+      french: "Français",
     },
     hero: {
       title: "Your Dream Wedding Starts Here",
@@ -402,6 +514,7 @@ export const translations: Record<Locale, Translation> = {
           "Fireworks display",
         ],
         button: "Select Package",
+        discover: "Discover",
     },
     visualTour: {
         title: "An Immersive Visual Tour",
@@ -453,6 +566,7 @@ export const translations: Record<Locale, Translation> = {
         option_balloon_title: "Hot Air Balloon Flights",
         option_balloon_desc: "What if your guests enjoyed a captive hot air balloon flight in the meadow to discover the park, the view of the manor and the Néron valley from above?",
         on_request: "Quote on request",
+        learn_more: "Learn More",
     },
     configurator: {
         title: "Wedding Configurator",
@@ -724,6 +838,108 @@ export const translations: Record<Locale, Translation> = {
           close: "Close",
         },
     },
+    stay: {
+      title: "Stay",
+      subtitle: "MANOIR DE VACHERESSES",
+      intro_title: "STAY WITH US",
+      intro_description: "The Manoir de Vacheresses offers accommodations for an evening, a weekend or a week in the Maison du Potager and the small house in the main courtyard.\n\nDecorated with our love for antiques, we wanted refined simplicity combining old and modern, an art of living in the present...",
+      maison_potager_title: "THE VEGETABLE GARDEN HOUSE",
+      maison_potager_subtitle: "LA MAISON DU POTAGER",
+      maison_potager_description: "In one of the Manor's outbuildings, in front of the medieval-inspired vegetable garden, between fruit trees and ancient plants, 5 rooms with personalized and refined decor will allow you to enjoy nature and calm in an environment conducive to daydreaming, relaxation or meditation.",
+      maison_potager_common_area: "A 35 m² shared living room with a fully equipped kitchen (refrigerator, ceramic hob, dishwasher, oven, kettle, dishes...) will allow you to cook and take your meals when you please.\n\nYou can of course have lunch, stroll in front of the medieval vegetable garden, rest in the park or enjoy the shade under the canopy in the orchard, as you wish.",
+      privatize_title: "PRIVATIZE THE PLACE",
+      privatize_description: "Possibility to privatize the premises (5 rooms for 15 people in total) for weddings, seminars, family reunions, residential courses (Contact us).\nThe living room can be transformed into a meeting room.",
+      view_details: "View Details",
+      reserve_online: "Book Online",
+      contact_us: "Contact Us",
+      rooms: {
+        heures_du_jour: {
+          name: "Les Heures du Jour",
+          type: "Duplex, up to 4 people",
+          capacity: "4 people",
+          bedding: "1 Queen Size double bed, 2 single beds",
+          surface: "32 m²",
+          description: "This family suite on 2 levels includes 4 beds (1 double bed on the ground floor and 2 single beds upstairs). Its decor reminds us of Charles-Le-Brun's drawings intended for the sculptors of the Grande Commande at Versailles...",
+        },
+        ruines_antiques: {
+          name: "Ruines Antiques",
+          type: "Duplex, up to 4 people",
+          capacity: "4 people",
+          bedding: "1 Queen Size double bed, 2 single beds",
+          surface: "32 m²",
+          description: "This family suite includes 4 beds on 2 levels. Its atmosphere takes us back to ancient Italy.",
+        },
+        jardins_tivoli: {
+          name: "Les Jardins Tivoli",
+          type: "Room, up to 3 people",
+          capacity: "3 people",
+          bedding: "1 Queen Size double bed, 1 sofa bed",
+          surface: "24 m²",
+          description: "Designed to accommodate people with reduced mobility, this room transports you to the idyllic atmosphere of Italian gardens where it is pleasant to stroll and relax.",
+        },
+        petit_trianon: {
+          name: "Le Petit Trianon",
+          type: "Room, 2 people",
+          capacity: "2 people",
+          bedding: "1 Queen Size double bed",
+          surface: "16 m²",
+          description: "This room with a double bed reminds us of the Queen's Hamlet wanted as a place for walks and receptions.",
+        },
+        voyage_ballon: {
+          name: "Voyage en Ballon",
+          type: "Room, 2 people",
+          capacity: "2 people",
+          bedding: "1 Queen Size double bed",
+          surface: "13 m²",
+          description: "This room with 2 single beds reminds us of the incredible history of hot air balloons! Man's old dream of flying, free as the air...",
+        },
+        la_loge: {
+          name: "La Loge",
+          type: "Guest House, 6 people",
+          capacity: "6 people",
+          bedding: "1 Queen Size double bed, 4 single beds",
+          surface: "32 m²",
+          description: "Arranged like a cozy little nest, this Guesthouse can accommodate up to 6 people.",
+        },
+      },
+      equipment: {
+        title: "Equipment",
+        bathroom: "Bathroom with walk-in shower and private toilet",
+        bed_queen: "1 Queen size bed (160 cm x 200 cm)",
+        bed_single: "Single beds (90 cm x 200 cm)",
+        curtains: "Blackout curtains",
+        wifi: "Wifi",
+        courtesy_tray: "Courtesy tray with kettle and a selection of tea, herbal tea and instant coffee",
+        tv: "Flat-screen HD TV",
+        toiletries: "Toiletries",
+        mirror: "Mirror",
+        hairdryer: "Hair dryer",
+        linens: "Sheets and towels provided",
+      },
+    },
+    domain: {
+      title: "The Estate",
+      subtitle: "MANOIR DE VACHERESSES",
+      spirit_title: "THE SPIRIT",
+      spirit_content: "Passionate about art, history and old stones, Frédérique and Philippe succumbed to the authenticity and architecture of the building which reminded the owner of childhood memories and his English origins.\n\nSince 2017, they have undertaken renovation work and opened this family home to create new emotions and share values that are dear to them: conviviality, generosity, elegance, the French art of living...\n\nToday, the opening of the Vegetable Garden Guesthouse and the Small House in the main courtyard will allow you to escape from the city to rediscover the simple pleasures of country life, the birdsong, the charm of old stones and the beauty of rare species...",
+      history_title: "THE HISTORY",
+      discover_more: "Discover More",
+      age_or_title: "The Golden Age of the Lords",
+      age_or_content: "It was an estate that experienced twists and turns in history.\n\nIf the date of the first foundations of the manor dates back to 1393, it was in 1478 that the name of the first lord of Vacheresses, Master Fleurant des Feugerets, appeared for the first time. His coat of arms bears \"argent with three branches of gules ferns\". Several descendants of this feudal family, originally from Perche, will succeed one another. In 1535, Florant des Feugerets made a pact with the monks of Coulombs Abbey by which Louis de Graffard inherited Vacheresses by virtue of his birthright; the de Graffard family, originally from Normandy, having become owner of the des Feugerets fief by alliance.",
+      renaissance_title: "At the Dawn of the Renaissance",
+      renaissance_content: "In 1587, the fief of Coulombs Abbey was alienated by Madame de l'Aulnay who sold it to the Count of Nogent. From this time, the lordship of Vacheresses will follow the influence of the Nogent-Le-Roi domain until the revolution of 1789.\n\nBetween 1677 and 1678, the estate passed into the hands of Diane de Caumont-Lauzun, widow of the powerful lord Armand de Bautru, Count of Nogent-Le-Roi.\n\nHer daughter, Emilie de Bautru, designated in the acts as sole heiress, will unfortunately marry, in 1742, Louis, Marquis de Melun. To cover the latter's debts, Nogent and consequently Vacheresses will be sold by forced decree in 1747.",
+      noailles_title: "The Noailles Dynasty",
+      noailles_content: "The manor fell into the hands of the illustrious Noailles family. Several descendants will succeed each other.\n\nIn 1777, Vacheresses was described as consisting of land, vineyards, meadows, warrens and river. 38 arpents of land were also cleared in two pieces: 10 arpents of land called the Vacheresses Warren and 28 arpents named the Vacheresses Park.\n\nIn 1873, the estate was sold by Henry Emmanuel, Marquis de Noailles, Minister of France to the United States, residing in Washington.",
+      modern_title: "The Manor and Modern Times",
+      modern_content: "It was at this time that the manor lost its primary function to become a pleasure residence.\n\nThe World of Arts has marked its history. Joseph Hémard, famous illustrator of the first half of the 20th century, lived there for about twenty years. Then, Gilbert Dupé, writer and theater director, will compose a large number of his novels there. Finally, Michèle Battut, internationally renowned artist and official painter of the French Navy, will stay there for more than thirty years.\n\nToday, the manor perpetuates the tradition and becomes a family home inhabited year-round. Lovers of heritage, we will try to protect it, restore it for future generations and open it to the public during receptions, weddings or family ceremonies...",
+    },
+    interactiveMap: {
+      title: "Explore the Estate",
+      subtitle: "Discover our accommodations by clicking on the map points",
+      discover: "Discover",
+      close: "Close",
+      legend: "Click on the points to discover our accommodations",
+    },
   },
   fr: {
     header: {
@@ -734,6 +950,10 @@ export const translations: Record<Locale, Translation> = {
       blog: "Blog",
       availability: "Disponibilité",
       portal: "Portail",
+      stay: "Séjourner",
+      domain: "Le Domaine",
+      english: "English",
+      french: "Français",
     },
     hero: {
       title: "Le mariage de vos rêves commence ici",
@@ -772,6 +992,7 @@ export const translations: Record<Locale, Translation> = {
           "Feu d'artifice",
         ],
         button: "Sélectionner le forfait",
+        discover: "Découvrir",
     },
     visualTour: {
         title: "Une visite visuelle immersive",
@@ -821,8 +1042,9 @@ export const translations: Record<Locale, Translation> = {
         option_flowers_title: "Bar à Fleurs",
         option_flowers_desc: "Envie d’offrir un présent à vos convives ? Que diriez-vous d’une animation de bijoux fleurs sur-mesure pour surprendre vos convives pendant le vin d’honneur ?",
         option_balloon_title: "Vols en Montgolfière",
-        option_balloon_desc: "Et si vos invités profitaient d’un vol captif en montgolfière dans le pré pour découvrir d’en haut le parc, la vue du manoir et la vallée du Néron ?",
+        option_balloon_desc: "Et si vos invités profitaient d'un vol captif en montgolfière dans le pré pour découvrir d'en haut le parc, la vue du manoir et la vallée du Néron ?",
         on_request: "Devis sur demande",
+        learn_more: "En savoir plus",
     },
     configurator: {
         title: "Configurateur de mariage",
@@ -1093,6 +1315,108 @@ export const translations: Record<Locale, Translation> = {
           status: "Statut",
           close: "Fermer",
         },
+    },
+    stay: {
+      title: "Séjourner",
+      subtitle: "MANOIR DE VACHERESSES",
+      intro_title: "SÉJOURNER",
+      intro_description: "Le Manoir de Vacheresses propose des hébergements le temps d'une soirée, d'un weekend ou d'une semaine dans la Maison du Potager et la petite Maison de la cour d'honneur.\n\nDécorées avec notre âme de chineur, nous avons souhaité une simplicité raffinée alliant ancien et moderne, un art de vivre au présent…",
+      maison_potager_title: "LA MAISON DU POTAGER",
+      maison_potager_subtitle: "LA MAISON DU POTAGER",
+      maison_potager_description: "Dans l'une des dépendances du Manoir, devant le potager d'inspiration médiévale, entre arbres fruitiers et plantes anciennes, 5 chambres au décor personnalisé et raffiné vous permettront de profiter de la nature et du calme dans un environnement propice à la rêverie, la détente ou la méditation.",
+      maison_potager_common_area: "Une pièce de vie commune de 35 m² avec cuisine entièrement équipée (réfrigérateur, plaque vitro-céramique, lave-vaisselle, four, bouilloire, vaisselle…) vous permettra de cuisiner et de prendre vos repas au moment qu'il vous plaira.\n\nVous pourrez bien évidemment déjeuner, flâner devant le potager médiéval, vous reposer dans le parc ou profiter de l'ombre sous le préau dans le verger, à votre guise.",
+      privatize_title: "PRIVATISER LES LIEUX",
+      privatize_description: "Possibilité de privatiser les lieux (5 chambres pour 15 personnes au total) pour mariages, séminaires, réunions de famille, stage résidentiel (Nous contacter).\nLa pièce de vie pouvant se transformer en salle de réunion.",
+      view_details: "Voir les détails",
+      reserve_online: "Réserver en ligne",
+      contact_us: "Nous contacter",
+      rooms: {
+        heures_du_jour: {
+          name: "Les Heures du Jour",
+          type: "Duplex, jusqu'à 4 personnes",
+          capacity: "4 personnes",
+          bedding: "1 lit double Queen Size, 2 lits simples",
+          surface: "32 m²",
+          description: "Cette suite familiale sur 2 niveaux comprend 4 couchages (1 lit double au rez-de-chaussée et 2 lits simples à l'étage). Son décor nous rappelle les dessins de Charles-Le-Brun destinés aux sculpteurs de la Grande Commande à Versailles…",
+        },
+        ruines_antiques: {
+          name: "Ruines Antiques",
+          type: "Duplex, jusqu'à 4 personnes",
+          capacity: "4 personnes",
+          bedding: "1 lit double Queen Size, 2 lits simples",
+          surface: "32 m²",
+          description: "Cette suite familiale comprend 4 couchages sur 2 niveaux. Son ambiance nous ramène dans l'Italie antique.",
+        },
+        jardins_tivoli: {
+          name: "Les Jardins Tivoli",
+          type: "Chambre, jusqu'à 3 personnes",
+          capacity: "3 personnes",
+          bedding: "1 lit double Queen Size, 1 canapé convertible",
+          surface: "24 m²",
+          description: "Conçue pour accueillir les personnes à mobilité réduite, cette chambre vous transporte dans l'ambiance idyllique des jardins italiens où il fait bon flâner et se détendre.",
+        },
+        petit_trianon: {
+          name: "Le Petit Trianon",
+          type: "Chambre, 2 personnes",
+          capacity: "2 personnes",
+          bedding: "1 lit double Queen Size",
+          surface: "16 m²",
+          description: "Cette chambre avec un lit double nous rappelle le Hameau de la Reine voulu comme un lieu de promenades et de réceptions.",
+        },
+        voyage_ballon: {
+          name: "Voyage en Ballon",
+          type: "Chambre, 2 personnes",
+          capacity: "2 personnes",
+          bedding: "1 lit double Queen Size",
+          surface: "13 m²",
+          description: "Cette chambre avec 2 lits simples nous rappelle l'incroyable histoire des montgolfières ! Le vieux rêve de l'homme de voler, libre comme l'air…",
+        },
+        la_loge: {
+          name: "La Loge",
+          type: "Guest House, 6 personnes",
+          capacity: "6 personnes",
+          bedding: "1 lit double Queen Size, 4 lits simples",
+          surface: "32 m²",
+          description: "Agencée comme un petit nid douillet, cette Guesthouse peut accueillir jusqu'à 6 personnes.",
+        },
+      },
+      equipment: {
+        title: "Équipements",
+        bathroom: "Salle de bains avec douche à l'italienne et toilettes privatives",
+        bed_queen: "1 Lit Queen size (160 cm x 200 cm)",
+        bed_single: "Lits 1 personne (90 cm x 200 cm)",
+        curtains: "Rideaux occultant",
+        wifi: "Wifi",
+        courtesy_tray: "Plateau de courtoisie avec bouilloire et une sélection de thé, tisane et café soluble",
+        tv: "TV écran plat HD",
+        toiletries: "Accessoires de toilette",
+        mirror: "Miroir",
+        hairdryer: "Sèche-cheveux",
+        linens: "Draps et linges de toilette fournis",
+      },
+    },
+    domain: {
+      title: "Le Domaine",
+      subtitle: "MANOIR DE VACHERESSES",
+      spirit_title: "L'ESPRIT",
+      spirit_content: "Passionnés d'art, d'histoire et de vieilles pierres, Frédérique et Philippe ont succombé à l'authenticité et à l'architecture du bâti qui rappelait au propriétaire des souvenirs d'enfance et ses origines anglaises.\n\nDepuis 2017, ils ont entrepris des travaux de rénovation et ouvrent cette demeure de famille pour faire naître de nouvelles émotions et partager des valeurs qui leur sont chères : convivialité, générosité, élégance, art de vivre à la française…\n\nAujourd'hui, l'ouverture de la Guesthouse du Potager et de la Petite Maison de la cour d'honneur vous permettront de vous éclipser de la ville pour retrouver les plaisirs simples de la vie à la campagne, le chant des oiseaux, le charme des vieilles pierres et la beauté des essences rares…",
+      history_title: "L'HISTOIRE",
+      discover_more: "Découvrir l'histoire",
+      age_or_title: "L'Âge d'or des seigneurs",
+      age_or_content: "Il était un domaine qui connut des rebondissements dans l'histoire.\n\nSi la date des premières fondations du manoir remonte en 1393, c'est en 1478 qu'apparaît pour la première fois le nom du premier seigneur de Vacheresses, Maître Fleurant des Feugerets. Ses armoiries portent « d'argent à trois branches de fougères de gueules ». Plusieurs descendants de cette famille féodale, originaire du Perche, se succèderont. En 1535, Florant des Feugerets passe un pacte avec les moines de l'Abbaye de Coulombs par lequel Louis de Graffard hérite en vertu de son droit d'aînesse de Vacheresses ; la famille de Graffard, originaire de Normandie, étant devenue propriétaire du fief des Feugerets par alliance.",
+      renaissance_title: "À l'aube de la Renaissance",
+      renaissance_content: "En 1587, le fief de l'Abbaye de Coulombs fut aliéné par Madame de l'Aulnay qui le vendit au Comte de Nogent. À partir de cette époque, la seigneurie de Vacheresses suivra la mouvance du domaine de Nogent-Le-Roi jusqu'à la révolution de 1789.\n\nEntre 1677 et 1678, le domaine passe aux mains de Diane de Caumont-Lauzun, veuve du puissant seigneur Armand de Bautru, comte de Nogent-Le-Roi.\n\nSa fille, Émilie de Bautru, désignée dans les actes comme unique héritière, épousera malencontreusement, en 1742, Louis, Marquis de Melun. Pour couvrir les dettes de ce dernier, Nogent et par conséquent Vacheresses seront vendus par décret forcé en 1747.",
+      noailles_title: "La dynastie de Noailles",
+      noailles_content: "Le manoir tombe dans l'escarcelle de l'illustre famille de Noailles. Plusieurs descendants s'y succèderont.\n\nEn 1777, on décrit Vacheresses, constitué de terres, vignes, prés, garennes et rivière. On défriche aussi 38 arpents de terre en deux pièces : 10 arpents de terre appelés la Garenne de Vacheresses et 28 arpents nommés le Parc de Vacheresses.\n\nEn 1873, le domaine est vendu par Henry Emmanuel, Marquis de Noailles, Ministre de France aux États-Unis, demeurant à Washington.",
+      modern_title: "Le Manoir et les Temps Modernes",
+      modern_content: "C'est à cette époque que le manoir perd sa fonction première pour devenir résidence d'agrément.\n\nLe Monde des Arts a marqué son histoire. Joseph Hémard, célèbre dessinateur et illustrateur de la première moitié du XXème siècle y a vécu une vingtaine d'années. Puis, Gilbert Dupé, écrivain et directeur de théâtre, y composera un grand nombre de ses romans. Enfin, Michèle Battut, artiste de renommée internationale et peintre officielle de la Marine Nationale y séjournera pendant plus de trente ans.\n\nAujourd'hui, le manoir perpétue la tradition et devient une maison de famille habitée à l'année. Amoureux du patrimoine, nous tenterons de le protéger, le restaurer pour les générations futures et de l'ouvrir au public lors de réceptions, mariages ou cérémonies familiales…",
+    },
+    interactiveMap: {
+      title: "Explorez le Domaine",
+      subtitle: "Découvrez nos hébergements en cliquant sur les points de la carte",
+      discover: "Découvrir",
+      close: "Fermer",
+      legend: "Cliquez sur les points pour découvrir nos hébergements",
     },
   },
 };

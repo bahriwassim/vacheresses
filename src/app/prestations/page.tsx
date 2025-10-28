@@ -99,7 +99,7 @@ export default function ServicesPage() {
                       overlay={true}
                       overlayContent={
                         <div className="text-center text-white">
-                          <p className="text-sm font-medium">En savoir plus</p>
+                          <p className="text-sm font-medium">{t.services.learn_more}</p>
                         </div>
                       }
                       className="mb-4"

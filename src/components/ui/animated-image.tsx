@@ -142,7 +142,7 @@ export function HeroImage({
         hoverEffect="none"
         className={cn(
           fill ? "w-full h-full" : "w-full h-full",
-          parallax && "hover:scale-110 transition-transform duration-[2000ms] ease-out"
+          parallax && "hover:scale-110 transition-transform duration-&lsqb;2000ms&rsqb; ease-out"
         )}
       />
     </div>

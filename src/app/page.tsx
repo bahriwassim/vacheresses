@@ -4,6 +4,8 @@
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 import { Hero } from '@/components/sections/hero';
+import { DomainTeaser } from '@/components/sections/domain-teaser';
+import { InteractiveMap } from '@/components/sections/interactive-map';
 import { Packages } from '@/components/sections/packages';
 import { VisualTour } from '@/components/sections/visual-tour';
 import { Availability } from '@/components/sections/availability';
@@ -23,8 +25,10 @@ export default function Home() {
         <Availability />
         <Testimonials />
         <Access />
+        <Packages />
       </main>
       <Footer />
+      <ScrollToTop />
     </div>
   );
 }

@@ -53,12 +53,12 @@ export function Testimonials() {
             {testimonials.map((testimonial, index) => (
               <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
                 <div className="p-1 h-full">
-                  <Card className="h-full flex flex-col justify-between transition-all duration-500 hover:shadow-lg animate-in fade-in slide-in-from-bottom-8"
+                  <Card className="h-full flex flex-col justify-between transition-all duration-500 hover-lift hover-glow hover:border-primary/30 animate-in fade-in slide-in-from-bottom-8"
                         style={{ animationDelay: `${index * 200}ms` }}>
                     <CardContent className="p-6 flex flex-col items-center text-center flex-grow">
                       <p className="text-muted-foreground italic mb-6">"{testimonial.quote}"</p>
                       <div className="flex items-center gap-4">
-                        <Avatar className="ring-2 ring-primary/20">
+                        <Avatar className="ring-2 ring-primary/20 transition-all duration-300 group-hover:ring-4 group-hover:ring-primary/40 hover:scale-110">
                           <AvatarImage src={testimonial.image} alt={testimonial.name} className="object-cover" />
                           <AvatarFallback className="bg-primary/10 text-primary font-semibold">{testimonial.avatar}</AvatarFallback>
                         </Avatar>

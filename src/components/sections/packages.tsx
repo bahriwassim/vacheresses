@@ -13,7 +13,6 @@ const packagesData = (t: any) => [
   {
     id: "classic",
     title: t.packages.classic_title,
-    price: "€15,000",
     description: t.packages.classic_desc,
     imageId: "package-classic",
     features: t.packages.classic_features,
@@ -21,7 +20,6 @@ const packagesData = (t: any) => [
   {
     id: "premium",
     title: t.packages.premium_title,
-    price: "€25,000",
     description: t.packages.premium_desc,
     imageId: "package-premium",
     features: t.packages.premium_features,
@@ -30,7 +28,6 @@ const packagesData = (t: any) => [
   {
     id: "luxury",
     title: t.packages.luxury_title,
-    price: "€40,000",
     description: t.packages.luxury_desc,
     imageId: "package-luxury",
     features: t.packages.luxury_features,
@@ -56,10 +53,10 @@ export function Packages() {
           {packages.map((pkg, index) => {
             const image = getImageById(pkg.imageId);
             return (
-              <Card 
-                key={pkg.id} 
-                className={`flex flex-col transition-all duration-500 animate-in fade-in slide-in-from-bottom-8 ${
-                  pkg.highlighted ? 'border-primary shadow-lg scale-105' : 'hover:shadow-lg'
+              <Card
+                key={pkg.id}
+                className={`flex flex-col transition-all duration-500 hover-lift hover-glow animate-in fade-in slide-in-from-bottom-8 ${
+                  pkg.highlighted ? 'border-primary shadow-lg scale-105 ring-2 ring-primary/20' : 'hover:shadow-lg hover:border-primary/50'
                 }`}
                 style={{ animationDelay: `${index * 200}ms` }}
               >
@@ -75,7 +72,7 @@ export function Packages() {
                       overlay={true}
                       overlayContent={
                         <div className="text-center text-white">
-                          <p className="text-sm font-medium">Découvrir</p>
+                          <p className="text-sm font-medium">{t.packages.discover}</p>
                         </div>
                       }
                       className="mb-4"
@@ -83,7 +80,6 @@ export function Packages() {
                   )}
                   <CardTitle className="font-headline">{pkg.title}</CardTitle>
                   <CardDescription>{pkg.description}</CardDescription>
-                  <p className="text-3xl font-bold pt-2 text-primary">{pkg.price}</p>
                 </CardHeader>
                 <CardContent className="flex-1">
                   <ul className="space-y-3">

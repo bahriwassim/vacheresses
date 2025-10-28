@@ -18,8 +18,10 @@ import { translations } from "@/lib/translations";
 
 const navLinks = [
   { href: "/", label: "home" },
+  { href: "/domaine", label: "domain" },
   { href: "/#packages", label: "packages" },
   { href: "/prestations", label: "services" },
+  { href: "/sejourner", label: "stay" },
   { href: "/configurator", label: "configurator" },
   { href: "/#availability", label: "availability" },
 ];
@@ -87,10 +89,10 @@ export function Header() {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuItem onClick={() => setLocale('en')}>
-                English
+                {t.header.english}
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => setLocale('fr')}>
-                Français
+                {t.header.french}
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
