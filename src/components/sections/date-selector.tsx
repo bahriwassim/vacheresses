@@ -1,44 +1,58 @@
 "use client";
 
+import { useEffect, useState, useCallback } from "react";
 import { Calendar } from "@/components/ui/calendar";
 import { Card, CardContent } from "@/components/ui/card";
-import { useState } from "react";
+import { Button } from "@/components/ui/button";
 import { useLocale } from "@/hooks/use-locale";
 import { useBooking } from "@/contexts/booking-context";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
+function monthStart(d: Date) {
+  return new Date(d.getFullYear(), d.getMonth(), 1);
+}
+
 export function DateSelector() {
   const { t, locale } = useLocale();
   const { setDates } = useBooking();
-  const [selectedDate, setSelectedDate] = useState<Date | undefined>();
-  const [currentMonth, setCurrentMonth] = useState(new Date());
-  const today = new Date();
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [currentMonth, setCurrentMonth] = useState<Date>(() => monthStart(new Date()));
+  const todayStart = monthStart(new Date());
 
-  const handleDateSelect = (date: Date | undefined) => {
-    setSelectedDate(date);
-    if (date) {
-      setDates({ from: date, to: date });
-
+  useEffect(() => {
+    if (selectedDate) {
+      setDates({ from: selectedDate, to: selectedDate });
       setTimeout(() => {
         const packagesSection = document.getElementById("packages");
-        if (packagesSection) {
-          packagesSection.scrollIntoView({ behavior: "smooth", block: "start" });
-        }
+        if (packagesSection) packagesSection.scrollIntoView({ behavior: "smooth", block: "start" });
       }, 300);
     } else {
       setDates(null);
     }
-  };
+  }, [selectedDate, setDates]);
 
-  const prevMonth = () => {
-    setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1));
-  };
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === "ArrowLeft") setCurrentMonth((m) => new Date(m.getFullYear(), m.getMonth() - 1, 1));
+      if (e.key === "ArrowRight") setCurrentMonth((m) => new Date(m.getFullYear(), m.getMonth() + 1, 1));
+    };
+    document.addEventListener("keydown", handler);
+    return () => document.removeEventListener("keydown", handler);
+  }, []);
 
-  const nextMonth = () => {
-    setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 1));
-  };
+  const prevMonth = useCallback(() => setCurrentMonth((m) => new Date(m.getFullYear(), m.getMonth() - 1, 1)), []);
+  const nextMonth = useCallback(() => setCurrentMonth((m) => new Date(m.getFullYear(), m.getMonth() + 1, 1)), []);
+
+  const isPrevDisabled = monthStart(currentMonth) <= todayStart;
+
+  // Met à jour le mois seulement si nécessaire
+  useEffect(() => {
+    if (!selectedDate) return;
+    const newMonth = monthStart(selectedDate);
+    if (newMonth.getTime() !== currentMonth.getTime()) setCurrentMonth(newMonth);
+  }, [selectedDate, currentMonth]);
 
   return (
     <section id="date-selector" className="py-16 md:py-24 bg-gradient-to-b from-secondary/30 to-background">
@@ -66,34 +80,37 @@ export function DateSelector() {
                 </div>
               )}
 
-              {/* Navigation mois */}
               <div className="flex items-center justify-between mb-4">
-                <Button variant="ghost" onClick={prevMonth} className="p-2">
+                <Button variant="ghost" onClick={prevMonth} className="p-2" disabled={isPrevDisabled} aria-label="Mois précédent">
                   <ChevronLeft />
                 </Button>
                 <span className="text-lg font-medium">
                   {format(currentMonth, "MMMM yyyy", { locale: locale === "fr" ? fr : undefined })}
                 </span>
-                <Button variant="ghost" onClick={nextMonth} className="p-2">
+                <Button variant="ghost" onClick={nextMonth} className="p-2" aria-label="Mois suivant">
                   <ChevronRight />
                 </Button>
               </div>
 
-              {/* Calendrier du mois courant */}
               <Calendar
                 mode="single"
-                selected={selectedDate}
-                onSelect={handleDateSelect}
+                selected={selectedDate} // null si rien
+                onSelect={(d) => setSelectedDate(d)}
                 month={currentMonth}
-                disabled={(day) => day < today}
+                disabled={(day) => {
+                  const today = new Date();
+                  today.setHours(0, 0, 0, 0);
+                  return day < today;
+                }}
                 className="rounded-md shadow-md"
+                dayKey={(day) => day.getTime()} // clé unique pour chaque jour
               />
             </CardContent>
           </Card>
         </div>
 
         <p className="text-center mt-6 text-sm text-muted-foreground animate-in fade-in duration-1000 delay-600">
-          {t.dateSelector?.helpText || "Cliquez sur une date pour continuer"}
+          {t.dateSelector?.helpText || "Cliquez sur une date pour continuer — utilisez ← → pour changer de mois"}
         </p>
       </div>
     </section>

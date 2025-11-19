@@ -115,7 +115,7 @@ export function InteractiveMap() {
               {/* Image principale */}
               <div className="relative w-full aspect-[16/10]">
                 <Image
-                  src="/vacheresses_4-1.jpg"
+                  src="/vacheresses_17.jpg"
                   alt="Vue aérienne du Manoir de Vacheresses"
                   fill
                   className="object-cover"

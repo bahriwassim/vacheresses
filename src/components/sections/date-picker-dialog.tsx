@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState, useCallback } from "react";
 import { Calendar } from "@/components/ui/calendar";
 import { Button } from "@/components/ui/button";
 import {
@@ -9,7 +10,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { useState } from "react";
 import { useLocale } from "@/hooks/use-locale";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
@@ -21,12 +21,33 @@ interface DatePickerDialogProps {
   onDateSelected: (date: Date) => void;
 }
 
+function monthStart(d: Date) {
+  return new Date(d.getFullYear(), d.getMonth(), 1);
+}
+
 export function DatePickerDialog({ open, onOpenChange, onDateSelected }: DatePickerDialogProps) {
   const { t, locale } = useLocale();
-  const [selectedDate, setSelectedDate] = useState<Date | undefined>();
-  const [currentMonth, setCurrentMonth] = useState(new Date());
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [currentMonth, setCurrentMonth] = useState<Date>(() => monthStart(new Date()));
+  const todayStart = monthStart(new Date());
 
-  const today = new Date();
+  useEffect(() => {
+    if (open) setCurrentMonth(selectedDate ? monthStart(selectedDate) : todayStart);
+  }, [open, selectedDate, todayStart]);
+
+  useEffect(() => {
+    if (!open) return;
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === "ArrowLeft") setCurrentMonth((m) => new Date(m.getFullYear(), m.getMonth() - 1, 1));
+      if (e.key === "ArrowRight") setCurrentMonth((m) => new Date(m.getFullYear(), m.getMonth() + 1, 1));
+      if (e.key === "Escape") onOpenChange(false);
+    };
+    document.addEventListener("keydown", handler);
+    return () => document.removeEventListener("keydown", handler);
+  }, [open, onOpenChange]);
+
+  const prevMonth = useCallback(() => setCurrentMonth((m) => new Date(m.getFullYear(), m.getMonth() - 1, 1)), []);
+  const nextMonth = useCallback(() => setCurrentMonth((m) => new Date(m.getFullYear(), m.getMonth() + 1, 1)), []);
 
   const handleConfirm = () => {
     if (selectedDate) {
@@ -35,13 +56,14 @@ export function DatePickerDialog({ open, onOpenChange, onDateSelected }: DatePic
     }
   };
 
-  const prevMonth = () => {
-    setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1));
-  };
+  const isPrevDisabled = monthStart(currentMonth) <= todayStart;
 
-  const nextMonth = () => {
-    setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 1));
-  };
+  // Mise à jour mois uniquement si nécessaire
+  useEffect(() => {
+    if (!selectedDate) return;
+    const newMonth = monthStart(selectedDate);
+    if (newMonth.getTime() !== currentMonth.getTime()) setCurrentMonth(newMonth);
+  }, [selectedDate, currentMonth]);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -66,27 +88,30 @@ export function DatePickerDialog({ open, onOpenChange, onDateSelected }: DatePic
           </div>
         )}
 
-        {/* Navigation mois */}
         <div className="flex items-center justify-between mb-4">
-          <Button variant="ghost" onClick={prevMonth} className="p-2">
+          <Button variant="ghost" onClick={prevMonth} className="p-2" disabled={isPrevDisabled} aria-label="Mois précédent">
             <ChevronLeft />
           </Button>
           <span className="text-lg font-medium">
             {format(currentMonth, "MMMM yyyy", { locale: locale === "fr" ? fr : undefined })}
           </span>
-          <Button variant="ghost" onClick={nextMonth} className="p-2">
+          <Button variant="ghost" onClick={nextMonth} className="p-2" aria-label="Mois suivant">
             <ChevronRight />
           </Button>
         </div>
 
-        {/* Calendrier du mois courant */}
         <Calendar
           mode="single"
           selected={selectedDate}
           onSelect={setSelectedDate}
           month={currentMonth}
-          disabled={(day) => day < today}
+          disabled={(day) => {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            return day < today;
+          }}
           className="rounded-md shadow-md"
+          dayKey={(day) => day.getTime()}
         />
 
         <div className="flex gap-3 justify-end mt-6">
