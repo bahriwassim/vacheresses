@@ -22,7 +22,7 @@ export function InstagramFeed() {
   ].filter(Boolean); // Filter out any undefined images
 
   return (
-    <section id="instagram-feed" className="py-16 md:py-24 bg-secondary/50">
+    <section id="instagram-feed" className="py-12 md:py-20 bg-secondary/50">
       <div className="container max-w-7xl px-4">
         <div className="text-center mb-12 animate-in fade-in slide-in-from-bottom-8 duration-1000">
           <h2 className="text-3xl md:text-4xl font-headline font-bold">

@@ -32,7 +32,7 @@ export function Testimonials() {
     const testimonials = testimonialsData(t);
 
   return (
-    <section id="testimonials" className="py-16 md:py-24">
+    <section id="testimonials" className="py-12 md:py-20">
       <div className="container max-w-7xl px-4">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-headline font-bold animate-in fade-in slide-in-from-bottom-8 duration-1000">

@@ -1,3 +1,4 @@
+
 "use client";
 
 import { getGalleryImages } from "@/lib/vacheresses-images";
@@ -38,7 +39,7 @@ export function VisualTour() {
   };
 
   return (
-    <section id="visual-tour" className="py-16 md:py-24">
+    <section id="visual-tour" className="py-12 md:py-20">
       <div className="container max-w-7xl px-4">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-headline font-bold">

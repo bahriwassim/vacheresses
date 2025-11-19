@@ -160,7 +160,7 @@ export function InteractiveMap() {
   const activeImages = activeHotspot ? roomImageGalleries[activeHotspot.id] || ["/vacheresses_4-1.jpg"] : [];
 
   return (
-    <section className="py-16 md:py-24 bg-gradient-to-b from-background to-secondary/30">
+    <section className="py-12 md:py-20 bg-gradient-to-b from-background to-secondary/30">
       <div className="container max-w-7xl">
         <div
           className="text-center mb-12 animate-in fade-in slide-in-from-bottom-8 duration-1000"
@@ -357,5 +357,3 @@ export function InteractiveMap() {
     </section>
   );
 }
-
-    

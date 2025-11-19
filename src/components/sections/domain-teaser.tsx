@@ -1,3 +1,4 @@
+
 "use client";
 
 import { Card, CardContent } from "@/components/ui/card";
@@ -10,7 +11,7 @@ export function DomainTeaser() {
   const { t } = useLocale();
 
   return (
-    <section className="py-16 md:py-24 bg-gradient-to-b from-background to-secondary/30">
+    <section className="py-12 md:py-20 bg-gradient-to-b from-background to-secondary/30">
       <div className="container max-w-6xl">
         <Card className="shadow-2xl border-primary/20 overflow-hidden">
           <CardContent className="p-8 md:p-12">

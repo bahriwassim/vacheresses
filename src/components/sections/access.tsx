@@ -60,7 +60,7 @@ export function Access() {
 
 
   return (
-    <section id="access" className="py-16 md:py-24 bg-background">
+    <section id="access" className="py-12 md:py-20 bg-background">
       <div className="container max-w-7xl px-4">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-headline font-bold">{t.access.title}</h2>
