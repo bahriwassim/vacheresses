@@ -12,7 +12,7 @@ import Link from "next/link";
 import { useToast } from "@/hooks/use-toast";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useLocale } from "@/hooks/use-locale";
-import { authService } from "@/lib/supabase";
+import { authService } from "@/lib";
 import { AlertCircle } from "lucide-react";
 
 export default function LoginPage() {

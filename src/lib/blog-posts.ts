@@ -21,13 +21,13 @@ export const blogPosts: BlogPost[] = [
       fr: 'Le lieu donne le ton de tout votre mariage. Voici nos meilleurs conseils pour trouver celui qui vous convient.',
     },
     content: {
-        en: `<p>Finding the perfect wedding venue is often the first and most significant decision you'll make in your planning journey. It sets the backdrop for your special day and influences everything from your guest list to your decor. Here's a breakdown of what to consider:</p>
+        en: `<p>Finding the perfect wedding venue is often the first and most significant decision you\'ll make in your planning journey. It sets the backdrop for your special day and influences everything from your guest list to your decor. Here\'s a breakdown of what to consider:</p>
             <h3>1. Define Your Vision</h3>
             <p>Before you start looking, sit down with your partner and discuss what you envision for your wedding. Do you dream of a rustic barn celebration, a chic city affair, or an elegant countryside escape? Knowing your style will help narrow down the options.</p>
             <h3>2. Consider Your Guest List</h3>
-            <p>Your guest count is a major factor. Make sure the venues you consider can comfortably accommodate your numbers. Don't try to squeeze 200 people into a space meant for 100, but also avoid a space that's too large, which can make the event feel empty.</p>
+            <p>Your guest count is a major factor. Make sure the venues you consider can comfortably accommodate your numbers. Don\'t try to squeeze 200 people into a space meant for 100, but also avoid a space that\'s too large, which can make the event feel empty.</p>
             <h3>3. Align with Your Budget</h3>
-            <p>Be realistic about what you can afford. Venue costs can include rental fees, catering, and extras. Ask for detailed pricing information upfront to avoid any surprises. Remember that a venue's price often reflects its location, capacity, and included services.</p>
+            <p>Be realistic about what you can afford. Venue costs can include rental fees, catering, and extras. Ask for detailed pricing information upfront to avoid any surprises. Remember that a venue\'s price often reflects its location, capacity, and included services.</p>
             <h3>4. Think About Logistics</h3>
             <p>Consider the guest experience. Is the venue easy to get to? Is there ample parking or access to public transportation? If you have many out-of-town guests, are there hotels nearby? These logistical details can make a big difference.</p>
             <p>At Domaine des Vacheresses, we offer a versatile and elegant setting that can be tailored to your unique vision. From our grand reception hall to our serene gardens, we provide a timeless canvas for your dream wedding.</p>`,
@@ -57,14 +57,14 @@ export const blogPosts: BlogPost[] = [
     content: {
       en: `<p>As we look ahead, 2025 is shaping up to be a year of personalized, sustainable, and boldly expressive wedding decor. Couples are moving away from traditional norms and embracing styles that truly reflect their personalities. Here are the top trends to watch:</p>
             <h3>1. Sustainable & Eco-Friendly Choices</h3>
-            <p>Sustainability is more than a trend; it's a movement. Expect to see locally sourced flowers, digital invitations, and upcycled decor. Couples are increasingly mindful of their environmental impact, opting for vendors who share their values.</p>
+            <p>Sustainability is more than a trend; it\'s a movement. Expect to see locally sourced flowers, digital invitations, and upcycled decor. Couples are increasingly mindful of their environmental impact, opting for vendors who share their values.</p>
             <h3>2. Bold & Vibrant Color Palettes</h3>
             <p>While neutrals will always be classic, 2025 is all about color. Think rich jewel tones, vibrant blues, and earthy terracottas. These bold palettes are being used in everything from florals and linens to bridesmaid dresses and stationery.</p>
             <h3>3. Immersive Guest Experiences</h3>
             <p>Couples are creating unique experiences for their guests. This includes interactive food stations, live entertainment beyond a DJ (think painters or magicians), and personalized welcome gifts. The focus is on making the day memorable for everyone involved.</p>
             <h3>4. Statement Florals & Greenery</h3>
-            <p>Floral installations are becoming more dramatic and architectural. Hanging floral arrangements, large-scale ceremony backdrops, and abundant greenery are being used to transform spaces and create a 'wow' factor.</p>
-            <p>At Domaine des Vacheresses, our versatile spaces provide the perfect backdrop for any of these trends, allowing you to create a day that's both stylish and deeply personal.</p>`,
+            <p>Floral installations are becoming more dramatic and architectural. Hanging floral arrangements, large-scale ceremony backdrops, and abundant greenery are being used to transform spaces and create a \'wow\' factor.</p>
+            <p>At Domaine des Vacheresses, our versatile spaces provide the perfect backdrop for any of these trends, allowing you to create a day that\'s both stylish and deeply personal.</p>`,
       fr: `<p>Alors que nous nous projetons, 2025 s'annonce comme une année de décoration de mariage personnalisée, durable et audacieusement expressive. Les couples s'éloignent des normes traditionnelles et adoptent des styles qui reflètent vraiment leur personnalité. Voici les principales tendances à surveiller :</p>
             <h3>1. Choix durables et écologiques</h3>
             <p>La durabilité est plus qu'une tendance ; c'est un mouvement. Attendez-vous à voir des fleurs d'origine locale, des invitations numériques et une décoration recyclée. Les couples sont de plus en plus conscients de leur impact environnemental, optant pour des fournisseurs qui partagent leurs valeurs.</p>
@@ -99,7 +99,7 @@ export const blogPosts: BlogPost[] = [
             <h3>4. Display Personal Photos</h3>
             <p>Create a photo display with pictures of you and your partner through the years, from childhood to your engagement. This is a wonderful conversation starter for guests and a beautiful tribute to your journey together.</p>
             <h3>5. Thoughtful Wedding Favors</h3>
-            <p>Choose favors that represent you as a couple. If you love to cook, consider a small bottle of your favorite spice blend. If you're coffee enthusiasts, a bag of locally roasted beans is a great idea. The more personal the favor, the more your guests will appreciate it.</p>`,
+            <p>Choose favors that represent you as a couple. If you love to cook, consider a small bottle of your favorite spice blend. If you\'re coffee enthusiasts, a bag of locally roasted beans is a great idea. The more personal the favor, the more your guests will appreciate it.</p>`,
       fr: `<p>Le jour de votre mariage est le reflet de votre histoire d'amour. Infuser des touches personnelles tout au long de la célébration le rend encore plus significatif pour vous et vos invités. Voici cinq idées pour vous inspirer :</p>
             <h3>1. Personnalisez votre cérémonie</h3>
             <p>Écrivez vos propres vœux pour exprimer votre amour avec vos propres mots. Vous pouvez également incorporer une cérémonie d'unité qui a du sens pour vous, comme planter un arbre, un rituel du handfasting ou mélanger un cocktail personnalisé.</p>
@@ -125,7 +125,7 @@ export const blogPosts: BlogPost[] = [
       fr: 'Assurez-vous que votre photographe immortalise chaque moment important. Notre liste couvre tout, des préparatifs à la dernière danse.',
     },
     content: {
-      en: `<p>Your wedding photos will be cherished for a lifetime. While you should trust your photographer's creative eye, providing a shot list ensures no important moment is missed. Here’s a comprehensive checklist:</p>
+      en: `<p>Your wedding photos will be cherished for a lifetime. While you should trust your photographer\'s creative eye, providing a shot list ensures no important moment is missed. Here’s a comprehensive checklist:</p>
             <h3>Getting Ready</h3>
             <ul>
               <li>Detail shots: dress, shoes, rings, invitations</li>
@@ -209,7 +209,7 @@ export const blogPosts: BlogPost[] = [
       fr: 'Choisir un traiteur, c\'est plus que de la nourriture. Voici les questions essentielles à poser avant de signer un contrat.',
     },
     content: {
-      en: `<p>Your wedding menu plays a huge role in your guests' experience. When meeting with potential caterers, being prepared with the right questions can help you make the best choice for your big day.</p>
+      en: `<p>Your wedding menu plays a huge role in your guests\' experience. When meeting with potential caterers, being prepared with the right questions can help you make the best choice for your big day.</p>
             <h3>1. Are you licensed and insured?</h3>
             <p>This is a non-negotiable. A professional caterer should have liability insurance and the necessary licenses to serve food and alcohol. This protects you and your venue.</p>
             <h3>2. What is included in your pricing?</h3>

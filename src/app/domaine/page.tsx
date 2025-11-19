@@ -118,7 +118,7 @@ export default function DomainePage() {
                 <div className="grid md:grid-cols-5 gap-0">
                   <div className="md:col-span-2 relative h-64 md:h-auto overflow-hidden">
                     <Image
-                      src="/vacheresses_14.jpg"
+                      src="/VacheressesHistoire.jpg"
                       alt="L'âge d'or"
                       fill
                       className="object-cover transition-transform duration-700 group-hover:scale-105"
@@ -150,7 +150,7 @@ export default function DomainePage() {
                   </div>
                   <div className="md:col-span-2 relative h-64 md:h-auto overflow-hidden order-1 md:order-2">
                     <Image
-                      src="/vacheresses_13.jpg"
+                      src="/renaissance.jpg"
                       alt="Renaissance"
                       fill
                       className="object-cover transition-transform duration-700 group-hover:scale-105"
@@ -166,7 +166,7 @@ export default function DomainePage() {
                 <div className="grid md:grid-cols-5 gap-0">
                   <div className="md:col-span-2 relative h-64 md:h-auto overflow-hidden">
                     <Image
-                      src="/Parc_1.jpg"
+                      src="/dynastiedenoailles.jpg"
                       alt="Dynastie de Noailles"
                       fill
                       className="object-cover transition-transform duration-700 group-hover:scale-105"
