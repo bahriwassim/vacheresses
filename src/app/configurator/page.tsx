@@ -135,7 +135,7 @@ function ConfiguratorContent() {
                     <Slider
                       id="guests"
                       min={20}
-                      max={300}
+                      max={130}
                       step={5}
                       value={[guestCount]}
                       onValueChange={(value) => setGuestCount(value[0])}
