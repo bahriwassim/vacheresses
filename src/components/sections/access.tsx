@@ -6,18 +6,42 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Car, Train, Plane } from "lucide-react";
 
 export function Access() {
-  const { t } = useLocale();
+  const { t, locale } = useLocale();
 
-  const accessInfo = [
+  const accessInfoEn = [
     {
       title: t.access.byCar,
       icon: <Car className="h-8 w-8 text-primary" />,
       details: [
-        "75 km de Paris",
-        "45 Km de Versailles",
-        "30 km de Chartres",
-        "22 km de Rambouillet",
-        "6 Km de Maintenon",
+        "47 miles from Paris (~1h 15min)",
+        "28 miles from Versailles (~45 min)",
+        "19 miles from Chartres (~30 min)",
+        "14 miles from Rambouillet (~25 min)",
+        "4 miles from Maintenon (~10 min)",
+      ],
+    },
+    {
+      title: t.access.byTrain,
+      icon: <Train className="h-8 w-8 text-primary" />,
+      details: ["Maintenon station (55 min from Gare Montparnasse)"],
+    },
+    {
+      title: t.access.byAir,
+      icon: <Plane className="h-8 w-8 text-primary" />,
+      details: ["Paris Orly: 53 miles", "Paris Roissy Charles de Gaulle: 72 miles"],
+    },
+  ];
+  
+  const accessInfoFr = [
+    {
+      title: t.access.byCar,
+      icon: <Car className="h-8 w-8 text-primary" />,
+      details: [
+        "75 km de Paris (~1h 15min)",
+        "45 km de Versailles (~45 min)",
+        "30 km de Chartres (~30 min)",
+        "22 km de Rambouillet (~25 min)",
+        "6 km de Maintenon (~10 min)",
       ],
     },
     {
@@ -28,9 +52,12 @@ export function Access() {
     {
       title: t.access.byAir,
       icon: <Plane className="h-8 w-8 text-primary" />,
-      details: ["Paris Orly : 86 Km", "Paris Roissy Charles de Gaulle : 116 Km"],
+      details: ["Paris Orly : 86 km", "Paris Roissy Charles de Gaulle : 116 km"],
     },
   ];
+
+  const accessInfo = locale === 'fr' ? accessInfoFr : accessInfoEn;
+
 
   return (
     <section id="access" className="py-16 md:py-24 bg-background">
