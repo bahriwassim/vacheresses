@@ -27,7 +27,7 @@ export function Footer() {
   // 1. Get an API key from https://console.cloud.google.com/google/maps-apis/overview
   // 2. Enable the "Maps Embed API" for your project.
   // 3. Replace the src URL below with the one provided by Google, including your API key.
-  const mapSrcWithApiKey = "https://www.google.com/maps/embed/v1/place?key=VOTRE_CLE_API&q=Manoir+de+Vacheresses,Nogent-Le-Roi,France";
+  const mapSrcWithApiKey = "https://www.google.com/maps/embed/v1/place?key=AIzaSyDB9IcwYdjnLWwD21GU4lr-a0Iu2NYyDpI&q=Manoir+de+Vacheresses,Nogent-Le-Roi,France";
 
 
   return (
