@@ -22,7 +22,7 @@ export const blogPosts: BlogPost[] = [
       fr: 'Le lieu de réception est l\'âme de votre mariage. Découvrez nos secrets pour trouver l\'endroit qui raconte votre histoire.',
     },
     imageId: 'blog-venue',
-    galleryImageIds: ['gallery-1', 'salle_reception_8', 'Parc_2'],
+    galleryImageIds: ['gallery-1', 'salle_reception_8'],
     content: {
         en: `
         <p class="lead">Choosing a wedding venue is like choosing a home for your love story to unfold for a day. It’s the first brushstroke on the canvas of your life together. At Manoir de Vacheresses, we believe this choice should be guided by heart and emotion. Let us whisper some secrets to help you find a place that feels like destiny.</p>
@@ -93,7 +93,7 @@ export const blogPosts: BlogPost[] = [
       fr: 'De l\'éclairage éthéré aux détails poétiques, découvrez les tendances qui feront de votre mariage 2025 une véritable romance.',
     },
     imageId: 'blog-decor',
-    galleryImageIds: ['esprit-9', 'esprit-10', 'salle_reception_6'],
+    galleryImageIds: ['esprit-9', 'esprit-10'],
     content: {
       en: `<p class="lead">In 2025, wedding design is moving away from the ephemeral to embrace the eternal. It's about creating an atmosphere that feels like a beautiful dream—personal, immersive, and filled with a quiet, confident romance.</p>
             <h3>1. The Poetry of Imperfection</h3>
@@ -162,7 +162,7 @@ export const blogPosts: BlogPost[] = [
       fr: 'Insufflez une âme à votre célébration. Découvrez des manières intimes de faire de votre mariage un reflet inoubliable de votre histoire d\'amour.',
     },
     imageId: 'blog-personalize',
-    galleryImageIds: ['se_marier_3', 'vacheresses_19', 'package-luxury'],
+    galleryImageIds: ['se_marier_3', 'vacheresses_19'],
     content: {
       en: `<p class="lead">Your wedding is more than an event; it's a symphony composed of your shared memories, inside jokes, and quiet promises. The most beautiful weddings are those that feel like a conversation with the couple. Here are five intimate ideas to make your day a true whisper of the heart.</p>
             <h3>1. Vows from the Soul</h3>
@@ -213,3 +213,5 @@ export const blogPosts: BlogPost[] = [
     },
   },
 ];
+
+    
