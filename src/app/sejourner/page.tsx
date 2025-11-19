@@ -199,10 +199,9 @@ export default function SejournerPage() {
             src="/potager_3.jpg"
             alt="Maison du Potager"
             fill
-            className="object-cover brightness-75"
+            className="object-cover"
             priority
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-background" />
         </div>
 
         <div className="relative h-full flex items-center justify-center text-center px-4">

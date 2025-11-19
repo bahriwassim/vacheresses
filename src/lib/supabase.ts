@@ -1,9 +1,15 @@
+'use client';
+
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+// Initialize supabase client only if the URL and key are provided
+export const supabase = 
+    supabaseUrl && supabaseAnonKey 
+    ? createClient(supabaseUrl, supabaseAnonKey)
+    : null;
 
 // Types pour la base de données
 export type User = {
@@ -36,6 +42,7 @@ export type Booking = {
 export const authService = {
   // Inscription
   async signUp(email: string, password: string, name: string, phone?: string) {
+    if (!supabase) throw new Error("Supabase is not configured.");
     const { data: authData, error: authError } = await supabase.auth.signUp({
       email,
       password,
@@ -65,6 +72,7 @@ export const authService = {
 
   // Connexion
   async signIn(email: string, password: string) {
+    if (!supabase) throw new Error("Supabase is not configured.");
     const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
@@ -72,104 +80,21 @@ export const authService = {
 
     if (error) throw error;
 
-    // Récupérer le profil utilisateur
-    const { data: profile } = await supabase
-      .from('users')
-      .select('*')
-      .eq('id', data.user.id)
-      .single();
-
-    return { user: data.user, profile };
+    return data;
   },
 
   // Déconnexion
   async signOut() {
+    if (!supabase) throw new Error("Supabase is not configured.");
     const { error } = await supabase.auth.signOut();
     if (error) throw error;
   },
 
   // Obtenir l'utilisateur actuel
-  async getCurrentUser() {
-    const { data: { user } } = await supabase.auth.getUser();
-
-    if (!user) return null;
-
-    const { data: profile } = await supabase
-      .from('users')
-      .select('*')
-      .eq('id', user.id)
-      .single();
-
-    return { user, profile };
-  },
-
-  // Mettre à jour le profil
-  async updateProfile(userId: string, updates: Partial<User>) {
-    const { data, error } = await supabase
-      .from('users')
-      .update(updates)
-      .eq('id', userId)
-      .select()
-      .single();
-
+  async getUser() {
+    if (!supabase) throw new Error("Supabase is not configured.");
+    const { data, error } = await supabase.auth.getUser();
     if (error) throw error;
-    return data;
-  },
-};
-
-// Fonctions de gestion des réservations
-export const bookingService = {
-  // Récupérer les réservations d'un utilisateur
-  async getUserBookings(userId: string) {
-    const { data, error } = await supabase
-      .from('bookings')
-      .select(`
-        *,
-        packages(name_fr, name_en),
-        rooms(name_fr, name_en)
-      `)
-      .eq('user_id', userId)
-      .order('start_date', { ascending: false });
-
-    if (error) throw error;
-    return data;
-  },
-
-  // Créer une réservation
-  async createBooking(booking: Partial<Booking>) {
-    const { data, error } = await supabase
-      .from('bookings')
-      .insert([booking])
-      .select()
-      .single();
-
-    if (error) throw error;
-    return data;
-  },
-
-  // Mettre à jour une réservation
-  async updateBooking(bookingId: string, updates: Partial<Booking>) {
-    const { data, error } = await supabase
-      .from('bookings')
-      .update(updates)
-      .eq('id', bookingId)
-      .select()
-      .single();
-
-    if (error) throw error;
-    return data;
-  },
-
-  // Annuler une réservation
-  async cancelBooking(bookingId: string) {
-    const { data, error } = await supabase
-      .from('bookings')
-      .update({ status: 'cancelled' })
-      .eq('id', bookingId)
-      .select()
-      .single();
-
-    if (error) throw error;
-    return data;
+    return data.user;
   },
 };

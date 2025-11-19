@@ -173,6 +173,10 @@ export function InteractiveMap() {
                     return (
                       <Dialog open={true} onOpenChange={() => setActiveHotspot(null)}>
                         <DialogContent className="max-w-5xl max-h-[90vh] overflow-y-auto p-0">
+                           <DialogHeader className="sr-only">
+                            <DialogTitle>{hotspot.name}</DialogTitle>
+                            <DialogDescription>{hotspot.description}</DialogDescription>
+                          </DialogHeader>
                           <button
                             onClick={() => setActiveHotspot(null)}
                             className="absolute top-4 right-4 z-50 text-white hover:text-gray-200 transition-colors bg-black/50 rounded-full p-2"

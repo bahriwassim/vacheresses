@@ -39,9 +39,10 @@ export function DatePickerDialog({ open, onOpenChange, onDateSelected }: DatePic
     }
   }, [open, selectedDate, todayStart]);
 
-  const handleConfirm = () => {
-    if (selectedDate) {
-      onDateSelected(selectedDate);
+  const handleDateSelect = (date: Date | null) => {
+    if (date) {
+      setSelectedDate(date);
+      onDateSelected(date);
       onOpenChange(false);
     }
   };
@@ -60,41 +61,30 @@ export function DatePickerDialog({ open, onOpenChange, onDateSelected }: DatePic
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogPortal>
         <DialogOverlay />
-        <DialogContent className="max-w-4xl max-h-[80vh] p-6">
+        <DialogContent className="max-w-4xl max-h-[80vh] p-6 bg-gray-900 text-white">
           <DialogHeader>
-            <DialogTitle className="text-2xl font-headline">
+            <DialogTitle className="text-2xl font-headline text-center">
               {t.dateSelector?.dialogTitle || 'Sélectionnez la date de votre événement'}
             </DialogTitle>
-            <DialogDescription>
+            <DialogDescription className="text-center">
               {t.dateSelector?.dialogDescription || 'Choisissez la date pour continuer'}
             </DialogDescription>
           </DialogHeader>
-
-          {selectedDate && (
-            <div className="p-4 bg-primary/10 rounded-lg border border-primary/20 text-center my-4">
-              <p className="text-sm text-muted-foreground mb-1">
-                {t.dateSelector?.selectedDate || 'Date sélectionnée'}
-              </p>
-              <p className="text-lg font-semibold">
-                {format(selectedDate, 'EEEE d MMMM yyyy', { locale: locale === 'fr' ? fr : undefined })}
-              </p>
-            </div>
-          )}
 
           <div className="flex items-center justify-between mb-4">
             <Button
               variant="ghost"
               onClick={prevMonth}
-              className="p-2"
+              className="p-2 text-white"
               disabled={isPrevDisabled}
               aria-label="Mois précédent"
             >
               <ChevronLeft />
             </Button>
-            <span className="text-lg font-medium">
+            <span className="text-xl font-bold">
               {format(currentMonth, 'MMMM yyyy', { locale: locale === 'fr' ? fr : undefined })}
             </span>
-            <Button variant="ghost" onClick={nextMonth} className="p-2" aria-label="Mois suivant">
+            <Button variant="ghost" onClick={nextMonth} className="p-2 text-white" aria-label="Mois suivant">
               <ChevronRight />
             </Button>
           </div>
@@ -102,24 +92,15 @@ export function DatePickerDialog({ open, onOpenChange, onDateSelected }: DatePic
           <Calendar
             mode="single"
             selected={selectedDate}
-            onSelect={setSelectedDate}
+            onSelect={handleDateSelect}
             month={currentMonth}
             disabled={(day) => {
               const today = new Date();
               today.setHours(0, 0, 0, 0);
               return day < today;
             }}
-            className="rounded-md shadow-md"
+            className="rounded-md shadow-md bg-gray-800 text-white"
           />
-
-          <div className="flex gap-3 justify-end mt-6">
-            <Button variant="outline" onClick={() => onOpenChange(false)}>
-              {t.dateSelector?.cancel || 'Annuler'}
-            </Button>
-            <Button onClick={handleConfirm} disabled={!selectedDate}>
-              {t.dateSelector?.confirm || 'Confirmer'}
-            </Button>
-          </div>
         </DialogContent>
       </DialogPortal>
     </Dialog>
