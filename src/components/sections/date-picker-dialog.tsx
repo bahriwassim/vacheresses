@@ -61,7 +61,7 @@ export function DatePickerDialog({ open, onOpenChange, onDateSelected }: DatePic
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogPortal>
         <DialogOverlay />
-        <DialogContent className="max-w-4xl max-h-[80vh] p-6 bg-gray-900 text-white">
+        <DialogContent className="sm:max-w-md p-6">
           <DialogHeader>
             <DialogTitle className="text-2xl font-headline text-center">
               {t.dateSelector?.dialogTitle || 'Sélectionnez la date de votre événement'}
@@ -73,34 +73,36 @@ export function DatePickerDialog({ open, onOpenChange, onDateSelected }: DatePic
 
           <div className="flex items-center justify-between mb-4">
             <Button
-              variant="ghost"
+              variant="outline"
+              size="icon"
               onClick={prevMonth}
-              className="p-2 text-white"
               disabled={isPrevDisabled}
               aria-label="Mois précédent"
             >
-              <ChevronLeft />
+              <ChevronLeft className="h-4 w-4" />
             </Button>
-            <span className="text-xl font-bold">
+            <span className="text-lg font-semibold text-foreground">
               {format(currentMonth, 'MMMM yyyy', { locale: locale === 'fr' ? fr : undefined })}
             </span>
-            <Button variant="ghost" onClick={nextMonth} className="p-2 text-white" aria-label="Mois suivant">
-              <ChevronRight />
+            <Button variant="outline" size="icon" onClick={nextMonth} aria-label="Mois suivant">
+              <ChevronRight className="h-4 w-4" />
             </Button>
           </div>
 
-          <Calendar
-            mode="single"
-            selected={selectedDate}
-            onSelect={handleDateSelect}
-            month={currentMonth}
-            disabled={(day) => {
-              const today = new Date();
-              today.setHours(0, 0, 0, 0);
-              return day < today;
-            }}
-            className="rounded-md shadow-md bg-gray-800 text-white"
-          />
+          <div className="flex justify-center">
+            <Calendar
+              mode="single"
+              selected={selectedDate}
+              onSelect={handleDateSelect}
+              month={currentMonth}
+              disabled={(day) => {
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                return day < today;
+              }}
+              className="p-0"
+            />
+          </div>
         </DialogContent>
       </DialogPortal>
     </Dialog>
