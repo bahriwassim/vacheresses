@@ -61,33 +61,15 @@ export function DatePickerDialog({ open, onOpenChange, onDateSelected }: DatePic
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogPortal>
         <DialogOverlay />
-        <DialogContent className="sm:max-w-md p-6">
+        <DialogContent className="sm:max-w-md p-6 bg-card">
           <DialogHeader>
-            <DialogTitle className="text-2xl font-headline text-center">
+            <DialogTitle className="text-2xl font-headline text-center text-card-foreground">
               {t.dateSelector?.dialogTitle || 'Sélectionnez la date de votre événement'}
             </DialogTitle>
-            <DialogDescription className="text-center">
+            <DialogDescription className="text-center text-muted-foreground">
               {t.dateSelector?.dialogDescription || 'Choisissez la date pour continuer'}
             </DialogDescription>
           </DialogHeader>
-
-          <div className="flex items-center justify-between mb-4">
-            <Button
-              variant="outline"
-              size="icon"
-              onClick={prevMonth}
-              disabled={isPrevDisabled}
-              aria-label="Mois précédent"
-            >
-              <ChevronLeft className="h-4 w-4" />
-            </Button>
-            <span className="text-lg font-semibold text-foreground">
-              {format(currentMonth, 'MMMM yyyy', { locale: locale === 'fr' ? fr : undefined })}
-            </span>
-            <Button variant="outline" size="icon" onClick={nextMonth} aria-label="Mois suivant">
-              <ChevronRight className="h-4 w-4" />
-            </Button>
-          </div>
 
           <div className="flex justify-center">
             <Calendar
@@ -95,12 +77,17 @@ export function DatePickerDialog({ open, onOpenChange, onDateSelected }: DatePic
               selected={selectedDate}
               onSelect={handleDateSelect}
               month={currentMonth}
+              onMonthChange={setCurrentMonth}
               disabled={(day) => {
                 const today = new Date();
                 today.setHours(0, 0, 0, 0);
                 return day < today;
               }}
               className="p-0"
+              classNames={{
+                nav_button_previous: 'absolute left-1',
+                nav_button_next: 'absolute right-1',
+              }}
             />
           </div>
         </DialogContent>
