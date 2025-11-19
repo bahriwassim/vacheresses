@@ -13,6 +13,7 @@ import { Access } from '@/components/sections/access';
 import { VideoSection } from '@/components/sections/video-section';
 import { ScrollToTop } from '@/components/ui/scroll-to-top';
 import { BookingProvider } from '@/contexts/booking-context';
+import { InstagramFeed } from '@/components/sections/instagram-feed';
 
 export default function Home() {
   return (
@@ -27,6 +28,7 @@ export default function Home() {
           <Packages />
           <VisualTour />
           <Testimonials />
+          <InstagramFeed />
           <Access />
         </main>
         <Footer />
