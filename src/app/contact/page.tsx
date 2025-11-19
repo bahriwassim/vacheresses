@@ -23,6 +23,12 @@ export default function ContactPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
 
+  // NOTE: To enable the map, you need a valid Google Maps API key.
+  // 1. Get an API key from https://console.cloud.google.com/google/maps-apis/overview
+  // 2. Enable the "Maps Embed API" for your project.
+  // 3. Replace the src URL below with the one provided by Google, including your API key.
+  const mapSrcWithApiKey = "https://www.google.com/maps/embed/v1/place?key=VOTRE_CLE_API&q=Manoir+de+Vacheresses,Nogent-Le-Roi,France";
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -266,13 +272,13 @@ export default function ContactPage() {
             </div>
           </div>
 
-          {/* Carte Google Maps (optionnel) */}
+          {/* Carte Google Maps */}
           <div className="mt-12 animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-400">
             <Card>
               <CardContent className="p-0">
                 <div className="relative w-full h-96 bg-muted rounded-lg overflow-hidden">
                   <iframe
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2810.0!2d5.7647!3d45.2167!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDXCsDEzJzAwLjEiTiA1wrA0NSc1Mi45IkU!5e0!3m2!1sfr!2sfr!4v1234567890"
+                    src={mapSrcWithApiKey}
                     width="100%"
                     height="100%"
                     style={{ border: 0 }}

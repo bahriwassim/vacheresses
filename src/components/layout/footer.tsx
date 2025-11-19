@@ -22,7 +22,13 @@ function SocialLink({ href, children, 'aria-label': ariaLabel }: { href: string;
 export function Footer() {
   const { t } = useLocale();
   const currentYear = new Date().getFullYear();
-  const mapSrcNoApi = "https://www.openstreetmap.org/export/embed.html?bbox=1.425%2C48.683%2C1.545%2C48.733&layer=mapnik&marker=48.708%2C1.485";
+  
+  // NOTE: To enable the map, you need a valid Google Maps API key.
+  // 1. Get an API key from https://console.cloud.google.com/google/maps-apis/overview
+  // 2. Enable the "Maps Embed API" for your project.
+  // 3. Replace the src URL below with the one provided by Google, including your API key.
+  const mapSrcWithApiKey = "https://www.google.com/maps/embed/v1/place?key=VOTRE_CLE_API&q=Manoir+de+Vacheresses,Nogent-Le-Roi,France";
+
 
   return (
     <footer className="border-t">
@@ -60,20 +66,13 @@ export function Footer() {
             </div>
         </div>
         <div className="md:col-span-2 rounded-lg overflow-hidden">
-           {/*
-              NOTE: To enable the map, you need a valid Google Maps API key.
-              1. Get an API key from https://console.cloud.google.com/google/maps-apis/overview
-              2. Enable the "Maps Embed API" for your project.
-              3. Replace the src URL below with the one provided by Google, including your API key.
-              Example: src="https://www.google.com/maps/embed/v1/place?key=YOUR_API_KEY&q=Space+Needle,Seattle+WA"
-            */}
           <iframe
             className="w-full h-full min-h-[250px]"
             style={{ border: 0 }}
             loading="lazy"
             allowFullScreen={false}
             referrerPolicy="no-referrer-when-downgrade"
-            src={mapSrcNoApi}
+            src={mapSrcWithApiKey}
           />
         </div>
       </div>
