@@ -7,6 +7,7 @@ export type BlogPost = {
   summary: Record<Locale, string>;
   content: Record<Locale, string>;
   imageId: string;
+  galleryImageIds?: string[];
 };
 
 export const blogPosts: BlogPost[] = [
@@ -14,230 +15,201 @@ export const blogPosts: BlogPost[] = [
     slug: 'choisir-le-lieu-parfait',
     title: {
       en: 'Choosing the Perfect Venue: A Guide for Couples',
-      fr: 'Choisir le lieu parfait : Le Guide Ultime pour les Futurs Mariés',
+      fr: 'Le Lieu Parfait : Comment Choisir le Cocon de Votre Amour',
     },
     summary: {
-      en: 'The venue sets the tone for your entire wedding. Here are our top tips for finding the one that\'s right for you.',
-      fr: 'Le lieu de réception est la toile de fond de votre mariage. Découvrez nos conseils pour faire le choix qui vous ressemble.',
-    },
-    content: {
-        en: `
-        <p class="lead">Finding the perfect wedding venue is often the first and most significant decision you'll make. It’s the canvas upon which you'll paint the memories of your special day. At Manoir de Vacheresses, we understand that this choice is deeply personal. Let us guide you through the key steps to finding a venue that feels like it was made just for you.</p>
-        
-        <h3>1. Define Your Vision and Style</h3>
-        <p>Before you even type "wedding venue" into a search bar, take a moment to dream with your partner. What is the atmosphere you want to create? Close your eyes and imagine your day.</p>
-        <ul>
-            <li><strong>Romantic & Timeless:</strong> Do you see flickering candles, soft florals, and historic architecture? A place like our manor, with its centuries of history, could be perfect.</li>
-            <li><strong>Modern & Chic:</strong> Perhaps you envision clean lines, minimalist decor, and a sophisticated, urban feel.</li>
-            <li><strong>Bohemian & Rustic:</strong> Or maybe a relaxed, nature-filled day with wooden elements, open fields, and a touch of whimsy in our covered orchard area.</li>
-        </ul>
-        <p>Your style will dictate the type of venue that will best bring your vision to life. This is your story, and the setting should be its perfect first chapter.</p>
-        
-        <blockquote class="my-8 p-6 border-l-4 border-primary bg-primary/10 text-lg italic">
-          “The venue isn’t just a place; it’s a character in your love story. Choose one that speaks your language.”
-        </blockquote>
-
-        <h3>2. Align with Your Guest List & Budget</h3>
-        <p>These two elements are intertwined. Your guest count will directly influence your budget and venue capacity. Be realistic: ensure your chosen space can comfortably host your guests without feeling cramped or cavernously empty. At Vacheresses, we can host intimate gatherings of 30 or grand celebrations of up to 130, offering flexibility for your dream guest list.</p>
-        
-        <div class="grid grid-cols-2 gap-4 my-8">
-            <img src="/salle_reception_8.jpg" alt="Interior of the reception hall" class="rounded-lg shadow-lg" />
-            <img src="/Parc_2.jpg" alt="Gardens of the manor" class="rounded-lg shadow-lg" />
-        </div>
-
-        <h3>3. Think About the Guest Experience</h3>
-        <p>A great wedding is a great party. Consider your guests' journey:</p>
-        <ul>
-            <li><strong>Accessibility:</strong> Is the venue easy to find? Is there ample parking? We are conveniently located just over an hour from Paris.</li>
-            <li><strong>Flow of the Day:</strong> Can the venue accommodate both the ceremony and reception? Having distinct spaces, like our park for the ceremony and the Grand Hall for the reception, creates a seamless experience.</li>
-            <li><strong>Accommodations:</strong> For guests traveling from afar, nearby lodging is a must. Our on-site guesthouses offer unparalleled convenience and charm.</li>
-        </ul>
-        
-        <h3>4. The Vacheresses Advantage</h3>
-        <p>Choosing a venue like the Manoir de Vacheresses offers more than just a beautiful space. It provides a dedicated team, a curated list of trusted caterers, and the peace of mind that comes from knowing every detail is handled with care. The history within our walls and the beauty of our grounds offer a timeless elegance that cannot be replicated.</p>
-        `,
-        fr: `
-        <p class="lead">Trouver le lieu de mariage parfait est souvent la première et la plus importante des décisions. C'est la toile sur laquelle vous peindrez les souvenirs de votre journée unique. Au Manoir de Vacheresses, nous savons que ce choix est profondément personnel. Laissez-nous vous guider à travers les étapes clés pour trouver un lieu qui semble avoir été créé juste pour vous.</p>
-        
-        <h3>1. Définissez Votre Vision et Votre Style</h3>
-        <p>Avant même de taper "lieu de mariage" dans une barre de recherche, prenez un moment pour rêver avec votre partenaire. Quelle est l'atmosphère que vous souhaitez créer ? Fermez les yeux et imaginez votre journée.</p>
-        <ul>
-            <li><strong>Romantique & Intemporel :</strong> Voyez-vous des bougies scintillantes, des fleurs douces et une architecture historique ? Un lieu comme notre manoir, avec ses siècles d'histoire, pourrait être parfait.</li>
-            <li><strong>Moderne & Chic :</strong> Peut-être imaginez-vous des lignes épurées, un décor minimaliste et une ambiance urbaine sophistiquée.</li>
-            <li><strong>Bohème & Rustique :</strong> Ou peut-être une journée décontractée, en pleine nature, avec des éléments en bois, des champs ouverts et une touche de fantaisie dans notre préau du verger.</li>
-        </ul>
-        <p>Votre style dictera le type de lieu qui donnera le mieux vie à votre vision. C'est votre histoire, et le décor doit en être le parfait premier chapitre.</p>
-        
-        <blockquote class="my-8 p-6 border-l-4 border-primary bg-primary/10 text-lg italic">
-          “Le lieu n'est pas juste un endroit ; c'est un personnage de votre histoire d'amour. Choisissez-en un qui parle votre langue.”
-        </blockquote>
-
-        <h3>2. Alignez-vous sur Votre Liste d'Invités & Votre Budget</h3>
-        <p>Ces deux éléments sont étroitement liés. Le nombre de vos invités influencera directement votre budget et la capacité du lieu. Soyez réaliste : assurez-vous que l'espace choisi puisse accueillir confortablement vos invités sans qu'ils se sentent à l'étroit ou perdus dans un lieu trop grand. À Vacheresses, nous pouvons accueillir des réceptions intimes de 30 personnes ou de grandes célébrations jusqu'à 130 personnes, offrant une flexibilité pour la liste d'invités de vos rêves.</p>
-        
-        <div class="grid grid-cols-2 gap-4 my-8">
-            <img src="/salle_reception_8.jpg" alt="Intérieur de la salle de réception" class="rounded-lg shadow-lg" />
-            <img src="/Parc_2.jpg" alt="Jardins du manoir" class="rounded-lg shadow-lg" />
-        </div>
-
-        <h3>3. Pensez à l'Expérience Invité</h3>
-        <p>Un grand mariage est une grande fête. Pensez au parcours de vos invités :</p>
-        <ul>
-            <li><strong>Accessibilité :</strong> Le lieu est-il facile à trouver ? Y a-t-il un grand parking ? Nous sommes idéalement situés à un peu plus d'une heure de Paris.</li>
-            <li><strong>Déroulement de la journée :</strong> Le lieu peut-il accueillir à la fois la cérémonie et la réception ? Avoir des espaces distincts, comme notre parc pour la cérémonie et la Grande Salle pour la réception, crée une expérience fluide.</li>
-            <li><strong>Hébergements :</strong> Pour les invités venant de loin, un hébergement à proximité est indispensable. Nos gîtes sur place offrent une commodité et un charme inégalés.</li>
-        </ul>
-        
-        <h3>4. L'Avantage Vacheresses</h3>
-        <p>Choisir un lieu comme le Manoir de Vacheresses offre plus qu'un simple bel espace. Il met à votre disposition une équipe dévouée, une liste de traiteurs de confiance et la tranquillité d'esprit de savoir que chaque détail est traité avec soin. L'histoire entre nos murs et la beauté de nos jardins offrent une élégance intemporelle qui ne peut être reproduite.</p>
-        `,
+      en: 'The venue is the soul of your wedding. Discover our secrets for finding the place that tells your story.',
+      fr: 'Le lieu de réception est l\'âme de votre mariage. Découvrez nos secrets pour trouver l\'endroit qui raconte votre histoire.',
     },
     imageId: 'blog-venue',
+    galleryImageIds: ['gallery-1', 'salle_reception_8', 'Parc_2'],
+    content: {
+        en: `
+        <p class="lead">Choosing a wedding venue is like choosing a home for your love story to unfold for a day. It’s the first brushstroke on the canvas of your life together. At Manoir de Vacheresses, we believe this choice should be guided by heart and emotion. Let us whisper some secrets to help you find a place that feels like destiny.</p>
+        
+        <h3>1. Dream Together, Define Your Soul's Aesthetic</h3>
+        <p>Before any search begins, close your eyes. What do you see? What do you feel? Is it a fairytale romance bathed in the golden light of sunset, or a chic, modern affair filled with laughter and champagne?</p>
+        <ul>
+            <li><strong>Timeless Romance:</strong> Imagine ancient stones whispering tales of the past, gardens where you can steal a quiet kiss, and a grand hall lit by the soft glow of a hundred candles. This is the heart of Vacheresses.</li>
+            <li><strong>Bohemian Dream:</strong> Envision a relaxed celebration under the stars, with wildflowers in your hair and music drifting through an old orchard.</li>
+        </ul>
+        <p>Your venue should be a reflection of your shared soul. It’s the stage where your promises will echo for a lifetime.</p>
+        
+        <blockquote class="my-8 p-6 border-l-4 border-primary bg-primary/10 text-lg italic text-primary/80">
+          “A venue isn't just a place to host a party; it’s the silent witness to your most precious promises.”
+        </blockquote>
+
+        <h3>2. The Perfect Embrace: Guests and Atmosphere</h3>
+        <p>The right venue holds your loved ones in a warm embrace. It should feel full, but not crowded; intimate, but not small. Whether you dream of a close-knit gathering or a grand celebration, the space should amplify the love in the room. Our estate can transform to welcome your tribe, making everyone feel part of your inner circle.</p>
+        
+        <h3>3. A Journey for the Heart (and for Your Guests)</h3>
+        <p>Think of your wedding as a beautiful journey for everyone you love. How will they experience your day?</p>
+        <ul>
+            <li><strong>A Seamless Flow:</strong> From a sun-dappled ceremony in the park to a magical reception in the Grand Hall, a venue that offers diverse spaces creates a fluid, enchanting experience.</li>
+            <li><strong>A Haven of Rest:</strong> For those traveling to share your joy, on-site accommodations are a gift of comfort and peace, allowing the celebration to continue without a worry.</li>
+        </ul>
+        
+        <h3>4. The Vacheresses Promise: More Than a Venue</h3>
+        <p>Choosing Vacheresses is choosing a partner in your dream. It's the peace of mind that comes with a dedicated team who cares about your day as much as you do. It's the magic woven into the very fabric of the place, an elegance that turns a beautiful wedding into an unforgettable memory.</p>
+        `,
+        fr: `
+        <p class="lead">Choisir un lieu de mariage, c'est comme choisir la maison où votre histoire d'amour s'épanouira le temps d'une journée. C'est le premier coup de pinceau sur la toile de votre vie à deux. Au Manoir de Vacheresses, nous croyons que ce choix doit être guidé par le cœur et l'émotion. Laissez-nous vous murmurer quelques secrets pour trouver un lieu qui ressemble à une évidence.</p>
+        
+        <h3>1. Rêvez Ensemble, Définissez l'Esthétique de Votre Âme</h3>
+        <p>Avant toute recherche, fermez les yeux. Que voyez-vous ? Que ressentez-vous ? Est-ce une romance de conte de fées baignée dans la lumière dorée du couchant, ou une fête chic et moderne remplie de rires et de champagne ?</p>
+        <ul>
+            <li><strong>Romance Intemporelle :</strong> Imaginez des pierres anciennes qui murmurent les contes du passé, des jardins où voler un baiser tranquille, et une grande salle éclairée par la lueur douce de cent bougies. C'est le cœur de Vacheresses.</li>
+            <li><strong>Rêve Bohème :</strong> Envisagez une célébration décontractée sous les étoiles, avec des fleurs sauvages dans vos cheveux et une musique qui flotte à travers un vieux verger.</li>
+        </ul>
+        <p>Votre lieu doit être le reflet de votre âme commune. C'est la scène où vos promesses résonneront pour toute une vie.</p>
+        
+        <blockquote class="my-8 p-6 border-l-4 border-primary bg-primary/10 text-lg italic text-primary/80">
+          “Un lieu n'est pas qu'un simple endroit pour une fête ; c'est le témoin silencieux de vos plus précieuses promesses.”
+        </blockquote>
+
+        <h3>2. L'Écrin Parfait : Invités et Atmosphère</h3>
+        <p>Le bon lieu enveloppe vos proches dans une étreinte chaleureuse. Il doit sembler plein, mais pas bondé ; intime, mais pas petit. Que vous rêviez d'une réunion en comité restreint ou d'une grande célébration, l'espace doit amplifier l'amour présent. Notre domaine se transforme pour accueillir votre tribu, faisant en sorte que chacun se sente partie de votre cercle intime.</p>
+        
+        <h3>3. Un Voyage pour le Cœur (et pour vos Invités)</h3>
+        <p>Pensez à votre mariage comme à un magnifique voyage pour tous ceux que vous aimez. Comment vivront-ils votre journée ?</p>
+        <ul>
+            <li><strong>Une Fluidité Sans Faille :</strong> D'une cérémonie baignée de soleil dans le parc à une réception magique dans la Grande Salle, un lieu qui offre des espaces variés crée une expérience fluide et enchanteresse.</li>
+            <li><strong>Un Havre de Repos :</strong> Pour ceux qui voyagent pour partager votre joie, des hébergements sur place sont un cadeau de confort et de paix, permettant à la célébration de se prolonger sans souci.</li>
+        </ul>
+        
+        <h3>4. La Promesse Vacheresses : Plus qu'un Lieu</h3>
+        <p>Choisir Vacheresses, c'est choisir un partenaire pour votre rêve. C'est la tranquillité d'esprit d'une équipe dévouée qui se soucie de votre journée autant que vous. C'est la magie tissée dans l'essence même du lieu, une élégance qui transforme un beau mariage en un souvenir inoubliable.</p>
+        `,
+    },
   },
   {
     slug: 'tendances-decoration-mariage-2025',
     title: {
-      en: 'Top Wedding Decor Trends for 2025',
-      fr: 'Les Tendances Déco Incontournables pour un Mariage en 2025',
+      en: '2025 Wedding Decor Trends: Whispers of Romance',
+      fr: 'Tendances Déco 2025 : Murmures de Romance pour Votre Mariage',
     },
     summary: {
-      en: 'From sustainable choices to bold color palettes, discover the trends that will define wedding aesthetics next year.',
-      fr: 'Durabilité, couleurs audacieuses et expériences immersives : plongez dans les tendances qui définiront les mariages de demain.',
-    },
-    content: {
-      en: `<p class="lead">2025 is all about creating weddings that are not just beautiful, but deeply personal and intentional. Forget cookie-cutter designs; this year's trends are about storytelling, sustainability, and creating unforgettable moments.</p>
-            <h3>1. The Rise of "Eco-Luxe"</h3>
-            <p>Sustainability is no longer a niche-it's chic. Couples are proving that you don't have to sacrifice luxury to be eco-conscious. This trend translates into:</p>
-            <ul>
-                <li><strong>Local & Seasonal Florals:</strong> Using flowers grown nearby not only supports local businesses but ensures freshness and reduces carbon footprint.</li>
-                <li><strong>Rethought Materials:</strong> Expect to see rented decor, upcycled elements, and invitations made from recycled paper or sent digitally.</li>
-                <li><strong>Mindful Menus:</strong> Caterers are focusing on farm-to-table menus that minimize waste and highlight local produce.</li>
-            </ul>
-
-            <div class="grid grid-cols-2 gap-4 my-8">
-                <img src="/esprit_vacheresses_9.jpg" alt="Natural floral arrangement" class="rounded-lg shadow-lg" />
-                <img src="/esprit_vacheresses_10.jpg" alt="Sustainable wedding detail" class="rounded-lg shadow-lg" />
-            </div>
-
-            <h3>2. Color is the New Neutral</h3>
-            <p>While classic white will never fade, 2025 is embracing bold, expressive color palettes. Think beyond blush and sage. We're seeing rich jewel tones like emerald and sapphire, earthy terracottas paired with vibrant blues, and even playful splashes of citrusy orange and yellow. This color confidence extends from florals to linens, stationery, and even the wedding cake.</p>
-
-            <blockquote class="my-8 p-6 border-l-4 border-primary bg-primary/10 text-lg italic">
-              "Color is the conversation starter of wedding design. It sets the mood before a single word is spoken."
-            </blockquote>
-
-            <h3>3. The Immersive Guest Experience</h3>
-            <p>The focus is shifting from simply observing to participating. Couples are curating multi-sensory experiences:</p>
-            <ul>
-                <li><strong>Interactive Stations:</strong> Think beyond the photo booth. We're seeing "perfume bars" where guests create their own scent, or live painters capturing the reception on canvas.</li>
-                <li><strong>Theatrical Entertainment:</strong> Magicians mingling during cocktail hour, surprise musical performances, or even choreographed dance numbers are on the rise.</li>
-                <li><strong>A Culinary Journey:</strong> The meal itself becomes an event, with curated tasting menus, wine pairings, and late-night food trucks offering a casual, fun twist.</li>
-            </ul>
-            <p>At Domaine des Vacheresses, our varied spaces—from the historic hall to the natural beauty of the orchard—provide a versatile canvas to bring any of these trends to life, allowing you to craft a day that's as stylish as it is personal.</p>`,
-      fr: `<p class="lead">L'année 2025 s'annonce comme celle des mariages non seulement beaux, mais profondément personnels et intentionnels. Oubliez les designs standardisés ; les tendances de cette année sont axées sur le storytelling, la durabilité et la création de moments inoubliables.</p>
-            <h3>1. L'Ascension de l'"Éco-Luxe"</h3>
-            <p>La durabilité n'est plus une niche, c'est devenu chic. Les couples prouvent qu'il n'est pas nécessaire de sacrifier le luxe pour être éco-responsable. Cette tendance se traduit par :</p>
-            <ul>
-                <li><strong>Fleurs Locales & de Saison :</strong> Utiliser des fleurs cultivées à proximité soutient les entreprises locales, garantit la fraîcheur et réduit l'empreinte carbone.</li>
-                <li><strong>Matériaux Repensés :</strong> Attendez-vous à voir des décors de location, des éléments recyclés et des invitations en papier recyclé ou envoyées numériquement.</li>
-                <li><strong>Menus Conscients :</strong> Les traiteurs se concentrent sur des menus "de la ferme à la table" qui minimisent le gaspillage et mettent en valeur les produits locaux.</li>
-            </ul>
-
-            <div class="grid grid-cols-2 gap-4 my-8">
-                <img src="/esprit_vacheresses_9.jpg" alt="Arrangement floral naturel" class="rounded-lg shadow-lg" />
-                <img src="/esprit_vacheresses_10.jpg" alt="Détail de mariage durable" class="rounded-lg shadow-lg" />
-            </div>
-
-            <h3>2. La Couleur est le Nouveau Neutre</h3>
-            <p>Alors que le blanc classique ne se démodera jamais, 2025 embrasse des palettes de couleurs audacieuses et expressives. Pensez au-delà du rose poudré et du vert sauge. Nous voyons des tons riches de pierres précieuses comme l'émeraude et le saphir, des terres cuites terreuses associées à des bleus vifs, et même des touches ludiques d'orange et de jaune d'agrumes. Cette confiance dans la couleur s'étend des fleurs à la papeterie, en passant par le linge de table et même le gâteau de mariage.</p>
-
-            <blockquote class="my-8 p-6 border-l-4 border-primary bg-primary/10 text-lg italic">
-              "La couleur est le point de départ de la conversation dans le design de mariage. Elle crée l'ambiance avant même qu'un seul mot ne soit prononcé."
-            </blockquote>
-
-            <h3>3. L'Expérience Immersive pour les Invités</h3>
-            <p>L'accent passe de la simple observation à la participation. Les couples organisent des expériences multi-sensorielles :</p>
-            <ul>
-                <li><strong>Stations Interactives :</strong> Pensez au-delà du photomaton. Nous voyons des "bars à parfums" où les invités créent leur propre senteur, ou des peintres en direct capturant la réception sur toile.</li>
-                <li><strong>Divertissement Théâtral :</strong> Des magiciens se mêlant aux invités pendant le cocktail, des performances musicales surprises ou même des numéros de danse chorégraphiés sont en plein essor.</li>
-                <li><strong>Un Voyage Culinaire :</strong> Le repas lui-même devient un événement, avec des menus dégustation, des accords mets et vins, et des food-trucks de fin de soirée offrant une touche décontractée et amusante.</li>
-            </ul>
-            <p>Au Domaine des Vacheresses, nos espaces variés—de la salle historique à la beauté naturelle du verger—offrent une toile polyvalente pour donner vie à n'importe laquelle de ces tendances, vous permettant de créer une journée aussi élégante que personnelle.</p>`,
+      en: 'From ethereal lighting to poetic details, discover the trends that will make your 2025 wedding a true romance.',
+      fr: 'De l\'éclairage éthéré aux détails poétiques, découvrez les tendances qui feront de votre mariage 2025 une véritable romance.',
     },
     imageId: 'blog-decor',
+    galleryImageIds: ['esprit-9', 'esprit-10', 'salle_reception_6'],
+    content: {
+      en: `<p class="lead">In 2025, wedding design is moving away from the ephemeral to embrace the eternal. It's about creating an atmosphere that feels like a beautiful dream—personal, immersive, and filled with a quiet, confident romance.</p>
+            <h3>1. The Poetry of Imperfection</h3>
+            <p>Perfection is giving way to personality. This trend celebrates the beauty of the handmade, the natural, and the slightly undone.</p>
+            <ul>
+                <li><strong>Organic Florals:</strong> Arrangements are becoming more artful and less structured, looking as if they were just gathered from a wildflower meadow. Think delicate textures, trailing vines, and unexpected color pairings.</li>
+                <li><strong>Hand-Touched Details:</strong> Calligraphy with character on handmade paper, hand-dyed silk ribbons, and ceramics with a human touch are taking center stage.</li>
+            </ul>
+
+            <h3>2. Lighting as the Main Character</h3>
+            <p>Lighting is no longer an afterthought; it’s the primary tool for creating mood and magic. The goal is to create pockets of intimacy and warmth.</p>
+            <ul>
+                <li><strong>A Sea of Candles:</strong> Taper candles in varying heights, clusters of pillar candles, and floating tea lights create a dynamic, living light that flatters everyone.</li>
+                <li><strong>Statement Installations:</strong> Think canopies of fairy lights that mimic a starlit sky, or a dramatic chandelier dripping with foliage over the main table.</li>
+            </ul>
+
+            <blockquote class="my-8 p-6 border-l-4 border-primary bg-primary/10 text-lg italic text-primary/80">
+              "Good lighting makes everyone and everything look more beautiful. It's the simplest secret to a magical atmosphere."
+            </blockquote>
+
+            <h3>3. The Sensory Journey</h3>
+            <p>A truly romantic wedding engages all the senses. It’s about creating moments that guests feel, not just see.</p>
+            <ul>
+                <li><strong>Curated Scents:</strong> A signature scent for the day, diffused subtly through the venue—perhaps notes of orange blossom in the garden and amber by the fireplace.</li>
+                <li><strong>Textures and Textiles:</strong> Velvet tablecloths, soft linen napkins, and comfortable lounge areas invite guests to relax and sink into the experience.</li>
+                <li><strong>A Culinary Story:</strong> The menu becomes a narrative of the couple's journey, featuring dishes inspired by their travels or favorite shared meals, served in an intimate, thoughtful way.</li>
+            </ul>
+            <p>At Domaine des Vacheresses, the historic architecture and natural landscapes provide the perfect foundation. We help you layer these romantic trends to create a day that is not just seen, but deeply felt—a true reflection of your love.</p>`,
+      fr: `<p class="lead">En 2025, le design de mariage s'éloigne de l'éphémère pour embrasser l'éternel. Il s'agit de créer une atmosphère qui ressemble à un beau rêve : personnelle, immersive et empreinte d'une romance tranquille et affirmée.</p>
+            <h3>1. La Poésie de l'Imperfection</h3>
+            <p>La perfection cède la place à la personnalité. Cette tendance célèbre la beauté du fait-main, du naturel et du légèrement imparfait.</p>
+            <ul>
+                <li><strong>Floraisons Organiques :</strong> Les arrangements deviennent plus artistiques et moins structurés, comme s'ils venaient d'être cueillis dans une prairie de fleurs sauvages. Pensez à des textures délicates, des vignes retombantes et des associations de couleurs inattendues.</li>
+                <li><strong>Détails Faits Main :</strong> La calligraphie de caractère sur du papier artisanal, les rubans de soie teints à la main et les céramiques avec une touche humaine occupent le devant de la scène.</li>
+            </ul>
+
+            <h3>2. L'Éclairage comme Personnage Principal</h3>
+            <p>L'éclairage n'est plus une réflexion après coup ; c'est l'outil principal pour créer l'ambiance et la magie. L'objectif est de créer des cocons d'intimité et de chaleur.</p>
+            <ul>
+                <li><strong>Une Mer de Bougies :</strong> Des bougies effilées de différentes hauteurs, des groupes de cierges et des bougies flottantes créent une lumière dynamique et vivante qui flatte tout le monde.</li>
+                <li><strong>Installations Spectaculaires :</strong> Pensez à des auvents de guirlandes lumineuses imitant un ciel étoilé, ou à un lustre spectaculaire dégoulinant de feuillage au-dessus de la table d'honneur.</li>
+            </ul>
+
+            <blockquote class="my-8 p-6 border-l-4 border-primary bg-primary/10 text-lg italic text-primary/80">
+              "Un bon éclairage rend tout et tout le monde plus beau. C'est le secret le plus simple pour une atmosphère magique."
+            </blockquote>
+
+            <h3>3. Le Voyage Sensoriel</h3>
+            <p>Un mariage vraiment romantique engage tous les sens. Il s'agit de créer des moments que les invités ressentent, et pas seulement voient.</p>
+            <ul>
+                <li><strong>Parfums Sur Mesure :</strong> Un parfum signature pour la journée, diffusé subtilement dans le lieu — peut-être des notes de fleur d'oranger dans le jardin et d'ambre près de la cheminée.</li>
+                <li><strong>Textures et Textiles :</strong> Des nappes en velours, des serviettes en lin doux et des espaces lounge confortables invitent les invités à se détendre et à s'immerger dans l'expérience.</li>
+                <li><strong>Une Histoire Culinaire :</strong> Le menu devient le récit du voyage du couple, avec des plats inspirés de leurs voyages ou de leurs repas partagés préférés, servis de manière intime et réfléchie.</li>
+            </ul>
+            <p>Au Domaine des Vacheresses, l'architecture historique et les paysages naturels fournissent la base parfaite. Nous vous aidons à superposer ces tendances romantiques pour créer une journée qui n'est pas seulement vue, mais profondément ressentie — un véritable reflet de votre amour.</p>`,
+    },
   },
   {
     slug: 'personaliser-votre-journee',
     title: {
-      en: '5 Ways to Personalize Your Wedding Day',
-      fr: '5 Idées Uniques pour Personnaliser Votre Jour de Mariage',
+      en: '5 Whispers of the Heart to Personalize Your Wedding Day',
+      fr: '5 Murmures du Cœur pour Personnaliser Votre Jour de Mariage',
     },
     summary: {
-      en: 'Make your wedding uniquely yours. Here are five creative ideas to infuse your personality into your celebration.',
-      fr: 'Rendez votre mariage inoubliable en y ajoutant des touches qui racontent votre histoire. Voici nos idées favorites.',
-    },
-    content: {
-      en: `<p class="lead">Your wedding is the ultimate expression of your love story. While traditions are beautiful, the most memorable moments often come from the personal touches that make the day uniquely yours. Here are five creative ways to weave your personality into every aspect of your celebration.</p>
-            <h3>1. An Unforgettable Ceremony</h3>
-            <p>This is the heart of your day. Go beyond the standard script:</p>
-            <ul>
-                <li><strong>Write Your Own Vows:</strong> This is your chance to tell your partner, and the world, exactly what they mean to you. It's often the most emotional part of the day.</li>
-                <li><strong>Involve Loved Ones:</strong> Ask a close friend or family member to read a poem, or even officiate.</li>
-                <li><strong>A Symbolic Ritual:</strong> Consider a handfasting ceremony, planting a tree together, or a wine blending ritual to symbolize your union.</li>
-            </ul>
-            
-            <div class="grid grid-cols-2 gap-4 my-8">
-                <img src="/se_marier_3.jpg" alt="Couple exchanging vows" class="rounded-lg shadow-lg" />
-                <img src="/vacheresses_19.jpg" alt="Outdoor ceremony at the manor" class="rounded-lg shadow-lg" />
-            </div>
-
-            <h3>2. The Soundtrack of Your Love</h3>
-            <p>Music is emotion. Create a playlist that tells your story. Think about the song that was playing on your first date, the music you both love for road trips, or the tune that always makes you dance. Ask for guest requests on your RSVPs to ensure the dance floor is packed all night.</p>
-
-            <h3>3. A Taste of "You" with a Signature Cocktail</h3>
-            <p>Work with your caterer to design a signature drink that reflects your tastes. Name it after something meaningful—a pet's name, the place you met, or an inside joke. It's a fun, personal detail that guests love.</p>
-            
-            <blockquote class="my-8 p-6 border-l-4 border-primary bg-primary/10 text-lg italic">
-              "Personal touches are the soul of a wedding. They transform a beautiful event into a meaningful memory."
-            </blockquote>
-
-            <h3>4. A Walk Down Memory Lane</h3>
-            <p>Create a beautiful display of photos charting your journey as a couple, from childhood snaps to engagement photos. It’s a wonderful way for guests from both sides to feel more connected to your story.</p>
-            
-            <h3>5. Favors That Tell a Story</h3>
-            <p>Ditch generic favors for something that speaks to who you are. Are you avid gardeners? Give seed packets. Coffee lovers? A small bag of your favorite local roast. A donation to a charity you both support is also a beautiful gesture. The best favors are the ones that feel like a small piece of you that your guests can take home.</p>`,
-      fr: `<p class="lead">Votre mariage est l'expression ultime de votre histoire d'amour. Bien que les traditions soient belles, les moments les plus mémorables proviennent souvent des touches personnelles qui rendent la journée unique. Voici cinq façons créatives d'intégrer votre personnalité dans chaque aspect de votre célébration.</p>
-            <h3>1. Une Cérémonie Inoubliable</h3>
-            <p>C'est le cœur de votre journée. Allez au-delà du script standard :</p>
-            <ul>
-                <li><strong>Écrivez Vos Propres Vœux :</strong> C'est votre chance de dire à votre partenaire, et au monde, exactement ce qu'il ou elle représente pour vous. C'est souvent la partie la plus émouvante de la journée.</li>
-                <li><strong>Impliquez Vos Proches :</strong> Demandez à un ami proche ou à un membre de votre famille de lire un poème, ou même d'officier.</li>
-                <li><strong>Un Rituel Symbolique :</strong> Pensez à une cérémonie du ruban (handfasting), à planter un arbre ensemble, ou à un rituel de mélange de vins pour symboliser votre union.</li>
-            </ul>
-            
-            <div class="grid grid-cols-2 gap-4 my-8">
-                <img src="/se_marier_3.jpg" alt="Couple échangeant ses vœux" class="rounded-lg shadow-lg" />
-                <img src="/vacheresses_19.jpg" alt="Cérémonie en plein air au manoir" class="rounded-lg shadow-lg" />
-            </div>
-
-            <h3>2. La Bande-Son de Votre Amour</h3>
-            <p>La musique, c'est de l'émotion. Créez une playlist qui raconte votre histoire. Pensez à la chanson qui passait lors de votre premier rendez-vous, la musique que vous aimez pour les voyages en voiture, ou l'air qui vous fait toujours danser. Demandez des suggestions de chansons à vos invités sur les cartons RSVP pour vous assurer que la piste de danse soit pleine toute la nuit.</p>
-
-            <h3>3. Le Goût de "Vous" avec un Cocktail Signature</h3>
-            <p>Collaborez avec votre traiteur pour concevoir une boisson signature qui reflète vos goûts. Nommez-la d'après quelque chose de significatif—le nom d'un animal de compagnie, le lieu de votre rencontre, ou une blague entre vous. C'est un détail amusant et personnel que les invités adorent.</p>
-            
-            <blockquote class="my-8 p-6 border-l-4 border-primary bg-primary/10 text-lg italic">
-              "Les touches personnelles sont l'âme d'un mariage. Elles transforment un bel événement en un souvenir chargé de sens."
-            </blockquote>
-
-            <h3>4. Une Promenade dans les Souvenirs</h3>
-            <p>Créez un bel affichage de photos retraçant votre parcours en tant que couple, des photos d'enfance aux photos de fiançailles. C'est une merveilleuse façon pour les invités des deux côtés de se sentir plus connectés à votre histoire.</p>
-            
-            <h3>5. Des Cadeaux d'Invités Qui Racontent une Histoire</h3>
-            <p>Abandonnez les cadeaux génériques pour quelque chose qui parle de qui vous êtes. Vous êtes des jardiniers passionnés ? Offrez des paquets de graines. Amateurs de café ? Un petit sac de votre torréfaction locale préférée. Un don à une œuvre de charité que vous soutenez tous les deux est également un beau geste. Les meilleurs cadeaux sont ceux qui semblent être un petit morceau de vous que vos invités peuvent emporter chez eux.</p>`,
+      en: 'Infuse your celebration with soul. Discover intimate ways to make your wedding an unforgettable reflection of your love story.',
+      fr: 'Insufflez une âme à votre célébration. Découvrez des manières intimes de faire de votre mariage un reflet inoubliable de votre histoire d\'amour.',
     },
     imageId: 'blog-personalize',
+    galleryImageIds: ['se_marier_3', 'vacheresses_19', 'package-luxury'],
+    content: {
+      en: `<p class="lead">Your wedding is more than an event; it's a symphony composed of your shared memories, inside jokes, and quiet promises. The most beautiful weddings are those that feel like a conversation with the couple. Here are five intimate ideas to make your day a true whisper of the heart.</p>
+            <h3>1. Vows from the Soul</h3>
+            <p>This is the crescendo of your ceremony. Instead of traditional vows, consider writing personal promises. It doesn't have to be a masterpiece of literature; it just has to be real. Speak from the heart about the small moments that built your great love. It’s a gift to your partner and to every guest who has the honor of witnessing it.</p>
+
+            <h3>2. Weave Your Story into the Details</h3>
+            <p>Let your story unfold throughout the day in subtle, meaningful ways:</p>
+            <ul>
+                <li><strong>Table Names with a Past:</strong> Name your tables after places you've traveled together, significant dates, or even your favorite songs. A small note on the table can explain the significance.</li>
+                <li><strong>A "Memory Lane" Welcome:</strong> Create a gallery of photos not just of you as a couple, but of your parents' and grandparents' weddings. It’s a beautiful tribute to the love that came before you.</li>
+            </ul>
+            
+            <h3>3. A Signature Scent</h3>
+            <p>Scent is the strongest sense tied to memory. Choose a fragrance—a specific candle, a type of flower like jasmine or tuberose, or an essential oil blend—and use it subtly throughout your venue. Years from now, that scent will instantly transport you both back to the magic of your wedding day.</p>
+            
+            <blockquote class="my-8 p-6 border-l-4 border-primary bg-primary/10 text-lg italic text-primary/80">
+              "The smallest personal details often leave the biggest impression on the heart."
+            </blockquote>
+
+            <h3>4. An Ode to Your Roots</h3>
+            <p>Honor your heritage in a way that feels authentic to you. This could be through a specific dish served during the meal, a traditional dance, or a piece of music that pays homage to your family's culture. It’s a way of grounding your new beginning in the richness of your past.</p>
+            
+            <h3>5. A Parting Gift with Meaning</h3>
+            <p>Send your guests home with a favor that is a true extension of you. Instead of a trinket, consider a small bottle of local olive oil if you're foodies, a bookmark with your favorite love poem, or a donation to a cause you're passionate about. It’s a final, warm thank you that feels both personal and heartfelt.</p>`,
+      fr: `<p class="lead">Votre mariage est plus qu'un événement ; c'est une symphonie composée de vos souvenirs communs, de vos blagues complices et de vos promesses silencieuses. Les plus beaux mariages sont ceux qui ressemblent à une conversation avec le couple. Voici cinq idées intimes pour faire de votre journée un véritable murmure du cœur.</p>
+            <h3>1. Des Vœux qui Viennent de l'Âme</h3>
+            <p>C'est le point culminant de votre cérémonie. Au lieu de vœux traditionnels, envisagez d'écrire des promesses personnelles. Il ne s'agit pas d'être un chef-d'œuvre de la littérature, mais simplement d'être vrai. Parlez avec le cœur des petits moments qui ont construit votre grand amour. C'est un cadeau pour votre partenaire et pour chaque invité qui a l'honneur d'en être témoin.</p>
+
+            <h3>2. Tissez Votre Histoire dans les Détails</h3>
+            <p>Laissez votre histoire se dérouler tout au long de la journée de manière subtile et significative :</p>
+            <ul>
+                <li><strong>Des Noms de Table avec un Passé :</strong> Nommez vos tables d'après des lieux où vous avez voyagé ensemble, des dates importantes ou même vos chansons préférées. Une petite note sur la table peut en expliquer la signification.</li>
+                <li><strong>Un Accueil "Chemin des Souvenirs" :</strong> Créez une galerie de photos non seulement de vous en tant que couple, mais aussi des mariages de vos parents et grands-parents. C'est un bel hommage à l'amour qui vous a précédés.</li>
+            </ul>
+            
+            <h3>3. Un Parfum Signature</h3>
+            <p>L'odorat est le sens le plus fortement lié à la mémoire. Choisissez un parfum — une bougie spécifique, un type de fleur comme le jasmin ou la tubéreuse, ou un mélange d'huiles essentielles — et utilisez-le subtilement dans votre lieu de réception. Dans des années, ce parfum vous transportera instantanément tous les deux dans la magie de votre journée de mariage.</p>
+            
+            <blockquote class="my-8 p-6 border-l-4 border-primary bg-primary/10 text-lg italic text-primary/80">
+              "Les plus petits détails personnels laissent souvent la plus grande impression sur le cœur."
+            </blockquote>
+
+            <h3>4. Une Ode à Vos Racines</h3>
+            <p>Honorez votre héritage d'une manière qui vous semble authentique. Cela peut se faire à travers un plat spécifique servi pendant le repas, une danse traditionnelle ou un morceau de musique qui rend hommage à la culture de votre famille. C'est une façon d'ancrer votre nouveau départ dans la richesse de votre passé.</p>
+            
+            <h3>5. Un Cadeau d'Adieu Qui a du Sens</h3>
+            <p>Renvoyez vos invités chez eux avec un cadeau qui est une véritable extension de vous. Au lieu d'une babiole, pensez à une petite bouteille d'huile d'olive locale si vous êtes gourmands, un marque-page avec votre poème d'amour préféré, ou un don à une cause qui vous passionne. C'est un dernier remerciement chaleureux, à la fois personnel et sincère.</p>`,
+    },
   },
 ];
-
-    
