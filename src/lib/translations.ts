@@ -513,6 +513,11 @@ export type Translation = {
     cancel: string;
     confirm: string;
   };
+  instagram: {
+    title: string;
+    subtitle: string;
+    button: string;
+  };
 };
 
 export const translations: Record<Locale, Translation> = {
@@ -1046,6 +1051,11 @@ export const translations: Record<Locale, Translation> = {
       cancel: "Cancel",
       confirm: "Confirm",
     },
+    instagram: {
+      title: "Follow us on Instagram",
+      subtitle: "@manoirdevacheresses",
+      button: "View on Instagram"
+    }
   },
   fr: {
     header: {
@@ -1577,7 +1587,10 @@ export const translations: Record<Locale, Translation> = {
       cancel: "Annuler",
       confirm: "Confirmer",
     },
+    instagram: {
+      title: "Suivez-nous sur Instagram",
+      subtitle: "@manoirdevacheresses",
+      button: "Voir sur Instagram"
+    }
   },
 };
-
-    

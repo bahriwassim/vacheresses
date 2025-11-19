@@ -26,11 +26,11 @@ export function InstagramFeed() {
       <div className="container max-w-7xl px-4">
         <div className="text-center mb-12 animate-in fade-in slide-in-from-bottom-8 duration-1000">
           <h2 className="text-3xl md:text-4xl font-headline font-bold">
-            {t.locale === 'fr' ? 'Suivez-nous sur Instagram' : 'Follow us on Instagram'}
+            {t.instagram.title}
           </h2>
           <p className="mt-2 text-lg text-muted-foreground max-w-2xl mx-auto">
              <Link href="https://www.instagram.com/manoirdevacheresses/" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
-                @manoirdevacheresses
+                {t.instagram.subtitle}
             </Link>
           </p>
         </div>
@@ -64,7 +64,7 @@ export function InstagramFeed() {
         <div className="text-center mt-12 animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-500">
             <Button asChild size="lg" className="group">
                 <Link href="https://www.instagram.com/manoirdevacheresses/" target="_blank" rel="noopener noreferrer">
-                    {t.locale === 'fr' ? 'Voir sur Instagram' : 'View on Instagram'}
+                    {t.instagram.button}
                     <ArrowRight className="h-5 w-5 ml-2 transition-transform group-hover:translate-x-1" />
                 </Link>
             </Button>
@@ -73,4 +73,3 @@ export function InstagramFeed() {
     </section>
   );
 }
-
