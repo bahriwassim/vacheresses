@@ -78,7 +78,7 @@ export function AnimatedImage({
           isLoaded ? cn("opacity-100", animationClasses[animation]) : "opacity-0",
           hoverClasses[hoverEffect]
         )}
-        onLoadingComplete={() => setIsLoaded(true)}
+        onLoad={() => setIsLoaded(true)}
         loading={priority ? "eager" : "lazy"}
       />
       

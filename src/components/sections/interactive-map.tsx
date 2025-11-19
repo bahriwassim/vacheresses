@@ -1,3 +1,4 @@
+
 "use client";
 
 import Image from "next/image";
@@ -5,7 +6,7 @@ import { useState, useMemo } from "react";
 import { useLocale } from "@/hooks/use-locale";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { MapPin, X, Users, Maximize2, Bed, Wifi, Droplet, Building, Park } from "lucide-react";
+import { MapPin, X, Users, Maximize2, Bed, Wifi, Trees } from "lucide-react";
 import Link from "next/link";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
@@ -210,7 +211,7 @@ export function InteractiveMap() {
                          <span className="absolute inset-0 w-12 h-12 -ml-6 -mt-6 bg-accent/30 rounded-full animate-ping" />
                         <span className="absolute inset-0 w-8 h-8 -ml-4 -mt-4 bg-accent/50 rounded-full animate-pulse" />
                         <span className="relative flex items-center justify-center w-8 h-8 -ml-4 -mt-4 bg-accent text-accent-foreground rounded-full shadow-lg transition-all duration-300 group-hover/hotspot:scale-125 group-hover/hotspot:shadow-2xl">
-                          <Park className="w-5 h-5" />
+                          <Trees className="w-5 h-5" />
                         </span>
                       </>
                     )}
@@ -226,7 +227,7 @@ export function InteractiveMap() {
                   <span>{t.interactiveMap.legend_accommodation}</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Park className="w-4 h-4 text-accent" />
+                  <Trees className="w-4 h-4 text-accent" />
                   <span>{t.interactiveMap.legend_poi}</span>
                 </div>
               </div>
