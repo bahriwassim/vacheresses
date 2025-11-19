@@ -5,7 +5,7 @@ import { useState, useMemo } from "react";
 import { useLocale } from "@/hooks/use-locale";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { MapPin, X, Users, Maximize2, Bed, Wifi, Droplet } from "lucide-react";
+import { MapPin, X, Users, Maximize2, Bed, Wifi, Droplet, Building, Park } from "lucide-react";
 import Link from "next/link";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
@@ -16,6 +16,7 @@ interface HotspotData {
   x: number; // Position en pourcentage
   y: number; // Position en pourcentage
   link: string;
+  type: 'accommodation' | 'poi'; // Point of Interest
 }
 
 export function InteractiveMap() {
@@ -24,53 +25,97 @@ export function InteractiveMap() {
   const [selectedImage, setSelectedImage] = useState(0);
 
   const hotspots: HotspotData[] = [
+    // Accommodations
     {
       id: "heures_du_jour",
       name: t.stay.rooms.heures_du_jour.name,
       description: t.stay.rooms.heures_du_jour.type,
-      x: 35, // Bâtiment à gauche
+      x: 35,
       y: 45,
       link: "/sejourner#heures_du_jour",
+      type: 'accommodation',
     },
     {
       id: "ruines_antiques",
       name: t.stay.rooms.ruines_antiques.name,
       description: t.stay.rooms.ruines_antiques.type,
-      x: 48, // Bâtiment central
+      x: 48,
       y: 52,
       link: "/sejourner#ruines_antiques",
+      type: 'accommodation',
     },
     {
       id: "jardins_tivoli",
       name: t.stay.rooms.jardins_tivoli.name,
       description: t.stay.rooms.jardins_tivoli.type,
-      x: 52, // Bâtiment central droit
+      x: 52,
       y: 48,
       link: "/sejourner#jardins_tivoli",
+      type: 'accommodation',
     },
     {
       id: "petit_trianon",
       name: t.stay.rooms.petit_trianon.name,
       description: t.stay.rooms.petit_trianon.type,
-      x: 65, // Bâtiment à droite
+      x: 65,
       y: 50,
       link: "/sejourner#petit_trianon",
+      type: 'accommodation',
     },
     {
       id: "la_loge",
       name: t.stay.rooms.la_loge.name,
       description: t.stay.rooms.la_loge.type,
-      x: 42, // Petit bâtiment
+      x: 42,
       y: 60,
       link: "/sejourner#la_loge",
+      type: 'accommodation',
+    },
+    // Points of Interest
+    {
+      id: "cour_honneur",
+      name: t.domain.poi.cour_honneur.title,
+      description: t.domain.poi.cour_honneur.subtitle,
+      x: 50,
+      y: 65,
+      link: "/domaine/cour-honneur",
+      type: 'poi',
+    },
+    {
+      id: "salle_reception",
+      name: t.domain.poi.salle_reception.title,
+      description: t.domain.poi.salle_reception.subtitle,
+      x: 45,
+      y: 55,
+      link: "/domaine/salle-de-reception",
+      type: 'poi',
+    },
+    {
+      id: "parc",
+      name: t.domain.poi.parc.title,
+      description: t.domain.poi.parc.subtitle,
+      x: 75,
+      y: 60,
+      link: "/domaine/parc",
+      type: 'poi',
+    },
+    {
+      id: "preau_verger",
+      name: t.domain.poi.preau_verger.title,
+      description: t.domain.poi.preau_verger.subtitle,
+      x: 60,
+      y: 25,
+      link: "/domaine/preau-verger",
+      type: 'poi',
     },
     {
       id: "potager",
-      name: t.stay.maison_potager_title,
-      description: t.stay.maison_potager_subtitle,
+      name: t.domain.poi.potager.title,
+      description: t.domain.poi.potager.subtitle,
       x: 58,
       y: 38,
-      link: "/sejourner",
+      link: "/domaine/potager",
+      type: 'poi',
     },
   ];
 
@@ -89,20 +134,28 @@ export function InteractiveMap() {
     setSelectedImage(0); // Reset image selection
     setActiveHotspotId(hotspotId);
   };
-
+  
   const roomImageGalleries: Record<string, string[]> = {
     heures_du_jour: ["/espace_1.jpg", "/espace_9.jpg", "/espace_15.jpg"],
     ruines_antiques: ["/espace_2_(1).jpg", "/espace_8.jpg", "/espace_9.jpg"],
     jardins_tivoli: ["/espace_4.jpg", "/espace_5.jpg", "/espace_15.jpg"],
     petit_trianon: ["/espace_5.jpg", "/espace_6.jpg", "/espace_7.jpg"],
     la_loge: ["/espace_6.jpg", "/espace_7.jpg", "/espace_8.jpg"],
-    potager: ["/potager_4.jpg", "/preau_verger_3.jpg", "/preau_verger_4.jpg"]
+    potager: ["/potager_4.jpg", "/preau_verger_3.jpg", "/preau_verger_4.jpg"],
+    cour_honneur: ["/vacheresses_13.jpg", "/vacheresses_17.jpg", "/vacheresses_20.jpg"],
+    salle_reception: ["/salle_reception_6.jpg", "/salle_reception_7.jpg", "/salle_reception_8.jpg"],
+    parc: ["/Parc_1.jpg", "/Parc_2.jpg", "/Parc_3.jpg"],
+    preau_verger: ["/preau_verger_1.jpg", "/preau_verger_2.jpg", "/preau_verger_3.jpg"],
   };
   
-  const activeRoomDetails = activeHotspot && activeHotspot.id !== "potager" 
+  const activeRoomDetails = activeHotspot && activeHotspot.type === 'accommodation'
     ? t.stay.rooms[activeHotspot.id as keyof typeof t.stay.rooms] 
     : null;
     
+  const activePoiDetails = activeHotspot && activeHotspot.type === 'poi'
+    ? t.domain.poi[activeHotspot.id as keyof typeof t.domain.poi]
+    : null;
+
   const activeImages = activeHotspot ? roomImageGalleries[activeHotspot.id] || ["/vacheresses_4-1.jpg"] : [];
 
   return (
@@ -144,20 +197,38 @@ export function InteractiveMap() {
                     className="relative group/hotspot"
                     aria-label={`Voir ${hotspot.name}`}
                   >
-                    <span className="absolute inset-0 w-12 h-12 -ml-6 -mt-6 bg-primary/30 rounded-full animate-ping" />
-                    <span className="absolute inset-0 w-8 h-8 -ml-4 -mt-4 bg-primary/50 rounded-full animate-pulse" />
-                    <span className="relative flex items-center justify-center w-8 h-8 -ml-4 -mt-4 bg-primary text-primary-foreground rounded-full shadow-lg transition-all duration-300 group-hover/hotspot:scale-125 group-hover/hotspot:shadow-2xl">
-                      <MapPin className="w-5 h-5" />
-                    </span>
+                    {hotspot.type === 'accommodation' ? (
+                      <>
+                        <span className="absolute inset-0 w-12 h-12 -ml-6 -mt-6 bg-primary/30 rounded-full animate-ping" />
+                        <span className="absolute inset-0 w-8 h-8 -ml-4 -mt-4 bg-primary/50 rounded-full animate-pulse" />
+                        <span className="relative flex items-center justify-center w-8 h-8 -ml-4 -mt-4 bg-primary text-primary-foreground rounded-full shadow-lg transition-all duration-300 group-hover/hotspot:scale-125 group-hover/hotspot:shadow-2xl">
+                          <MapPin className="w-5 h-5" />
+                        </span>
+                      </>
+                    ) : (
+                      <>
+                         <span className="absolute inset-0 w-12 h-12 -ml-6 -mt-6 bg-accent/30 rounded-full animate-ping" />
+                        <span className="absolute inset-0 w-8 h-8 -ml-4 -mt-4 bg-accent/50 rounded-full animate-pulse" />
+                        <span className="relative flex items-center justify-center w-8 h-8 -ml-4 -mt-4 bg-accent text-accent-foreground rounded-full shadow-lg transition-all duration-300 group-hover/hotspot:scale-125 group-hover/hotspot:shadow-2xl">
+                          <Park className="w-5 h-5" />
+                        </span>
+                      </>
+                    )}
                   </button>
                 </div>
               ))}
             </div>
 
             <div className="bg-muted/50 p-6">
-              <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
-                <MapPin className="w-4 h-4 text-primary" />
-                <span>{t.interactiveMap.legend}</span>
+              <div className="flex flex-wrap items-center justify-center gap-4 text-sm text-muted-foreground">
+                <div className="flex items-center gap-2">
+                  <MapPin className="w-4 h-4 text-primary" />
+                  <span>{t.interactiveMap.legend_accommodation}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Park className="w-4 h-4 text-accent" />
+                  <span>{t.interactiveMap.legend_poi}</span>
+                </div>
               </div>
             </div>
           </CardContent>
@@ -168,7 +239,7 @@ export function InteractiveMap() {
             <DialogContent className="max-w-5xl max-h-[90vh] overflow-y-auto p-0">
               <DialogHeader className="sr-only">
                 <DialogTitle>{activeHotspot.name}</DialogTitle>
-                <DialogDescription>{activeHotspot.description}</DialogDescription>
+
               </DialogHeader>
               <button
                 onClick={() => setActiveHotspotId(null)}
@@ -191,11 +262,9 @@ export function InteractiveMap() {
                   <h3 className="font-headline text-3xl md:text-4xl font-bold text-white drop-shadow-lg">
                     {activeHotspot.name}
                   </h3>
-                  {activeRoomDetails && (
-                    <p className="text-white/90 text-lg mt-2 drop-shadow">
-                      {activeRoomDetails.type}
+                   <p className="text-white/90 text-lg mt-2 drop-shadow">
+                      {activeHotspot.description}
                     </p>
-                  )}
                 </div>
 
                 <div className="absolute bottom-6 right-6 flex gap-2">
@@ -258,39 +327,15 @@ export function InteractiveMap() {
                         {activeRoomDetails.description}
                       </p>
                     </div>
-                    <div className="space-y-3">
-                      <h4 className="font-headline text-xl font-semibold">Équipements</h4>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                        <div className="flex items-center gap-2">
-                          <Droplet className="w-5 h-5 text-primary" />
-                          <span className="text-sm">{t.stay.equipment.bathroom}</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <Bed className="w-5 h-5 text-primary" />
-                          <span className="text-sm">{activeRoomDetails.bedding}</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <Wifi className="w-5 h-5 text-primary" />
-                          <span className="text-sm">{t.stay.equipment.wifi}</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <MapPin className="w-5 h-5 text-primary" />
-                          <span className="text-sm">{t.stay.equipment.curtains}</span>
-                        </div>
-                      </div>
-                    </div>
                   </>
-                ) : (
-                  <div className="space-y-3">
-                    <h4 className="font-headline text-xl font-semibold">La Maison du Potager</h4>
-                    <p className="text-muted-foreground leading-relaxed text-base">
-                      {t.stay.maison_potager_description}
-                    </p>
-                    <p className="text-muted-foreground leading-relaxed text-base mt-4">
-                      {t.stay.maison_potager_common_area}
-                    </p>
-                  </div>
-                )}
+                ) : activePoiDetails ? (
+                   <div className="space-y-3">
+                      <h4 className="font-headline text-xl font-semibold">{activePoiDetails.title}</h4>
+                      <p className="text-muted-foreground leading-relaxed text-base whitespace-pre-line">
+                        {activePoiDetails.content}
+                      </p>
+                    </div>
+                ) : null}
                 <div className="flex gap-4 pt-4">
                   <Button asChild className="flex-1" size="lg">
                     <Link href={activeHotspot.link}>
@@ -311,3 +356,5 @@ export function InteractiveMap() {
     </section>
   );
 }
+
+    

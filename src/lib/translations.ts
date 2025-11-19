@@ -458,13 +458,46 @@ export type Translation = {
     noailles_content: string;
     modern_title: string;
     modern_content: string;
+    poi: {
+      cour_honneur: {
+        title: string;
+        subtitle: string;
+        content: string;
+      },
+      salle_reception: {
+        title: string;
+        subtitle: string;
+        content: string;
+      },
+      salle_exposition: {
+        title: string;
+        subtitle: string;
+        content: string;
+      },
+      parc: {
+        title: string;
+        subtitle: string;
+        content: string;
+      },
+      preau_verger: {
+        title: string;
+        subtitle: string;
+        content: string;
+      },
+      potager: {
+        title: string;
+        subtitle: string;
+        content: string;
+      }
+    }
   };
   interactiveMap: {
     title: string;
     subtitle: string;
     discover: string;
     close: string;
-    legend: string;
+    legend_accommodation: string;
+    legend_poi: string;
   };
   contact: {
     title: string;
@@ -958,13 +991,46 @@ export const translations: Record<Locale, Translation> = {
       noailles_content: "The manor fell into the hands of the illustrious Noailles family. Several descendants will succeed each other.\n\nIn 1777, Vacheresses was described as consisting of land, vineyards, meadows, warrens and river. 38 arpents of land were also cleared in two pieces: 10 arpents of land called the Vacheresses Warren and 28 arpents named the Vacheresses Park.\n\nIn 1873, the estate was sold by Henry Emmanuel, Marquis de Noailles, Minister of France to the United States, residing in Washington.",
       modern_title: "The Manor and Modern Times",
       modern_content: "It was at this time that the manor lost its primary function to become a pleasure residence.\n\nThe World of Arts has marked its history. Joseph Hémard, famous illustrator of the first half of the 20th century, lived there for about twenty years. Then, Gilbert Dupé, writer and theater director, will compose a large number of his novels there. Finally, Michèle Battut, internationally renowned artist and official painter of the French Navy, will stay there for more than thirty years.\n\nToday, the manor perpetuates the tradition and becomes a family home inhabited year-round. Lovers of heritage, we will try to protect it, restore it for future generations and open it to the public during receptions, weddings or family ceremonies...",
+      poi: {
+        cour_honneur: {
+            title: "Cour d'Honneur",
+            subtitle: "A majestic welcome",
+            content: "You will open the gate and there, your guests will succumb to the magic of the old stones and the size of the famous yew balls, a true identity of the manor. Surprised and happy, your guests will not fail to compliment you on the beauty of the place upon their arrival..."
+        },
+        salle_reception: {
+            title: "Reception Hall",
+            subtitle: "Elegance and History",
+            content: "An old stable in the 1900s, this room, with its monumental fireplace, will allow you to accommodate between 30 and 110 seated guests. Upstairs, a mezzanine allows you to create, according to your desires, a lounge area, a photobooth animation… Its imposing cathedral ceiling gives it a subtle charm to make it even more magical during the evening, by personalizing it to your image…"
+        },
+        salle_exposition: {
+            title: "Exhibition Hall",
+            subtitle: "A versatile space",
+            content: "This building located on the east wing of the building can be arranged in addition to the reception hall to organize a cocktail party or a space for children."
+        },
+        parc: {
+            title: "The Park",
+            subtitle: "A romantic setting",
+            content: "This romantic English-style park is the privileged setting for your cocktail, secular ceremony or your couple photos. Leave the city behind and immerse yourself in the middle of this bubble among many species, in the shade of giant sequoias, purple beech, ginkgo biloba, araucaria… You will discover on the left the dovecote that supplied the court of Versailles with small pigeons under the de Noailles. You will also listen to the song of the birds and you may have the chance to cross paths with warrens, squirrels, does or pheasants coming out of the woods…"
+        },
+        preau_verger: {
+            title: "The Préau and its Orchard",
+            subtitle: "Chic country charm",
+            content: "You will pass through the freestone arch, an exclusive setting to organize your secular ceremony. It is also one of the favorite places for photographers for group photos with family or friends… In the shade of apple and hazelnut trees, your guests can circulate and discover the culinary animations during your wine of honor. An old hayloft, the préau becomes a confidential and intimate place for a secular ceremony or a cocktail in case of capricious weather. In the evening, the light from its chandeliers gives it a chic bohemian style, very appreciated by the guests…"
+        },
+        potager: {
+            title: "The Medieval Vegetable Garden",
+            subtitle: "An enchanting journey",
+            content: "Inspired by a drawing by Joseph Hémard, an illustrious owner in the 1920s, we have reconstituted a medieval-inspired vegetable garden according to the principles of permaculture. A truly enchanting place, you will discover or rediscover the wonders of nature: palmette fruit trees, aromatic, medicinal, decorative herbs…"
+        }
+      }
     },
     interactiveMap: {
       title: "Explore the Estate",
-      subtitle: "Discover our accommodations by clicking on the map points",
+      subtitle: "Discover our accommodations and spaces by clicking on the map points",
       discover: "Discover",
       close: "Close",
-      legend: "Click on the points to discover our accommodations",
+      legend_accommodation: "Accommodations",
+      legend_poi: "Points of Interest",
     },
     contact: {
       title: "Contact Us",
@@ -1456,13 +1522,46 @@ export const translations: Record<Locale, Translation> = {
       noailles_content: "Le manoir tombe dans l'escarcelle de l'illustre famille de Noailles. Plusieurs descendants s'y succèderont.\n\nEn 1777, on décrit Vacheresses, constitué de terres, vignes, prés, garennes et rivière. On défriche aussi 38 arpents de terre en deux pièces : 10 arpents de terre appelés la Garenne de Vacheresses et 28 arpents nommés le Parc de Vacheresses.\n\nEn 1873, le domaine est vendu par Henry Emmanuel, Marquis de Noailles, Ministre de France aux États-Unis, demeurant à Washington.",
       modern_title: "Le Manoir et les Temps Modernes",
       modern_content: "C'est à cette époque que le manoir perd sa fonction première pour devenir résidence d'agrément.\n\nLe Monde des Arts a marqué son histoire. Joseph Hémard, célèbre dessinateur et illustrateur de la première moitié du XXème siècle y a vécu une vingtaine d'années. Puis, Gilbert Dupé, écrivain et directeur de théâtre, y composera un grand nombre de ses romans. Enfin, Michèle Battut, artiste de renommée internationale et peintre officielle de la Marine Nationale y séjournera pendant plus de trente ans.\n\nAujourd'hui, le manoir perpétue la tradition et devient une maison de famille habitée à l'année. Amoureux du patrimoine, nous tenterons de le protéger, le restaurer pour les générations futures et de l'ouvrir au public lors de réceptions, mariages ou cérémonies familiales…",
+      poi: {
+        cour_honneur: {
+          title: "Cour d’honneur",
+          subtitle: "Un accueil majestueux",
+          content: "Vous ouvrirez le portail et là, vos convives succomberont à la magie des vieilles pierres et à la taille des célèbres boules d’ifs, véritable identité du manoir. Surpris et heureux, vos invités ne manqueront pas de vous complimenter sur la beauté des lieux dès leur arrivée…"
+        },
+        salle_reception: {
+          title: "Salle de réception",
+          subtitle: "Élégance et Histoire",
+          content: "Ancienne écurie dans les années 1900, cette salle, avec sa cheminée monumentale, vous permettra d’accueillir entre 30 et 110 convives assis. A l’étage, une mezzanine permet de créer selon vos envies un coin lounge, une animation photoboost…\n\nSon imposant plafond cathédrale lui confère un charme subtil pour la rendre encore plus féérique lors de la soirée, en la personnalisant à votre image…"
+        },
+        salle_exposition: {
+            title: "Salle d’exposition",
+            subtitle: "Un espace polyvalent",
+            content: "Ce corps de bâtiment situé sur l’aile Est de la bâtisse peut être aménagé en complément de la salle de réception pour organiser un cocktail ou un espace pour les enfants."
+        },
+        parc: {
+          title: "Parc",
+          subtitle: "Un écrin romantique",
+          content: "Ce parc romantique à l’anglaise est le théâtre privilégié pour votre cocktail, cérémonie laïque ou vos photos de couple. Laissez la ville derrière vous et plongez-vous au milieu de cette bulle parmi de nombreuses essences, à l’ombre des séquoias géants, hêtre pourpre, ginkgo biloba, araucaria…\n\nVous découvrirez sur la gauche le pigeonnier qui alimentait la cour de Versailles en petits pigeons sous les de Noailles. Vous écouterez aussi le chant des oiseaux et vous aurez peut-être la chance de croiser garennes, écureuils, biches ou faisans qui sortent du bois…"
+        },
+        preau_verger: {
+          title: "Préau et son verger",
+          subtitle: "Charme champêtre chic",
+          content: "Vous passerez l’arche en pierre de taille, cadre exclusif pour organiser votre cérémonie laïque. C’est aussi l’un des endroits préférés des photographes pour les photos de groupe en famille ou entre amis…\n\nA l’ombre des pommiers et noisetiers, vos convives pourront circuler et découvrir les animations culinaires pendant votre vin d’honneur.\nAncien grenier à foin, le préau devient un lieu confidentiel et intime pour une cérémonie laïque ou un cocktail en cas de temps capricieux.\n\nEn soirée, la lumière de ses lustres lui confère un style bohême chic, très apprécié des invités…"
+        },
+        potager: {
+          title: "Le Potager médiéval",
+          subtitle: "Un voyage enchanteur",
+          content: "Inspiré d’un dessin de Joseph Hémard, illustre propriétaire dans les années 20, nous avons reconstitué un potager d’inspiration médiévale selon les principes de la permaculture.\n\nVéritable lieu enchanteur, vous découvrirez ou redécouvrirez les merveilles de la nature : arbres fruitiers à palmette, herbes aromatiques, médicinales, décoratives…"
+        }
+      }
     },
     interactiveMap: {
       title: "Explorez le Domaine",
-      subtitle: "Découvrez nos hébergements en cliquant sur les points de la carte",
+      subtitle: "Découvrez nos hébergements et espaces en cliquant sur les points de la carte",
       discover: "Découvrir",
       close: "Fermer",
-      legend: "Cliquez sur les points pour découvrir nos hébergements",
+      legend_accommodation: "Hébergements",
+      legend_poi: "Lieux d'intérêt",
     },
     contact: {
       title: "Contactez-nous",
@@ -1480,3 +1579,5 @@ export const translations: Record<Locale, Translation> = {
     },
   },
 };
+
+    
