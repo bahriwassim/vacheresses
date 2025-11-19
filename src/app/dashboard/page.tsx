@@ -27,11 +27,11 @@ export default function DashboardPage() {
   useEffect(() => {
     // Initialiser avec les contrats existants
     const initialState = sharedState.getState();
-    setContracts(initialState.contracts.filter((c: any) => c.client === "Samantha & Chloe"));
+    setContracts(initialState.contracts.filter((c: any) => c.client === "Alex & Jordan"));
     
     // S'abonner aux changements
     const unsubscribe = sharedState.subscribe(state => {
-      setContracts(state.contracts.filter((c: any) => c.client === "Samantha & Chloe"));
+      setContracts(state.contracts.filter((c: any) => c.client === "Alex & Jordan"));
     });
     
     return () => unsubscribe();

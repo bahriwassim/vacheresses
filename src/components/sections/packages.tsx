@@ -86,14 +86,7 @@ export function Packages() {
           </p>
         </div>
 
-        {!dates && (
-          <div className="mb-8 max-w-2xl mx-auto p-4 bg-muted/50 rounded-lg border animate-in fade-in slide-in-from-top-4 duration-500 text-center">
-            <CalendarIcon className="h-5 w-5 mx-auto mb-2 text-muted-foreground" />
-            <p className="text-sm text-muted-foreground">
-              {t.packages.selectDatesInfo || "Sélectionnez une date ci-dessus ou choisissez un forfait pour sélectionner votre date"}
-            </p>
-          </div>
-        )}
+     
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {packages.map((pkg, index) => {
             const image = getImageById(pkg.imageId);

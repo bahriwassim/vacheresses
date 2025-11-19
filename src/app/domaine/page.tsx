@@ -38,7 +38,6 @@ export default function DomainePage() {
             className="object-cover brightness-75"
             priority
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-background" />
         </div>
 
         <div className="relative h-full flex items-center justify-center text-center px-4">
@@ -124,7 +123,6 @@ export default function DomainePage() {
                       fill
                       className="object-cover transition-transform duration-700 group-hover:scale-105"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-r from-transparent to-background/50 md:to-background" />
                   </div>
                   <div className="md:col-span-3 p-8 md:p-10">
                     <CardTitle className="font-headline text-2xl md:text-3xl text-primary mb-4">
@@ -157,7 +155,6 @@ export default function DomainePage() {
                       fill
                       className="object-cover transition-transform duration-700 group-hover:scale-105"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-l from-transparent to-background/50 md:to-background" />
                   </div>
                 </div>
               </Card>
@@ -174,7 +171,6 @@ export default function DomainePage() {
                       fill
                       className="object-cover transition-transform duration-700 group-hover:scale-105"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-r from-transparent to-background/50 md:to-background" />
                   </div>
                   <div className="md:col-span-3 p-8 md:p-10">
                     <CardTitle className="font-headline text-2xl md:text-3xl text-primary mb-4">
@@ -207,7 +203,6 @@ export default function DomainePage() {
                       fill
                       className="object-cover transition-transform duration-700 group-hover:scale-105"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-l from-transparent to-background/50 md:to-background" />
                   </div>
                 </div>
               </Card>

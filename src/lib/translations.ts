@@ -727,7 +727,7 @@ export const translations: Record<Locale, Translation> = {
       backToBlog: "Back to Blog",
     },
     dashboard: {
-      title: "Samantha & Chloe's Wedding",
+      title: "Alex & Jordan's Wedding",
       subtitle: "Welcome to your personal wedding portal.",
       contact_planner: "Contact Planner",
       tabs: {
@@ -778,7 +778,7 @@ export const translations: Record<Locale, Translation> = {
       },
       messages: {
         title: "Your Planner: Sophie",
-        message1: "Hi Samantha and Chloe! Just wanted to confirm your tasting session for next Tuesday at 2 PM. So excited for you to try the menu!",
+        message1: "Hi Alex and Jordan! Just wanted to confirm your tasting session for next Tuesday at 2 PM. So excited for you to try the menu!",
         message2: "Hi Sophie! That sounds great, we'll be there. Can't wait!",
         placeholder: "Type a message...",
         send_button: "Send",
@@ -1225,7 +1225,7 @@ export const translations: Record<Locale, Translation> = {
       backToBlog: "Retour au blog",
     },
     dashboard: {
-      title: "Mariage de Samantha & Chloé",
+      title: "Mariage de Alex & Chloé",
       subtitle: "Bienvenue sur votre portail de mariage personnel.",
       contact_planner: "Contacter l'organisateur",
       tabs: {
@@ -1276,7 +1276,7 @@ export const translations: Record<Locale, Translation> = {
       },
       messages: {
         title: "Votre organisatrice : Sophie",
-        message1: "Bonjour Samantha et Chloé ! Je voulais juste confirmer votre séance de dégustation pour mardi prochain à 14h. J'ai hâte que vous goûtiez le menu !",
+        message1: "Bonjour Alex et Chloé ! Je voulais juste confirmer votre séance de dégustation pour mardi prochain à 14h. J'ai hâte que vous goûtiez le menu !",
         message2: "Salut Sophie ! Ça nous va très bien, nous serons là. On a hâte !",
         placeholder: "Écrire un message...",
         send_button: "Envoyer",

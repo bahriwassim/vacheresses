@@ -21,15 +21,15 @@ const createSharedState = () => {
   let listeners: ((data: any) => void)[] = [];
   let state = {
     clients: [
-      { name: "Samantha & Chloe", date: "2025-06-14", package: "Premium Romance", status: "Booked" },
+      { name: "Alex & Jordan", date: "2025-06-14", package: "Premium Romance", status: "Booked" },
       { name: "Alex & Jordan", date: "2025-07-20", package: "Classic Elegance", status: "Booked" },
       { name: "Michael & David", date: "2025-08-05", package: "Luxury Dream", status: "Booked" },
       { name: "Emily & James", date: "2025-09-01", package: "Premium Romance", status: "Inquiry" },
     ],
     contracts: [
-      { client: "Samantha & Chloe", document: "Main Venue Agreement", status: "Awaiting Signature", dateSent: "May 20, 2024" },
+      { client: "Alex & Jordan", document: "Main Venue Agreement", status: "Awaiting Signature", dateSent: "May 20, 2024" },
       { client: "Alex & Jordan", document: "Main Venue Agreement", status: "Completed", dateSent: "May 15, 2024" },
-      { client: "Samantha & Chloe", document: "Catering Addendum", status: "Completed", dateSent: "May 15, 2024"},
+      { client: "Alex & Jordan", document: "Catering Addendum", status: "Completed", dateSent: "May 15, 2024"},
     ]
   };
 
