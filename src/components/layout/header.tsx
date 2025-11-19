@@ -22,8 +22,6 @@ const navLinks = [
   { href: "/#packages", label: "packages" },
   { href: "/prestations", label: "services" },
   { href: "/sejourner", label: "stay" },
-  { href: "/configurator", label: "configurator" },
-  { href: "/#availability", label: "availability" },
 ];
 
 function useTheme() {

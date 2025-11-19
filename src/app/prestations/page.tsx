@@ -9,9 +9,13 @@ import { useLocale } from "@/hooks/use-locale";
 import { Separator } from "@/components/ui/separator";
 import { getServiceImages, getImageById } from "@/lib/vacheresses-images";
 import { CardImage } from "@/components/ui/animated-image";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { useState } from "react";
+import Image from "next/image";
 
 export default function ServicesPage() {
   const { t } = useLocale();
+  const [openDialog, setOpenDialog] = useState<string | null>(null);
 
   const includedServices = [
     t.services.included_1,
@@ -82,38 +86,70 @@ export default function ServicesPage() {
             {optionalServices.map((service, index) => {
               const image = getImageById(service.imageId);
               return(
-              <Card 
-                key={service.title} 
-                className="flex flex-col transition-all duration-500 hover:shadow-lg animate-in fade-in slide-in-from-bottom-8"
-                style={{ animationDelay: `${600 + index * 200}ms` }}
-              >
-                <CardHeader>
-                   {image && (
-                    <CardImage
-                      src={image.imageUrl}
-                      alt={image.description}
-                      width={600}
-                      height={400}
-                      dataAiHint={image.imageHint}
-                      aspectRatio="landscape"
-                      overlay={true}
-                      overlayContent={
-                        <div className="text-center text-white">
-                          <p className="text-sm font-medium">{t.services.learn_more}</p>
-                        </div>
-                      }
-                      className="mb-4"
-                    />
+              <Dialog key={service.title} open={openDialog === service.title} onOpenChange={(open) => setOpenDialog(open ? service.title : null)}>
+                <DialogTrigger asChild>
+                  <Card
+                    className="flex flex-col transition-all duration-500 hover:shadow-xl hover:-translate-y-1 cursor-pointer animate-in fade-in slide-in-from-bottom-8"
+                    style={{ animationDelay: `${600 + index * 200}ms` }}
+                  >
+                    <CardHeader>
+                      {image && (
+                        <CardImage
+                          src={image.imageUrl}
+                          alt={image.description}
+                          width={600}
+                          height={400}
+                          dataAiHint={image.imageHint}
+                          aspectRatio="landscape"
+                          overlay={true}
+                          overlayContent={
+                            <div className="text-center text-white">
+                              <p className="text-sm font-medium">{t.services.learn_more}</p>
+                            </div>
+                          }
+                          className="mb-4"
+                        />
+                      )}
+                      <CardTitle className="font-headline text-2xl">{service.title}</CardTitle>
+                    </CardHeader>
+                    <CardContent className="flex-1">
+                      <p className="text-muted-foreground line-clamp-3">{service.description}</p>
+                    </CardContent>
+                    <CardFooter>
+                      <p className="text-sm font-semibold text-primary">{t.services.on_request}</p>
+                    </CardFooter>
+                  </Card>
+                </DialogTrigger>
+
+                <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+                  <DialogHeader>
+                    <DialogTitle className="font-headline text-3xl">{service.title}</DialogTitle>
+                  </DialogHeader>
+
+                  {/* Image en grand dans le popup */}
+                  {image && (
+                    <div className="relative w-full h-64 md:h-96 rounded-lg overflow-hidden">
+                      <Image
+                        src={image.imageUrl}
+                        alt={image.description}
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
                   )}
-                  <CardTitle className="font-headline text-2xl">{service.title}</CardTitle>
-                </CardHeader>
-                <CardContent className="flex-1">
-                  <p className="text-muted-foreground">{service.description}</p>
-                </CardContent>
-                <CardFooter>
-                    <p className="text-sm font-semibold text-primary">{t.services.on_request}</p>
-                </CardFooter>
-              </Card>
+
+                  {/* Description complète */}
+                  <DialogDescription className="text-base text-foreground space-y-4">
+                    <p className="text-lg leading-relaxed">{service.description}</p>
+
+                    <div className="mt-6 p-4 bg-primary/10 rounded-lg border border-primary/20">
+                      <p className="text-sm font-semibold text-primary text-center">
+                        {t.services.on_request}
+                      </p>
+                    </div>
+                  </DialogDescription>
+                </DialogContent>
+              </Dialog>
               )
             })}
           </div>

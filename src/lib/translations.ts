@@ -41,6 +41,10 @@ export type Translation = {
   visualTour: {
     title: string;
     subtitle: string;
+    dialogTitle: string;
+    dialogDescription: string;
+    viewDomain: string;
+    close: string;
   };
   availability: {
     title: string;
@@ -462,6 +466,10 @@ export type Translation = {
     close: string;
     legend: string;
   };
+  contact: {
+    title: string;
+    subtitle: string;
+  };
   dateSelector: {
     title: string;
     subtitle: string;
@@ -533,6 +541,10 @@ export const translations: Record<Locale, Translation> = {
     visualTour: {
         title: "An Immersive Visual Tour",
         subtitle: "Explore the breathtaking beauty of Domaine des Vacheresses from every angle.",
+        dialogTitle: "Discover the Estate",
+        dialogDescription: "Immerse yourself in the history and elegance of Domaine des Vacheresses.",
+        viewDomain: "View the Estate",
+        close: "Close",
     },
     availability: {
         title: "Check Our Availability",
@@ -954,6 +966,10 @@ export const translations: Record<Locale, Translation> = {
       close: "Close",
       legend: "Click on the points to discover our accommodations",
     },
+    contact: {
+      title: "Contact Us",
+      subtitle: "We are here to answer all your questions",
+    },
     dateSelector: {
       title: "Choose your event date",
       subtitle: "Select the date of your wedding or event to discover our packages",
@@ -1023,6 +1039,10 @@ export const translations: Record<Locale, Translation> = {
     visualTour: {
         title: "Une visite visuelle immersive",
         subtitle: "Explorez la beauté à couper le souffle du Domaine des Vacheresses sous tous les angles.",
+        dialogTitle: "Découvrir le Domaine",
+        dialogDescription: "Plongez dans l'histoire et l'élégance du Domaine des Vacheresses.",
+        viewDomain: "Voir le Domaine",
+        close: "Fermer",
     },
     availability: {
         title: "Consultez nos disponibilités",
@@ -1443,6 +1463,10 @@ export const translations: Record<Locale, Translation> = {
       discover: "Découvrir",
       close: "Fermer",
       legend: "Cliquez sur les points pour découvrir nos hébergements",
+    },
+    contact: {
+      title: "Contactez-nous",
+      subtitle: "Nous sommes à votre écoute pour répondre à toutes vos questions",
     },
     dateSelector: {
       title: "Choisissez la date de votre événement",
