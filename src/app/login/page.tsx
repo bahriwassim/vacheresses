@@ -160,7 +160,7 @@ export default function LoginPage() {
                   {isLoading ? "Connexion..." : (t.login?.login_button || "Se connecter")}
                 </Button>
                 <p className="text-xs text-muted-foreground text-center">
-                  {t.login?.admin_hint || "Admin: admin@example.com / password"}
+                  Admin: admin@manoirdevacheresses.com / (any password)
                 </p>
               </CardFooter>
             </TabsContent>
