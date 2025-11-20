@@ -196,105 +196,105 @@ export const VacheressesImages: VacheressesImage[] = [
   {
     id: "esprit-1",
     description: "L'esprit authentique du Manoir de Vacheresses",
-    imageUrl: "/esprit_vacheresses_1.jpg",
+    imageUrl: "/vacheresses_13.jpg",
     category: "gallery",
     imageHint: "esprit manoir authentique"
   },
   {
     id: "esprit-2",
     description: "Détails architecturaux du manoir",
-    imageUrl: "/esprit_vacheresses_2.jpg",
+    imageUrl: "/vacheresses_14.jpg",
     category: "gallery",
     imageHint: "architecture manoir"
   },
   {
     id: "esprit-3",
     description: "Ambiance chaleureuse du domaine",
-    imageUrl: "/esprit_vacheresses_3.jpg",
+    imageUrl: "/vacheresses_17.jpg",
     category: "gallery",
     imageHint: "ambiance domaine"
   },
   {
     id: "esprit-4",
     description: "Charme rustique du manoir",
-    imageUrl: "/esprit_vacheresses_4.jpg",
+    imageUrl: "/vacheresses_19.jpg",
     category: "gallery",
     imageHint: "charme rustique"
   },
   {
     id: "esprit-5",
     description: "Élégance du Manoir de Vacheresses",
-    imageUrl: "/esprit_vacheresses_5.jpg",
+    imageUrl: "/vacheresse-1.jpg",
     category: "gallery",
     imageHint: "élégance manoir"
   },
   {
     id: "esprit-6",
     description: "Détails raffinés du domaine",
-    imageUrl: "/esprit_vacheresses_6.jpg",
+    imageUrl: "/vacheresse-1145.jpg",
     category: "gallery",
     imageHint: "détails raffinés"
   },
   {
     id: "esprit-7",
     description: "Atmosphère romantique du manoir",
-    imageUrl: "/esprit_vacheresses_7.jpg",
+    imageUrl: "/renaissance.jpg",
     category: "gallery",
     imageHint: "atmosphère romantique"
   },
   {
     id: "esprit-8",
     description: "Sérénité du domaine",
-    imageUrl: "/esprit_vacheresses_8.jpg",
+    imageUrl: "/dynastiedenoailles.jpg",
     category: "gallery",
     imageHint: "sérénité domaine"
   },
   {
     id: "esprit-9",
     description: "Beauté naturelle du Manoir de Vacheresses",
-    imageUrl: "/esprit_vacheresses_9.jpg",
+    imageUrl: "/VacheressesHistoire.jpg",
     category: "gallery",
     imageHint: "beauté naturelle"
   },
   {
     id: "esprit-10",
     description: "Harmonie entre architecture et nature",
-    imageUrl: "/esprit_vacheresses_10.jpg",
+    imageUrl: "/manoir1950.jpg",
     category: "gallery",
     imageHint: "harmonie architecture nature"
   },
   {
     id: "esprit-11",
     description: "Prestance du Manoir de Vacheresses",
-    imageUrl: "/esprit_vacheresses_11.jpg",
+    imageUrl: "/2020-06-30_Dans_les_bois-29.jpg",
     category: "gallery",
     imageHint: "prestance manoir"
   },
   {
     id: "esprit-12",
     description: "Charme intemporel du domaine",
-    imageUrl: "/esprit_vacheresses_12.jpg",
+    imageUrl: "/mariage_Véronique__Florian_-959.jpg",
     category: "gallery",
     imageHint: "charme intemporel"
   },
   {
     id: "esprit-13",
     description: "Élégance discrète du manoir",
-    imageUrl: "/esprit_vacheresses_13.jpg",
+    imageUrl: "/TerracottaOttoman(37).jpg",
     category: "gallery",
     imageHint: "élégance discrète"
   },
   {
     id: "esprit-14",
     description: "Authenticité du Manoir de Vacheresses",
-    imageUrl: "/esprit_vacheresses_14.jpg",
+    imageUrl: "/TerracottaOttoman(102).jpg",
     category: "gallery",
     imageHint: "authenticité manoir"
   },
   {
     id: "esprit-15",
     description: "Raffinement du domaine",
-    imageUrl: "/esprit_vacheresses_15.jpg",
+    imageUrl: "/salle_reception_10.jpg",
     category: "gallery",
     imageHint: "raffinement domaine"
   },
@@ -303,7 +303,7 @@ export const VacheressesImages: VacheressesImage[] = [
   {
     id: "manoir-1",
     description: "Vue du Manoir de Vacheresses",
-    imageUrl: "/vacheresses_4_1.jpg",
+    imageUrl: "/vacheresses_20.jpg",
     category: "gallery",
     imageHint: "manoir vacheresses vue"
   },
@@ -349,14 +349,14 @@ export const VacheressesImages: VacheressesImage[] = [
   {
     id: "potager-1",
     description: "Le potager du domaine",
-    imageUrl: "/potager_3.jpg",
+    imageUrl: "/Parc_3.jpg",
     category: "gallery",
     imageHint: "potager domaine"
   },
   {
     id: "potager-2",
     description: "Jardin potager du manoir",
-    imageUrl: "/potager_4.jpg",
+    imageUrl: "/Parc_5.jpg",
     category: "gallery",
     imageHint: "jardin potager"
   },
@@ -372,7 +372,7 @@ export const VacheressesImages: VacheressesImage[] = [
   {
     id: "blog-decor",
     description: "Décoration élégante pour votre mariage",
-    imageUrl: "/esprit_vacheresses_7.jpg",
+    imageUrl: "/renaissance.jpg",
     category: "blog",
     imageHint: "décoration mariage"
   },
@@ -409,7 +409,7 @@ export const VacheressesImages: VacheressesImage[] = [
   {
     id: "testimonial-2",
     description: "Mariage réussi au domaine",
-    imageUrl: "/esprit_vacheresses_1.jpg",
+    imageUrl: "/vacheresses_7.jpg",
     category: "testimonial",
     imageHint: "mariage réussi"
   },

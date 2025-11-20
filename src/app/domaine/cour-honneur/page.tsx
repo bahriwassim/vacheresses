@@ -11,7 +11,7 @@ const images = [
   "/vacheresses_13.jpg",
   "/vacheresses_17.jpg",
   "/vacheresses_20.jpg",
-  "/vacheresses_4-1.jpg",
+  "/vacheresses_7.jpg",
 ];
 
 export default function CourHonneurPage() {

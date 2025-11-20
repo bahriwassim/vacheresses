@@ -62,7 +62,7 @@ export default function DomainePage() {
                 {/* Image gauche */}
                 <div className="relative h-64 md:h-auto overflow-hidden group">
                   <Image
-                    src="/esprit_vacheresses_1.jpg"
+                    src="/vacheresses_13.jpg"
                     alt="L'esprit du Manoir"
                     fill
                     className="object-cover transition-transform duration-700 group-hover:scale-110"
@@ -84,7 +84,7 @@ export default function DomainePage() {
 
               {/* Galerie d'images sous le texte */}
               <div className="grid grid-cols-3 gap-0.5 bg-background/50">
-                {['/esprit_vacheresses_7.jpg', '/esprit_vacheresses_9.jpg', '/esprit_vacheresses_13.jpg'].map((img, i) => (
+                {['/renaissance.jpg', '/VacheressesHistoire.jpg', '/TerracottaOttoman(37).jpg'].map((img, i) => (
                   <div key={i} className="relative h-40 overflow-hidden group">
                     <Image
                       src={img}

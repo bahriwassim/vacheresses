@@ -142,7 +142,7 @@ export function InteractiveMap() {
     jardins_tivoli: ["/espace_4.jpg", "/espace_5.jpg", "/espace_15.jpg"],
     petit_trianon: ["/espace_5.jpg", "/espace_6.jpg", "/espace_7.jpg"],
     la_loge: ["/espace_6.jpg", "/espace_7.jpg", "/espace_8.jpg"],
-    potager: ["/potager_4.jpg", "/preau_verger_3.jpg", "/preau_verger_4.jpg"],
+    potager: ["/Parc_3.jpg", "/preau_verger_3.jpg", "/preau_verger_4.jpg"],
     cour_honneur: ["/vacheresses_13.jpg", "/vacheresses_17.jpg", "/vacheresses_20.jpg"],
     salle_reception: ["/salle_reception_6.jpg", "/salle_reception_7.jpg", "/salle_reception_8.jpg"],
     parc: ["/Parc_1.jpg", "/Parc_2.jpg", "/Parc_3.jpg"],
@@ -157,7 +157,7 @@ export function InteractiveMap() {
     ? t.domain.poi[activeHotspot.id as keyof typeof t.domain.poi]
     : null;
 
-  const activeImages = activeHotspot ? roomImageGalleries[activeHotspot.id] || ["/vacheresses_4-1.jpg"] : [];
+  const activeImages = activeHotspot ? roomImageGalleries[activeHotspot.id] || ["/vacheresses_20.jpg"] : [];
 
   return (
     <section className="py-12 md:py-20 bg-gradient-to-b from-background to-secondary/30">

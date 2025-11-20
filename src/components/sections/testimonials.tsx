@@ -16,7 +16,7 @@ const testimonialsData = (t: any) => [
   {
     name: "Alex & Jordan",
     avatar: "SC",
-    image: "/esprit_vacheresses_1.jpg",
+    image: "/vacheresses_7.jpg",
     quote: t.testimonials.quote_2,
   },
   {

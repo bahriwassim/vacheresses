@@ -152,7 +152,7 @@ export default function SejournerPage() {
       surface: t.stay.rooms.voyage_ballon.surface,
       description: t.stay.rooms.voyage_ballon.description,
       image: "/espace_6.jpg",
-      gallery: ["/espace_6.jpg", "/esprit_vacheresses_8.jpg", "/esprit_vacheresses_11.jpg"],
+      gallery: ["/espace_6.jpg", "/dynastiedenoailles.jpg", "/2020-06-30_Dans_les_bois-29.jpg"],
       equipment: [
         t.stay.equipment.bathroom,
         t.stay.equipment.bed_queen,
@@ -175,7 +175,7 @@ export default function SejournerPage() {
       surface: t.stay.rooms.la_loge.surface,
       description: t.stay.rooms.la_loge.description,
       image: "/espace_7.jpg",
-      gallery: ["/espace_7.jpg", "/esprit_vacheresses_12.jpg", "/esprit_vacheresses_15.jpg", "/esprit_vacheresses_1.jpg"],
+      gallery: ["/espace_7.jpg", "/mariage_Véronique__Florian_-959.jpg", "/salle_reception_10.jpg", "/vacheresses_13.jpg"],
       equipment: [
         t.stay.equipment.bathroom,
         t.stay.equipment.bed_queen,
@@ -412,13 +412,13 @@ export default function SejournerPage() {
                     </div>
                     <div className="grid grid-cols-2 gap-2 p-4">
                         <div className="relative h-64 rounded-lg overflow-hidden group">
-                             <Image src="/esprit_vacheresses_12.jpg" alt="La Loge photo 1" fill className="object-cover transition-transform duration-500 group-hover:scale-110"/>
+                             <Image src="/mariage_Véronique__Florian_-959.jpg" alt="La Loge photo 1" fill className="object-cover transition-transform duration-500 group-hover:scale-110"/>
                         </div>
                         <div className="relative h-64 rounded-lg overflow-hidden group">
-                            <Image src="/esprit_vacheresses_15.jpg" alt="La Loge photo 2" fill className="object-cover transition-transform duration-500 group-hover:scale-110"/>
+                            <Image src="/salle_reception_10.jpg" alt="La Loge photo 2" fill className="object-cover transition-transform duration-500 group-hover:scale-110"/>
                         </div>
                         <div className="relative h-64 col-span-2 rounded-lg overflow-hidden group">
-                           <Image src="/esprit_vacheresses_1.jpg" alt="La Loge photo 3" fill className="object-cover transition-transform duration-500 group-hover:scale-110"/>
+                           <Image src="/vacheresses_13.jpg" alt="La Loge photo 3" fill className="object-cover transition-transform duration-500 group-hover:scale-110"/>
                         </div>
                     </div>
                 </div>

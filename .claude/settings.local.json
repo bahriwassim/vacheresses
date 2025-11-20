@@ -3,7 +3,12 @@
     "allow": [
       "Bash(npm run build:*)",
       "Bash(test:*)",
-      "Bash(npm install @supabase/supabase-js)"
+      "Bash(npm install @supabase/supabase-js)",
+      "Bash(findstr:*)",
+      "Bash(nul)",
+      "Bash(cat:*)",
+      "Bash(git lfs:*)",
+      "Bash(ls:*)"
     ],
     "deny": [],
     "ask": []

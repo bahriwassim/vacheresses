@@ -8,10 +8,10 @@ import Image from "next/image";
 import { Card, CardContent } from "@/components/ui/card";
 
 const images = [
-  "/potager_3.jpg",
-  "/potager_4.jpg",
-  "/esprit_vacheresses_9.jpg",
-  "/esprit_vacheresses_10.jpg",
+  "/Parc_3.jpg",
+  "/Parc_5.jpg",
+  "/VacheressesHistoire.jpg",
+  "/manoir1950.jpg",
 ];
 
 export default function PotagerPage() {
