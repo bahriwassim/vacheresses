@@ -24,6 +24,7 @@ export default function DashboardPage() {
   const { toast } = useToast();
   const router = useRouter();
   const [user, setUser] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
   const [profileData, setProfileData] = useState({ name: '', email: '', phone: '' });
   const [contracts, setContracts] = useState<any[]>([]);
   const [accommodations, setAccommodations] = useState<any[]>([]);
@@ -32,24 +33,25 @@ export default function DashboardPage() {
 
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
-    if (!storedUser) {
+    if (storedUser) {
+      const parsedUser = JSON.parse(storedUser);
+      setUser(parsedUser);
+      setProfileData({ name: parsedUser.name, email: parsedUser.email, phone: parsedUser.phone || '' });
+      
+      const initialState = sharedState.getState();
+      setContracts(initialState.contracts.filter((c: any) => c.client === parsedUser.name));
+      setAccommodations(initialState.accommodations.filter((acc: any) => acc.client === parsedUser.name));
+      
+      const unsubscribe = sharedState.subscribe(state => {
+        setContracts(state.contracts.filter((c: any) => c.client === parsedUser.name));
+        setAccommodations(state.accommodations.filter((acc: any) => acc.client === parsedUser.name));
+      });
+      setLoading(false);
+      
+      return () => unsubscribe();
+    } else {
       router.push('/login');
-      return;
     }
-    const parsedUser = JSON.parse(storedUser);
-    setUser(parsedUser);
-    setProfileData({ name: parsedUser.name, email: parsedUser.email, phone: parsedUser.phone || '' });
-    
-    const initialState = sharedState.getState();
-    setContracts(initialState.contracts.filter((c: any) => c.client === parsedUser.name));
-    setAccommodations(initialState.accommodations.filter((acc: any) => acc.client === parsedUser.name));
-    
-    const unsubscribe = sharedState.subscribe(state => {
-      setContracts(state.contracts.filter((c: any) => c.client === parsedUser.name));
-      setAccommodations(state.accommodations.filter((acc: any) => acc.client === parsedUser.name));
-    });
-    
-    return () => unsubscribe();
   }, [router]);
 
   const handleSignContract = (contractToSign: any) => {
@@ -79,17 +81,23 @@ export default function DashboardPage() {
 
   const handleProfileUpdate = () => {
     // In a real app, this would call an API
-    const updatedUser = { ...user, ...profileData };
-    localStorage.setItem('user', JSON.stringify(updatedUser));
-    setUser(updatedUser);
-    toast({
-      title: "Profil mis à jour",
-      description: "Vos informations ont été sauvegardées.",
-    });
+    if (user) {
+        const updatedUser = { ...user, ...profileData };
+        localStorage.setItem('user', JSON.stringify(updatedUser));
+        setUser(updatedUser);
+        toast({
+          title: "Profil mis à jour",
+          description: "Vos informations ont été sauvegardées.",
+        });
+    }
   };
 
-  if (!user) {
-    return null; // ou un spinner de chargement
+  if (loading || !user) {
+    return (
+        <div className="flex items-center justify-center min-h-screen">
+            <p>Loading...</p>
+        </div>
+    );
   }
 
   return (
@@ -334,5 +342,6 @@ export default function DashboardPage() {
     </div>
   );
 }
+    
 
     
