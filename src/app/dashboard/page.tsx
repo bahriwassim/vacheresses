@@ -8,9 +8,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
-import { FileText, CreditCard, MessageSquare, Heart, Calendar, Users, LogOut, User as UserIcon, Hotel } from "lucide-react";
+import { FileText, CreditCard, Heart, Calendar, Users, LogOut, User as UserIcon, Hotel } from "lucide-react";
 import { useLocale } from "@/hooks/use-locale";
 import { sharedState } from '@/app/admin/page'; // Import shared state
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogClose } from "@/components/ui/dialog";
