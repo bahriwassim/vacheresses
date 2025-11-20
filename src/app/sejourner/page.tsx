@@ -175,7 +175,7 @@ export default function SejournerPage() {
       surface: t.stay.rooms.la_loge.surface,
       description: t.stay.rooms.la_loge.description,
       image: "/espace_7.jpg",
-      gallery: ["/espace_7.jpg", "/esprit_vacheresses_12.jpg", "/esprit_vacheresses_15.jpg"],
+      gallery: ["/espace_7.jpg", "/esprit_vacheresses_12.jpg", "/esprit_vacheresses_15.jpg", "/esprit_vacheresses_1.jpg"],
       equipment: [
         t.stay.equipment.bathroom,
         t.stay.equipment.bed_queen,
@@ -404,18 +404,25 @@ export default function SejournerPage() {
           <section id="la-loge">
             <Separator className="my-16" />
             <h2 className="text-4xl font-headline font-bold text-center mb-12">{laLoge?.name}</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
-              <div className="md:col-span-1">
-                {laLoge && renderRoomCard(laLoge)}
-              </div>
-              <div className="md:col-span-2">
-                <Card className="shadow-lg">
-                  <CardContent className="p-8">
-                    <p className="text-lg text-muted-foreground leading-relaxed">{laLoge?.description}</p>
-                  </CardContent>
-                </Card>
-              </div>
-            </div>
+            <Card className="shadow-2xl overflow-hidden">
+                <div className="grid md:grid-cols-2 gap-0">
+                    <div className="p-8 md:p-12 flex flex-col justify-center">
+                        <p className="text-lg text-muted-foreground leading-relaxed mb-8">{laLoge?.description}</p>
+                        {laLoge && renderRoomCard(laLoge)}
+                    </div>
+                    <div className="grid grid-cols-2 gap-2 p-4">
+                        <div className="relative h-64 rounded-lg overflow-hidden group">
+                             <Image src="/esprit_vacheresses_12.jpg" alt="La Loge photo 1" fill className="object-cover transition-transform duration-500 group-hover:scale-110"/>
+                        </div>
+                        <div className="relative h-64 rounded-lg overflow-hidden group">
+                            <Image src="/esprit_vacheresses_15.jpg" alt="La Loge photo 2" fill className="object-cover transition-transform duration-500 group-hover:scale-110"/>
+                        </div>
+                        <div className="relative h-64 col-span-2 rounded-lg overflow-hidden group">
+                           <Image src="/esprit_vacheresses_1.jpg" alt="La Loge photo 3" fill className="object-cover transition-transform duration-500 group-hover:scale-110"/>
+                        </div>
+                    </div>
+                </div>
+            </Card>
           </section>
         </div>
       </main>
@@ -423,5 +430,3 @@ export default function SejournerPage() {
     </div>
   );
 }
-
-    
