@@ -81,6 +81,8 @@ export default function AdminPage() {
   const [isCreateDialogOpen, setCreateDialogOpen] = useState(false);
   const [isViewDialogOpen, setViewDialogOpen] = useState(false);
   const [viewedContract, setViewedContract] = useState<any>(null);
+  
+  const [highSeasonDates, setHighSeasonDates] = useState<Date[]>([]);
 
   useEffect(() => {
     const unsubscribe = sharedState.subscribe(state => {
@@ -136,6 +138,8 @@ export default function AdminPage() {
         description: "Les prix des forfaits ont été sauvegardés.",
     });
   };
+
+  const dayIsHighSeason = (day: Date) => highSeasonDates.some(d => d.getTime() === day.getTime());
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -275,15 +279,33 @@ export default function AdminPage() {
             <TabsContent value="calendar" className="mt-6">
                 <Card>
                     <CardHeader>
-                        <CardTitle>{t.admin.venue_calendar.title}</CardTitle>
-                        <CardDescription>{t.admin.venue_calendar.description}</CardDescription>
+                        <CardTitle>Calendrier des Saisons</CardTitle>
+                        <CardDescription>Cliquez sur les jours pour définir la haute et basse saison.</CardDescription>
                     </CardHeader>
-                    <CardContent className="flex justify-center">
+                    <CardContent className="flex flex-col items-center gap-4">
                         <Calendar
                             mode="multiple"
+                            selected={highSeasonDates}
+                            onSelect={setHighSeasonDates}
                             className="p-0"
                             defaultMonth={new Date(2025, 5)}
+                            modifiers={{
+                                highSeason: day => dayIsHighSeason(day),
+                            }}
+                            modifiersClassNames={{
+                                highSeason: 'bg-green-200 dark:bg-green-800',
+                            }}
                         />
+                         <div className="flex gap-4 text-sm">
+                            <div className="flex items-center gap-2">
+                                <div className="w-4 h-4 rounded-full bg-green-200 dark:bg-green-800 border border-muted-foreground"></div>
+                                <span>Haute saison</span>
+                            </div>
+                             <div className="flex items-center gap-2">
+                                <div className="w-4 h-4 rounded-full bg-background border border-muted-foreground"></div>
+                                <span>Basse saison</span>
+                            </div>
+                        </div>
                     </CardContent>
                 </Card>
             </TabsContent>
@@ -475,7 +497,3 @@ export default function AdminPage() {
     </div>
   );
 }
-
-    
-
-    
