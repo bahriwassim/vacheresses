@@ -23,8 +23,8 @@ export default function Home() {
         <main className="flex-1">
           <Hero />
           <DomainTeaser />
-          <InteractiveMap />
           <VideoSection />
+          <InteractiveMap />
           <Packages />
           <VisualTour />
           <Testimonials />

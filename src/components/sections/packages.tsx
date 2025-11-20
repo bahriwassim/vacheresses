@@ -75,7 +75,7 @@ export function Packages() {
   };
 
   return (
-    <section id="packages" className="py-12 md:py-20 bg-secondary/50">
+    <section id="packages" className="py-8 md:py-12 bg-secondary/50">
       <div className="container max-w-7xl px-4">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-headline font-bold animate-in fade-in slide-in-from-bottom-8 duration-1000">

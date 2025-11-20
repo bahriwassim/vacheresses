@@ -303,7 +303,7 @@ export const VacheressesImages: VacheressesImage[] = [
   {
     id: "manoir-1",
     description: "Vue du Manoir de Vacheresses",
-    imageUrl: "/vacheresses_4-1.jpg",
+    imageUrl: "/vacheresses_4_1.jpg",
     category: "gallery",
     imageHint: "manoir vacheresses vue"
   },
