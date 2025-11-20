@@ -11,13 +11,12 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { FileText, CreditCard, Heart, Calendar, Users, LogOut, User as UserIcon, Hotel } from "lucide-react";
 import { useLocale } from "@/hooks/use-locale";
-import { sharedState } from '@/app/admin/page'; // Import shared state
+import { sharedState } from '@/lib/mock-db';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogClose } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Label } from '@/components/ui/label';
-
 
 export default function DashboardPage() {
   const { t } = useLocale();
@@ -32,25 +31,28 @@ export default function DashboardPage() {
   const [viewedContract, setViewedContract] = useState<any>(null);
 
   useEffect(() => {
-    const storedUser = localStorage.getItem('user');
-    if (storedUser) {
-      const parsedUser = JSON.parse(storedUser);
-      setUser(parsedUser);
-      setProfileData({ name: parsedUser.name, email: parsedUser.email, phone: parsedUser.phone || '' });
-      
-      const initialState = sharedState.getState();
-      setContracts(initialState.contracts.filter((c: any) => c.client === parsedUser.name));
-      setAccommodations(initialState.accommodations.filter((acc: any) => acc.client === parsedUser.name));
-      
-      const unsubscribe = sharedState.subscribe(state => {
-        setContracts(state.contracts.filter((c: any) => c.client === parsedUser.name));
-        setAccommodations(state.accommodations.filter((acc: any) => acc.client === parsedUser.name));
-      });
-      setLoading(false);
-      
-      return () => unsubscribe();
-    } else {
-      router.push('/login');
+    // We need to check if we are on the client side
+    if (typeof window !== 'undefined') {
+        const storedUser = localStorage.getItem('user');
+        if (storedUser) {
+            const parsedUser = JSON.parse(storedUser);
+            setUser(parsedUser);
+            setProfileData({ name: parsedUser.name, email: parsedUser.email, phone: parsedUser.phone || '' });
+            
+            const initialState = sharedState.getState();
+            setContracts(initialState.contracts.filter((c: any) => c.client === parsedUser.name));
+            setAccommodations(initialState.accommodations.filter((acc: any) => acc.client === parsedUser.name));
+            
+            const unsubscribe = sharedState.subscribe(state => {
+              setContracts(state.contracts.filter((c: any) => c.client === parsedUser.name));
+              setAccommodations(state.accommodations.filter((acc: any) => acc.client === parsedUser.name));
+            });
+
+            setLoading(false);
+            return () => unsubscribe();
+        } else {
+            router.push('/login');
+        }
     }
   }, [router]);
 
@@ -92,12 +94,18 @@ export default function DashboardPage() {
     }
   };
 
-  if (loading || !user) {
+  if (loading) {
     return (
         <div className="flex items-center justify-center min-h-screen">
-            <p>Loading...</p>
+            <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-primary"></div>
         </div>
     );
+  }
+
+  if (!user) {
+    // This part should ideally not be reached if the redirection logic in useEffect is correct,
+    // but it's a good fallback.
+    return null;
   }
 
   return (
@@ -342,6 +350,5 @@ export default function DashboardPage() {
     </div>
   );
 }
-    
 
     
