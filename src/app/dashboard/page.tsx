@@ -10,32 +10,44 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
-import { FileText, CreditCard, MessageSquare, Heart, Calendar, Users } from "lucide-react";
+import { FileText, CreditCard, MessageSquare, Heart, Calendar, Users, LogOut } from "lucide-react";
 import { useLocale } from "@/hooks/use-locale";
 import { sharedState } from '@/app/admin/page'; // Import shared state
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogClose } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 
 export default function DashboardPage() {
   const { t } = useLocale();
   const { toast } = useToast();
+  const router = useRouter();
+  const [user, setUser] = useState<any>(null);
   const [contracts, setContracts] = useState<any[]>([]);
   const [isViewDialogOpen, setViewDialogOpen] = useState(false);
   const [viewedContract, setViewedContract] = useState<any>(null);
 
   useEffect(() => {
-    // Initialiser avec les contrats existants
-    const initialState = sharedState.getState();
-    setContracts(initialState.contracts.filter((c: any) => c.client === "Alex & Jordan"));
+    const storedUser = localStorage.getItem('user');
+    if (!storedUser) {
+      router.push('/login');
+      return;
+    }
+    const parsedUser = JSON.parse(storedUser);
+    setUser(parsedUser);
     
-    // S'abonner aux changements
+    // Simuler le chargement des contrats pour cet utilisateur
+    const initialState = sharedState.getState();
+    setContracts(initialState.contracts.filter((c: any) => c.client === parsedUser.name));
+    
+    // S'abonner aux changements d'état partagé
     const unsubscribe = sharedState.subscribe(state => {
-      setContracts(state.contracts.filter((c: any) => c.client === "Alex & Jordan"));
+      setContracts(state.contracts.filter((c: any) => c.client === parsedUser.name));
     });
     
     return () => unsubscribe();
-  }, []);
+  }, [router]);
 
   const handleSignContract = (contractToSign: any) => {
     const allContracts = sharedState.getState().contracts;
@@ -56,6 +68,16 @@ export default function DashboardPage() {
     setViewedContract(contract);
     setViewDialogOpen(true);
   }
+  
+  const handleLogout = () => {
+    localStorage.removeItem('user');
+    router.push('/login');
+  };
+
+  if (!user) {
+    return null; // ou un spinner de chargement
+  }
+
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -64,10 +86,17 @@ export default function DashboardPage() {
         <div className="container max-w-7xl">
           <div className="flex flex-col md:flex-row gap-4 md:items-center justify-between mb-8">
             <div>
-              <h1 className="text-3xl font-bold font-headline">{t.dashboard.title}</h1>
+              <h1 className="text-3xl font-bold font-headline">{t.dashboard.title.replace("Alex & Jordan's", user.name)}</h1>
               <p className="text-muted-foreground">{t.dashboard.subtitle}</p>
             </div>
-             <Button>{t.dashboard.contact_planner}</Button>
+             <div className="flex items-center gap-4">
+               <Button asChild>
+                  <Link href="/contact">{t.dashboard.contact_planner}</Link>
+               </Button>
+               <Button variant="outline" onClick={handleLogout}>
+                 <LogOut className="mr-2" /> Déconnexion
+               </Button>
+             </div>
           </div>
 
           <Tabs defaultValue="overview">

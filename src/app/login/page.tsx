@@ -34,21 +34,22 @@ export default function LoginPage() {
     try {
       const { user, profile } = await authService.signIn(email, password);
 
+      // Stocker le profil dans localStorage pour accès rapide
+      localStorage.setItem('user', JSON.stringify(profile));
+
       // Vérifier si c'est un admin
       if (profile?.role === "admin") {
         toast({
           title: t.login?.admin_success_title || "Connexion admin réussie",
           description: t.login?.admin_success_desc || "Bienvenue administrateur"
         });
-        localStorage.setItem('user', JSON.stringify(profile));
         router.push("/admin");
       } else {
         toast({
           title: t.login?.client_success_title || "Connexion réussie",
           description: t.login?.client_success_desc || "Bienvenue"
         });
-        localStorage.setItem('user', JSON.stringify(profile));
-        router.push("/compte/profil");
+        router.push("/dashboard"); // REDIRIGER VERS LE DASHBOARD CLIENT
       }
     } catch (err: any) {
       setError(err.message || "Identifiants invalides");
@@ -91,7 +92,7 @@ export default function LoginPage() {
       });
 
       localStorage.setItem('user', JSON.stringify(profile));
-      router.push("/compte/profil");
+      router.push("/dashboard"); // REDIRIGER VERS LE DASHBOARD CLIENT
     } catch (err: any) {
       setError(err.message || "Erreur lors de l'inscription");
       toast({
