@@ -10,13 +10,14 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
-import { FileText, CreditCard, MessageSquare, Heart, Calendar, Users, LogOut } from "lucide-react";
+import { FileText, CreditCard, MessageSquare, Heart, Calendar, Users, LogOut, User as UserIcon, Hotel } from "lucide-react";
 import { useLocale } from "@/hooks/use-locale";
 import { sharedState } from '@/app/admin/page'; // Import shared state
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogClose } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { Label } from '@/components/ui/label';
 
 
 export default function DashboardPage() {
@@ -24,7 +25,9 @@ export default function DashboardPage() {
   const { toast } = useToast();
   const router = useRouter();
   const [user, setUser] = useState<any>(null);
+  const [profileData, setProfileData] = useState({ name: '', email: '', phone: '' });
   const [contracts, setContracts] = useState<any[]>([]);
+  const [accommodations, setAccommodations] = useState<any[]>([]);
   const [isViewDialogOpen, setViewDialogOpen] = useState(false);
   const [viewedContract, setViewedContract] = useState<any>(null);
 
@@ -36,14 +39,15 @@ export default function DashboardPage() {
     }
     const parsedUser = JSON.parse(storedUser);
     setUser(parsedUser);
+    setProfileData({ name: parsedUser.name, email: parsedUser.email, phone: parsedUser.phone || '' });
     
-    // Simuler le chargement des contrats pour cet utilisateur
     const initialState = sharedState.getState();
     setContracts(initialState.contracts.filter((c: any) => c.client === parsedUser.name));
+    setAccommodations(initialState.accommodations.filter((acc: any) => acc.client === parsedUser.name));
     
-    // S'abonner aux changements d'état partagé
     const unsubscribe = sharedState.subscribe(state => {
       setContracts(state.contracts.filter((c: any) => c.client === parsedUser.name));
+      setAccommodations(state.accommodations.filter((acc: any) => acc.client === parsedUser.name));
     });
     
     return () => unsubscribe();
@@ -74,10 +78,20 @@ export default function DashboardPage() {
     router.push('/login');
   };
 
+  const handleProfileUpdate = () => {
+    // In a real app, this would call an API
+    const updatedUser = { ...user, ...profileData };
+    localStorage.setItem('user', JSON.stringify(updatedUser));
+    setUser(updatedUser);
+    toast({
+      title: "Profil mis à jour",
+      description: "Vos informations ont été sauvegardées.",
+    });
+  };
+
   if (!user) {
     return null; // ou un spinner de chargement
   }
-
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -86,7 +100,7 @@ export default function DashboardPage() {
         <div className="container max-w-7xl">
           <div className="flex flex-col md:flex-row gap-4 md:items-center justify-between mb-8">
             <div>
-              <h1 className="text-3xl font-bold font-headline">{t.dashboard.title.replace("Alex & Jordan's", user.name)}</h1>
+              <h1 className="text-3xl font-bold font-headline">{t.dashboard.title.replace("Alex & Jordan", user.name)}</h1>
               <p className="text-muted-foreground">{t.dashboard.subtitle}</p>
             </div>
              <div className="flex items-center gap-4">
@@ -100,11 +114,12 @@ export default function DashboardPage() {
           </div>
 
           <Tabs defaultValue="overview">
-            <TabsList className="grid w-full grid-cols-2 md:grid-cols-4">
+            <TabsList className="grid w-full grid-cols-2 md:grid-cols-5">
               <TabsTrigger value="overview"><Heart className="mr-2" />{t.dashboard.tabs.overview}</TabsTrigger>
               <TabsTrigger value="contracts"><FileText className="mr-2" />{t.dashboard.tabs.contracts}</TabsTrigger>
               <TabsTrigger value="payments"><CreditCard className="mr-2" />{t.dashboard.tabs.payments}</TabsTrigger>
-              <TabsTrigger value="messages"><MessageSquare className="mr-2" />{t.dashboard.tabs.messages}</TabsTrigger>
+              <TabsTrigger value="accommodations"><Hotel className="mr-2"/>Hébergements</TabsTrigger>
+              <TabsTrigger value="profile"><UserIcon className="mr-2"/>Mon Profil</TabsTrigger>
             </TabsList>
             
             <TabsContent value="overview" className="mt-6">
@@ -157,7 +172,7 @@ export default function DashboardPage() {
                     <TableBody>
                       {contracts.map(contract => (
                          <TableRow key={contract.document}>
-                           <TableCell>{contract.document === 'Main Venue Agreement' ? t.dashboard.contracts.doc_main : t.dashboard.contracts.doc_catering}</TableCell>
+                           <TableCell>{contract.document === 'Main Venue Agreement' ? t.dashboard.contracts.doc_main : "Avenant Traiteur"}</TableCell>
                            <TableCell>
                             <Badge variant={contract.status === 'Completed' ? 'default' : 'destructive'}>
                               {contract.status === 'Completed' ? t.dashboard.contracts.status_completed : t.dashboard.contracts.status_awaiting}
@@ -224,37 +239,64 @@ export default function DashboardPage() {
                 </Card>
             </TabsContent>
 
-            <TabsContent value="messages" className="mt-6">
-                <Card className="h-[60vh] flex flex-col">
+            <TabsContent value="accommodations" className="mt-6">
+                <Card>
                     <CardHeader>
-                      <CardTitle>{t.dashboard.messages.title}</CardTitle>
+                        <CardTitle>Mes Hébergements</CardTitle>
+                        <CardDescription>Consultez les détails de vos réservations de chambres.</CardDescription>
                     </CardHeader>
-                    <CardContent className="flex-1 overflow-y-auto space-y-4">
-                        <div className="flex items-start gap-3">
-                            <Avatar>
-                                <AvatarImage src="https://picsum.photos/seed/planner1/100/100" />
-                                <AvatarFallback>SP</AvatarFallback>
-                            </Avatar>
-                            <div className="bg-muted p-3 rounded-lg max-w-xs">
-                                <p className="text-sm">{t.dashboard.messages.message1}</p>
-                            </div>
+                    <CardContent>
+                        {accommodations.length > 0 ? (
+                        <Table>
+                            <TableHeader>
+                                <TableRow>
+                                    <TableHead>Chambre</TableHead>
+                                    <TableHead>Arrivée</TableHead>
+                                    <TableHead>Départ</TableHead>
+                                    <TableHead>Statut</TableHead>
+                                </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                                {accommodations.map(acc => (
+                                    <TableRow key={acc.id}>
+                                        <TableCell>{acc.room}</TableCell>
+                                        <TableCell>{new Date(acc.checkIn).toLocaleDateString()}</TableCell>
+                                        <TableCell>{new Date(acc.checkOut).toLocaleDateString()}</TableCell>
+                                        <TableCell><Badge variant={acc.status === 'Confirmed' ? 'default' : 'secondary'}>{acc.status}</Badge></TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                        ) : (
+                            <p className="text-muted-foreground">Vous n'avez aucune réservation d'hébergement pour le moment.</p>
+                        )}
+                    </CardContent>
+                </Card>
+            </TabsContent>
+
+            <TabsContent value="profile" className="mt-6">
+                <Card>
+                    <CardHeader>
+                        <CardTitle>Mon Profil</CardTitle>
+                        <CardDescription>Mettez à jour vos informations personnelles.</CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                        <div className="space-y-2">
+                            <Label htmlFor="name">Nom</Label>
+                            <Input id="name" value={profileData.name} onChange={(e) => setProfileData({...profileData, name: e.target.value})} />
                         </div>
-                        <div className="flex items-start gap-3 justify-end">
-                            <div className="bg-primary text-primary-foreground p-3 rounded-lg max-w-xs">
-                                <p className="text-sm">{t.dashboard.messages.message2}</p>
-                            </div>
-                            <Avatar>
-                                <AvatarImage src="https://picsum.photos/seed/couple2/100/100" />
-                                <AvatarFallback>SC</AvatarFallback>
-                            </Avatar>
+                        <div className="space-y-2">
+                            <Label htmlFor="email">Email</Label>
+                            <Input id="email" type="email" value={profileData.email} onChange={(e) => setProfileData({...profileData, email: e.target.value})} />
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="phone">Téléphone</Label>
+                            <Input id="phone" type="tel" value={profileData.phone} onChange={(e) => setProfileData({...profileData, phone: e.target.value})} />
                         </div>
                     </CardContent>
-                    <div className="p-4 border-t">
-                        <div className="relative">
-                            <Input placeholder={t.dashboard.messages.placeholder} className="pr-16" />
-                            <Button className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-14">{t.dashboard.messages.send_button}</Button>
-                        </div>
-                    </div>
+                    <CardContent>
+                        <Button onClick={handleProfileUpdate}>Enregistrer les modifications</Button>
+                    </CardContent>
                 </Card>
             </TabsContent>
 
@@ -263,10 +305,10 @@ export default function DashboardPage() {
            <Dialog open={isViewDialogOpen} onOpenChange={setViewDialogOpen}>
             <DialogContent className="max-w-2xl">
               <DialogHeader>
-                <DialogTitle>{viewedContract?.document === 'Main Venue Agreement' ? t.dashboard.contracts.doc_main : t.dashboard.contracts.doc_catering}</DialogTitle>
+                <DialogTitle>{viewedContract?.document === 'Main Venue Agreement' ? t.dashboard.contracts.doc_main : "Avenant Traiteur"}</DialogTitle>
               </DialogHeader>
               <div className="prose dark:prose-invert max-w-none max-h-[60vh] overflow-y-auto p-4 border rounded-md">
-                <h3>{viewedContract?.document === 'Main Venue Agreement' ? t.dashboard.contracts.doc_main : t.dashboard.contracts.doc_catering} {t.dashboard.view_contract.for} {viewedContract?.client}</h3>
+                <h3>{viewedContract?.document === 'Main Venue Agreement' ? t.dashboard.contracts.doc_main : "Avenant Traiteur"} {t.dashboard.view_contract.for} {viewedContract?.client}</h3>
                 <p>{t.dashboard.view_contract.p1.replace('{date}', t.dashboard.overview.date_value)}</p>
                 <h4>{t.dashboard.view_contract.h4_1}</h4>
                 <p>{t.dashboard.view_contract.p2}</p>
@@ -293,3 +335,5 @@ export default function DashboardPage() {
     </div>
   );
 }
+
+    

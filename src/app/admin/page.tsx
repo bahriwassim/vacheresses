@@ -9,27 +9,37 @@ import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Calendar } from "@/components/ui/calendar";
-import { BarChart, Users, FileText, CalendarDays, Euro, PlusCircle } from "lucide-react";
+import { BarChart, Users, FileText, CalendarDays, Euro, PlusCircle, Hotel, Settings } from "lucide-react";
 import { useLocale } from "@/hooks/use-locale";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter, DialogClose } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useToast } from "@/hooks/use-toast";
 
 // Shared state simulation
 const createSharedState = () => {
   let listeners: ((data: any) => void)[] = [];
   let state = {
     clients: [
-      { name: "Alex & Jordan", date: "2025-06-14", package: "Premium Romance", status: "Booked" },
-      { name: "Alex & Jordan", date: "2025-07-20", package: "Classic Elegance", status: "Booked" },
-      { name: "Michael & David", date: "2025-08-05", package: "Luxury Dream", status: "Booked" },
-      { name: "Emily & James", date: "2025-09-01", package: "Premium Romance", status: "Inquiry" },
+      { id: 'user-123', name: "Alex & Jordan", date: "2025-06-14", package: "Premium Romance", status: "Booked" },
+      { id: 'user-456', name: "Michael & David", date: "2025-08-05", package: "Luxury Dream", status: "Booked" },
+      { id: 'user-789', name: "Emily & James", date: "2025-09-01", package: "Premium Romance", status: "Inquiry" },
     ],
     contracts: [
       { client: "Alex & Jordan", document: "Main Venue Agreement", status: "Awaiting Signature", dateSent: "May 20, 2024" },
-      { client: "Alex & Jordan", document: "Main Venue Agreement", status: "Completed", dateSent: "May 15, 2024" },
       { client: "Alex & Jordan", document: "Catering Addendum", status: "Completed", dateSent: "May 15, 2024"},
+      { client: "Michael & David", document: "Main Venue Agreement", status: "Completed", dateSent: "May 15, 2024" },
+    ],
+    accommodations: [
+        { id: 1, client: "Alex & Jordan", room: "Les Heures du Jour", checkIn: "2025-06-13", checkOut: "2025-06-15", status: "Confirmed" },
+        { id: 2, client: "Alex & Jordan", room: "Ruines Antiques", checkIn: "2025-06-13", checkOut: "2025-06-15", status: "Confirmed" },
+        { id: 3, client: "Michael & David", room: "La Loge", checkIn: "2025-08-04", checkOut: "2025-08-06", status: "Pending" },
+    ],
+    packages: [
+        { id: "classic", name: "Classic Elegance", price: 15000 },
+        { id: "premium", name: "Premium Romance", price: 25000 },
+        { id: "luxury", name: "Luxury Dream", price: 40000 },
     ]
   };
 
@@ -53,8 +63,13 @@ export const sharedState = createSharedState();
 
 export default function AdminPage() {
   const { t } = useLocale();
+  const { toast } = useToast();
+
   const [clients, setClients] = useState(sharedState.getState().clients);
   const [contracts, setContracts] = useState(sharedState.getState().contracts);
+  const [accommodations, setAccommodations] = useState(sharedState.getState().accommodations);
+  const [packages, setPackages] = useState(sharedState.getState().packages);
+
   const [newContract, setNewContract] = useState({ client: '', date: '', package: '' });
   const [isCreateDialogOpen, setCreateDialogOpen] = useState(false);
   const [isViewDialogOpen, setViewDialogOpen] = useState(false);
@@ -64,13 +79,15 @@ export default function AdminPage() {
     const unsubscribe = sharedState.subscribe(state => {
       setClients(state.clients);
       setContracts(state.contracts);
+      setAccommodations(state.accommodations);
+      setPackages(state.packages);
     });
     return () => unsubscribe();
   }, []);
 
   const handleCreateContract = () => {
     if (newContract.client && newContract.date && newContract.package) {
-      const newClient = { ...newContract, status: 'Booked' };
+      const newClient = { ...newContract, id: `user-${Math.random()}`, status: 'Booked' };
       const newContractEntry = { client: newContract.client, document: 'Main Venue Agreement', status: 'Awaiting Signature', dateSent: new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) };
 
       sharedState.setState({
@@ -94,6 +111,19 @@ export default function AdminPage() {
         handleViewContract(contract);
     }
   }
+
+  const handlePackagePriceChange = (packageId: string, newPrice: number) => {
+    const updatedPackages = packages.map(p => p.id === packageId ? { ...p, price: newPrice } : p);
+    setPackages(updatedPackages); // Optimistic UI update
+  };
+
+  const handleSavePackagePrices = () => {
+    sharedState.setState({ packages });
+    toast({
+        title: "Tarifs mis à jour",
+        description: "Les prix des forfaits ont été sauvegardés.",
+    });
+  };
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -150,11 +180,13 @@ export default function AdminPage() {
           </div>
 
           <Tabs defaultValue="dashboard">
-            <TabsList className="grid w-full grid-cols-2 md:grid-cols-4">
+            <TabsList className="grid w-full grid-cols-3 md:grid-cols-6">
               <TabsTrigger value="dashboard"><BarChart className="mr-2"/>{t.admin.tabs.dashboard}</TabsTrigger>
               <TabsTrigger value="clients"><Users className="mr-2"/>{t.admin.tabs.clients}</TabsTrigger>
-              <TabsTrigger value="calendar"><CalendarDays className="mr-2"/>{t.admin.tabs.calendar}</TabsTrigger>
               <TabsTrigger value="contracts"><FileText className="mr-2"/>{t.admin.tabs.contracts}</TabsTrigger>
+              <TabsTrigger value="accommodations"><Hotel className="mr-2"/>Hébergements</TabsTrigger>
+              <TabsTrigger value="packages"><Settings className="mr-2"/>Forfaits</TabsTrigger>
+              <TabsTrigger value="calendar"><CalendarDays className="mr-2"/>{t.admin.tabs.calendar}</TabsTrigger>
             </TabsList>
 
             <TabsContent value="dashboard" className="mt-6">
@@ -211,7 +243,7 @@ export default function AdminPage() {
                             </TableHeader>
                             <TableBody>
                                 {clients.map(client => (
-                                    <TableRow key={client.name}>
+                                    <TableRow key={client.id}>
                                         <TableCell>{client.name}</TableCell>
                                         <TableCell>{client.date ? new Date(client.date).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' }) : ''}</TableCell>
                                         <TableCell>{client.package}</TableCell>
@@ -263,7 +295,7 @@ export default function AdminPage() {
                       {contracts.map(contract => (
                         <TableRow key={`${contract.client}-${contract.document}`}>
                             <TableCell>{contract.client}</TableCell>
-                            <TableCell>{t.admin.all_contracts.doc_main}</TableCell>
+                            <TableCell>{contract.document === 'Main Venue Agreement' ? t.admin.all_contracts.doc_main : "Avenant Traiteur"}</TableCell>
                             <TableCell>
                                 <Badge variant={contract.status === 'Completed' ? 'default' : 'destructive'}>
                                 {contract.status === 'Completed' ? t.admin.all_contracts.status_completed : t.admin.all_contracts.status_awaiting}
@@ -283,16 +315,83 @@ export default function AdminPage() {
                 </CardContent>
               </Card>
             </TabsContent>
+            
+            <TabsContent value="accommodations" className="mt-6">
+                <Card>
+                    <CardHeader>
+                        <CardTitle>Gestion des Hébergements</CardTitle>
+                        <CardDescription>Suivi des réservations de chambres.</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        <Table>
+                            <TableHeader>
+                                <TableRow>
+                                    <TableHead>Client</TableHead>
+                                    <TableHead>Chambre</TableHead>
+                                    <TableHead>Arrivée</TableHead>
+                                    <TableHead>Départ</TableHead>
+                                    <TableHead>Statut</TableHead>
+                                </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                                {accommodations.map(acc => (
+                                    <TableRow key={acc.id}>
+                                        <TableCell>{acc.client}</TableCell>
+                                        <TableCell>{acc.room}</TableCell>
+                                        <TableCell>{new Date(acc.checkIn).toLocaleDateString()}</TableCell>
+                                        <TableCell>{new Date(acc.checkOut).toLocaleDateString()}</TableCell>
+                                        <TableCell><Badge variant={acc.status === 'Confirmed' ? 'default' : 'secondary'}>{acc.status}</Badge></TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </CardContent>
+                </Card>
+            </TabsContent>
+
+            <TabsContent value="packages" className="mt-6">
+                <Card>
+                    <CardHeader>
+                        <CardTitle>Gestion des Forfaits & Tarifs</CardTitle>
+                        <CardDescription>Ajustez les prix de base de vos forfaits mariage.</CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                        {packages.map(pkg => (
+                            <div key={pkg.id} className="flex items-center justify-between p-4 border rounded-lg">
+                                <div>
+                                    <p className="font-semibold">{pkg.name}</p>
+                                    <p className="text-sm text-muted-foreground">{t.packages[`${pkg.id}_desc` as keyof typeof t.packages]}</p>
+                                </div>
+                                <div className="flex items-center gap-2 w-48">
+                                    <Label htmlFor={`price-${pkg.id}`} className="sr-only">Prix</Label>
+                                    <Input 
+                                        id={`price-${pkg.id}`}
+                                        type="number" 
+                                        value={pkg.price}
+                                        onChange={(e) => handlePackagePriceChange(pkg.id, Number(e.target.value))}
+                                        className="w-32"
+                                    />
+                                    <span>€</span>
+                                </div>
+                            </div>
+                        ))}
+                    </CardContent>
+                    <CardContent>
+                        <Button onClick={handleSavePackagePrices}>Enregistrer les tarifs</Button>
+                    </CardContent>
+                </Card>
+            </TabsContent>
+
 
           </Tabs>
 
           <Dialog open={isViewDialogOpen} onOpenChange={setViewDialogOpen}>
             <DialogContent className="max-w-2xl">
               <DialogHeader>
-                <DialogTitle>{t.admin.view_contract.title}: {viewedContract?.document === 'Main Venue Agreement' ? t.dashboard.contracts.doc_main : t.dashboard.contracts.doc_catering}</DialogTitle>
+                <DialogTitle>{t.admin.view_contract.title}: {viewedContract?.document === 'Main Venue Agreement' ? t.dashboard.contracts.doc_main : "Avenant Traiteur"}</DialogTitle>
               </DialogHeader>
               <div className="prose dark:prose-invert max-w-none max-h-[60vh] overflow-y-auto p-4 border rounded-md">
-                <h3>{viewedContract?.document === 'Main Venue Agreement' ? t.dashboard.contracts.doc_main : t.dashboard.contracts.doc_catering} {t.admin.view_contract.for} {viewedContract?.client}</h3>
+                <h3>{viewedContract?.document === 'Main Venue Agreement' ? t.dashboard.contracts.doc_main : "Avenant Traiteur"} {t.admin.view_contract.for} {viewedContract?.client}</h3>
                 <p>{t.admin.view_contract.p1.replace('{date}', clients.find(c => c.name === viewedContract?.client)?.date ? new Date(clients.find(c => c.name === viewedContract?.client)!.date).toLocaleDateString() : 'N/A')}</p>
                 <h4>{t.admin.view_contract.h4_1}</h4>
                 <p>{t.admin.view_contract.p2}</p>
@@ -316,3 +415,5 @@ export default function AdminPage() {
     </div>
   );
 }
+
+    
