@@ -27,13 +27,18 @@ export default function LoginPage() {
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
 
-  const handleLogin = async () => {
+  const handleLogin = async (event: React.FormEvent) => {
+    event.preventDefault();
     setIsLoading(true);
     setError(null);
 
     try {
       const { user, profile } = await authService.signIn(email, password);
 
+      if (!profile) {
+        throw new Error("Profil utilisateur non trouvé.");
+      }
+      
       // Stocker le profil dans localStorage pour accès rapide
       localStorage.setItem('user', JSON.stringify(profile));
 
@@ -63,7 +68,8 @@ export default function LoginPage() {
     }
   };
 
-  const handleSignUp = async () => {
+  const handleSignUp = async (event: React.FormEvent) => {
+    event.preventDefault();
     setError(null);
 
     if (!name || !email || !password) {
@@ -85,6 +91,10 @@ export default function LoginPage() {
 
     try {
       const { user, profile } = await authService.signUp(email, password, name, phone);
+      
+      if (!profile) {
+        throw new Error("La création du profil a échoué.");
+      }
 
       toast({
         title: t.login?.signup_success_title || "Inscription réussie",
@@ -125,6 +135,7 @@ export default function LoginPage() {
               <TabsTrigger value="signup">{t.login.signup_tab}</TabsTrigger>
             </TabsList>
             <TabsContent value="login">
+             <form onSubmit={handleLogin}>
               <CardContent className="grid gap-4 pt-6">
                 {error && (
                   <div className="p-3 bg-red-50 border border-red-200 rounded-lg flex items-start gap-2">
@@ -157,15 +168,17 @@ export default function LoginPage() {
                 </div>
               </CardContent>
               <CardFooter className="flex flex-col gap-4">
-                <Button className="w-full" onClick={handleLogin} disabled={isLoading}>
+                <Button type="submit" className="w-full" disabled={isLoading}>
                   {isLoading ? "Connexion..." : (t.login?.login_button || "Se connecter")}
                 </Button>
                 <p className="text-xs text-muted-foreground text-center">
                   Admin: admin@manoirdevacheresses.com / (any password)
                 </p>
               </CardFooter>
+             </form>
             </TabsContent>
             <TabsContent value="signup">
+              <form onSubmit={handleSignUp}>
                <CardContent className="grid gap-4 pt-6">
                 {error && (
                   <div className="p-3 bg-red-50 border border-red-200 rounded-lg flex items-start gap-2">
@@ -221,13 +234,16 @@ export default function LoginPage() {
                 </div>
               </CardContent>
               <CardFooter>
-                <Button className="w-full" onClick={handleSignUp} disabled={isLoading}>
+                <Button type="submit" className="w-full" disabled={isLoading}>
                   {isLoading ? "Création..." : (t.login?.signup_button || "S'inscrire")}
                 </Button>
               </CardFooter>
+              </form>
             </TabsContent>
         </Tabs>
       </Card>
     </div>
   );
 }
+
+    

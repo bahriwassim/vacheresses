@@ -9,13 +9,14 @@ import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Calendar } from "@/components/ui/calendar";
-import { BarChart, Users, FileText, CalendarDays, Euro, PlusCircle, Hotel, Settings } from "lucide-react";
+import { BarChart, Users, FileText, CalendarDays, Euro, PlusCircle, Hotel, Settings, MessageSquare, Send } from "lucide-react";
 import { useLocale } from "@/hooks/use-locale";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter, DialogClose } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
+import { Textarea } from "@/components/ui/textarea";
 
 // Shared state simulation
 const createSharedState = () => {
@@ -37,9 +38,14 @@ const createSharedState = () => {
         { id: 3, client: "Michael & David", room: "La Loge", checkIn: "2025-08-04", checkOut: "2025-08-06", status: "Pending" },
     ],
     packages: [
-        { id: "classic", name: "Classic Elegance", price: 15000 },
-        { id: "premium", name: "Premium Romance", price: 25000 },
-        { id: "luxury", name: "Luxury Dream", price: 40000 },
+        { id: "classic", name: "Classic Elegance", priceHigh: 18000, priceLow: 15000 },
+        { id: "premium", name: "Premium Romance", priceHigh: 28000, priceLow: 25000 },
+        { id: "luxury", name: "Luxury Dream", priceHigh: 45000, priceLow: 40000 },
+    ],
+    messages: [
+        { id: 1, client: "Alex & Jordan", sender: "Client", text: "Bonjour, est-il possible de visiter le domaine la semaine prochaine ?" },
+        { id: 2, client: "Alex & Jordan", sender: "Admin", text: "Bien sûr ! Seriez-vous disponible mardi à 14h ?" },
+        { id: 3, client: "Emily & James", sender: "Client", text: "Nous aimerions avoir des informations sur les options de traiteur." }
     ]
   };
 
@@ -69,6 +75,7 @@ export default function AdminPage() {
   const [contracts, setContracts] = useState(sharedState.getState().contracts);
   const [accommodations, setAccommodations] = useState(sharedState.getState().accommodations);
   const [packages, setPackages] = useState(sharedState.getState().packages);
+  const [messages, setMessages] = useState(sharedState.getState().messages);
 
   const [newContract, setNewContract] = useState({ client: '', date: '', package: '' });
   const [isCreateDialogOpen, setCreateDialogOpen] = useState(false);
@@ -81,6 +88,7 @@ export default function AdminPage() {
       setContracts(state.contracts);
       setAccommodations(state.accommodations);
       setPackages(state.packages);
+      setMessages(state.messages);
     });
     return () => unsubscribe();
   }, []);
@@ -112,9 +120,13 @@ export default function AdminPage() {
     }
   }
 
-  const handlePackagePriceChange = (packageId: string, newPrice: number) => {
-    const updatedPackages = packages.map(p => p.id === packageId ? { ...p, price: newPrice } : p);
-    setPackages(updatedPackages); // Optimistic UI update
+  const handlePackagePriceChange = (packageId: string, season: 'High' | 'Low', newPrice: number) => {
+    const updatedPackages = packages.map(p => 
+      p.id === packageId 
+        ? { ...p, [`price${season}`]: newPrice } 
+        : p
+    );
+    setPackages(updatedPackages);
   };
 
   const handleSavePackagePrices = () => {
@@ -180,11 +192,12 @@ export default function AdminPage() {
           </div>
 
           <Tabs defaultValue="dashboard">
-            <TabsList className="grid w-full grid-cols-3 md:grid-cols-6">
+            <TabsList className="grid w-full grid-cols-4 md:grid-cols-7">
               <TabsTrigger value="dashboard"><BarChart className="mr-2"/>{t.admin.tabs.dashboard}</TabsTrigger>
               <TabsTrigger value="clients"><Users className="mr-2"/>{t.admin.tabs.clients}</TabsTrigger>
               <TabsTrigger value="contracts"><FileText className="mr-2"/>{t.admin.tabs.contracts}</TabsTrigger>
               <TabsTrigger value="accommodations"><Hotel className="mr-2"/>Hébergements</TabsTrigger>
+              <TabsTrigger value="messages"><MessageSquare className="mr-2"/>Messagerie</TabsTrigger>
               <TabsTrigger value="packages"><Settings className="mr-2"/>Forfaits</TabsTrigger>
               <TabsTrigger value="calendar"><CalendarDays className="mr-2"/>{t.admin.tabs.calendar}</TabsTrigger>
             </TabsList>
@@ -349,29 +362,76 @@ export default function AdminPage() {
                 </Card>
             </TabsContent>
 
+            <TabsContent value="messages" className="mt-6">
+                <Card>
+                    <CardHeader>
+                        <CardTitle>Messagerie</CardTitle>
+                        <CardDescription>Consultez et répondez aux messages des clients.</CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                        {clients.map(client => (
+                            <Card key={client.id}>
+                                <CardHeader>
+                                    <CardTitle className="text-lg">{client.name}</CardTitle>
+                                </CardHeader>
+                                <CardContent>
+                                    <div className="space-y-3 max-h-48 overflow-y-auto pr-4">
+                                        {messages.filter(m => m.client === client.name).map(msg => (
+                                            <div key={msg.id} className={`flex ${msg.sender === 'Admin' ? 'justify-end' : 'justify-start'}`}>
+                                                <p className={`p-3 rounded-lg max-w-[70%] ${msg.sender === 'Admin' ? 'bg-primary text-primary-foreground' : 'bg-muted'}`}>
+                                                    {msg.text}
+                                                </p>
+                                            </div>
+                                        ))}
+                                    </div>
+                                    <div className="mt-4 flex gap-2">
+                                        <Textarea placeholder="Répondre..." className="flex-1"/>
+                                        <Button><Send className="w-4 h-4"/></Button>
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        ))}
+                    </CardContent>
+                </Card>
+            </TabsContent>
+
             <TabsContent value="packages" className="mt-6">
                 <Card>
                     <CardHeader>
                         <CardTitle>Gestion des Forfaits & Tarifs</CardTitle>
-                        <CardDescription>Ajustez les prix de base de vos forfaits mariage.</CardDescription>
+                        <CardDescription>Ajustez les prix de base de vos forfaits mariage par saison.</CardDescription>
                     </CardHeader>
-                    <CardContent className="space-y-4">
+                    <CardContent className="space-y-6">
                         {packages.map(pkg => (
-                            <div key={pkg.id} className="flex items-center justify-between p-4 border rounded-lg">
-                                <div>
-                                    <p className="font-semibold">{pkg.name}</p>
-                                    <p className="text-sm text-muted-foreground">{t.packages[`${pkg.id}_desc` as keyof typeof t.packages]}</p>
-                                </div>
-                                <div className="flex items-center gap-2 w-48">
-                                    <Label htmlFor={`price-${pkg.id}`} className="sr-only">Prix</Label>
-                                    <Input 
-                                        id={`price-${pkg.id}`}
-                                        type="number" 
-                                        value={pkg.price}
-                                        onChange={(e) => handlePackagePriceChange(pkg.id, Number(e.target.value))}
-                                        className="w-32"
-                                    />
-                                    <span>€</span>
+                            <div key={pkg.id} className="p-4 border rounded-lg">
+                                <p className="font-semibold text-xl mb-4">{pkg.name}</p>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div className="space-y-2">
+                                        <Label htmlFor={`price-high-${pkg.id}`}>Prix Haute Saison</Label>
+                                        <div className="flex items-center gap-2">
+                                            <Input 
+                                                id={`price-high-${pkg.id}`}
+                                                type="number" 
+                                                value={pkg.priceHigh}
+                                                onChange={(e) => handlePackagePriceChange(pkg.id, 'High', Number(e.target.value))}
+                                                className="w-full"
+                                            />
+                                            <span>€</span>
+                                        </div>
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label htmlFor={`price-low-${pkg.id}`}>Prix Basse Saison</Label>
+                                         <div className="flex items-center gap-2">
+                                            <Input 
+                                                id={`price-low-${pkg.id}`}
+                                                type="number" 
+                                                value={pkg.priceLow}
+                                                onChange={(e) => handlePackagePriceChange(pkg.id, 'Low', Number(e.target.value))}
+                                                className="w-full"
+                                            />
+                                             <span>€</span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         ))}
@@ -415,5 +475,7 @@ export default function AdminPage() {
     </div>
   );
 }
+
+    
 
     
