@@ -1,6 +1,6 @@
 'use client';
 
-import { createClient } from '@supabase/supabase-js';
+import { createClient, User as SupabaseUser } from '@supabase/supabase-js';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
@@ -12,7 +12,7 @@ export const supabase =
     : null;
 
 // Types pour la base de données
-export type User = {
+export type UserProfile = {
   id: string;
   email: string;
   name: string;
@@ -49,13 +49,14 @@ export const authService = {
     });
 
     if (authError) throw authError;
+    if (!authData.user) throw new Error("User not created");
 
     // Créer le profil utilisateur dans la table users
     const { data: userData, error: userError } = await supabase
       .from('users')
       .insert([
         {
-          id: authData.user?.id,
+          id: authData.user.id,
           email,
           name,
           phone,
@@ -73,14 +74,23 @@ export const authService = {
   // Connexion
   async signIn(email: string, password: string) {
     if (!supabase) throw new Error("Supabase is not configured.");
-    const { data, error } = await supabase.auth.signInWithPassword({
+    const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
 
-    if (error) throw error;
+    if (authError) throw authError;
+    if (!authData.user) throw new Error("User not found");
 
-    return data;
+    const { data: profile, error: profileError } = await supabase
+        .from('users')
+        .select('*')
+        .eq('id', authData.user.id)
+        .single();
+    
+    if (profileError) throw profileError;
+
+    return { user: authData.user, profile };
   },
 
   // Déconnexion
@@ -91,10 +101,34 @@ export const authService = {
   },
 
   // Obtenir l'utilisateur actuel
-  async getUser() {
+  async getCurrentUser() {
     if (!supabase) throw new Error("Supabase is not configured.");
-    const { data, error } = await supabase.auth.getUser();
+    const { data: { user }, error: userError } = await supabase.auth.getUser();
+    
+    if (userError || !user) return { user: null, profile: null };
+
+    const { data: profile, error: profileError } = await supabase
+      .from('users')
+      .select('*')
+      .eq('id', user.id)
+      .single();
+      
+    return { user, profile: profile || null };
+  },
+  
+  // Mettre à jour le profil utilisateur
+  async updateProfile(userId: string, updates: Partial<UserProfile>) {
+    if (!supabase) throw new Error("Supabase is not configured.");
+    
+    const { data, error } = await supabase
+      .from('users')
+      .update(updates)
+      .eq('id', userId)
+      .select()
+      .single();
+      
     if (error) throw error;
-    return data.user;
+    
+    return data;
   },
 };

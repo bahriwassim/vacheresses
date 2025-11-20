@@ -27,8 +27,7 @@ export default function ComptePage() {
 
   // Formulaire d'inscription
   const [signupData, setSignupData] = useState({
-    firstName: "",
-    lastName: "",
+    name: "",
     email: "",
     phone: "",
     password: "",
@@ -77,7 +76,7 @@ export default function ComptePage() {
       const { user, profile } = await authService.signUp(
         signupData.email,
         signupData.password,
-        `${signupData.firstName} ${signupData.lastName}`,
+        signupData.name,
         signupData.phone
       );
 
@@ -191,31 +190,17 @@ export default function ComptePage() {
                     </div>
 
                     <form onSubmit={handleSignup} className="space-y-4">
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div className="space-y-2">
-                          <Label htmlFor="signup-firstName">Prénom</Label>
+                      <div className="space-y-2">
+                          <Label htmlFor="signup-name">Nom complet</Label>
                           <Input
-                            id="signup-firstName"
+                            id="signup-name"
                             type="text"
                             required
-                            value={signupData.firstName}
-                            onChange={(e) => setSignupData({ ...signupData, firstName: e.target.value })}
-                            placeholder="Jean"
+                            value={signupData.name}
+                            onChange={(e) => setSignupData({ ...signupData, name: e.target.value })}
+                            placeholder="Jean Dupont"
                           />
                         </div>
-
-                        <div className="space-y-2">
-                          <Label htmlFor="signup-lastName">Nom</Label>
-                          <Input
-                            id="signup-lastName"
-                            type="text"
-                            required
-                            value={signupData.lastName}
-                            onChange={(e) => setSignupData({ ...signupData, lastName: e.target.value })}
-                            placeholder="Dupont"
-                          />
-                        </div>
-                      </div>
 
                       <div className="space-y-2">
                         <Label htmlFor="signup-email">Email</Label>
