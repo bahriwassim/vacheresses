@@ -5,6 +5,8 @@ export type Translation = {
   header: {
     home: string;
     packages: string;
+    elopement: string;
+    faq: string;
     services: string;
     configurator: string;
     blog: string;
@@ -225,6 +227,11 @@ export type Translation = {
     subtitle: string;
     readMore: string;
     backToBlog: string;
+    pressTitle?: string;
+    pressSubtitle?: string;
+    pressButton?: string;
+    momentsTitle?: string;
+    momentsSubtitle?: string;
   };
   dashboard: {
     title: string;
@@ -488,17 +495,49 @@ export type Translation = {
         title: string;
         subtitle: string;
         content: string;
+      },
+      salle_blanche: {
+        title: string;
+        subtitle: string;
+        content: string;
+      },
+      orangerie: {
+        title: string;
+        subtitle: string;
+        content: string;
+      },
+      chapelle: {
+        title: string;
+        subtitle: string;
+        content: string;
+      },
+      terrasses: {
+        title: string;
+        subtitle: string;
+        content: string;
+      },
+      roseraie: {
+        title: string;
+        subtitle: string;
+        content: string;
+      },
+      mare: {
+        title: string;
+        subtitle: string;
+        content: string;
       }
     }
   };
   interactiveMap: {
-    title: string;
-    subtitle: string;
-    discover: string;
-    close: string;
-    legend_accommodation: string;
-    legend_poi: string;
-  };
+      title: string;
+      subtitle: string;
+      exploreSpaces?: string;
+      discover: string;
+      close: string;
+      legend_accommodation: string;
+      legend_poi: string;
+      legend_space: string;
+    };
   contact: {
     title: string;
     subtitle: string;
@@ -524,7 +563,9 @@ export const translations: Record<Locale, Translation> = {
   en: {
     header: {
       home: "Home",
-      packages: "Packages",
+      packages: "Wedding Packages",
+      elopement: "Elopement",
+      faq: "FAQ",
       services: "Services",
       configurator: "Configurator",
       blog: "Blog",
@@ -763,6 +804,11 @@ export const translations: Record<Locale, Translation> = {
       subtitle: "Inspiration, tips, and stories for your perfect wedding.",
       readMore: "Read More",
       backToBlog: "Back to Blog",
+      pressTitle: "Press & Media",
+      pressSubtitle: "Discover the press features highlighting Domaine des Vacheresses",
+      pressButton: "View press articles",
+      momentsTitle: "Unforgettable Moments",
+      momentsSubtitle: "Discover the magic of our weddings through these images",
     },
     dashboard: {
       title: "Alex & Jordan's Wedding",
@@ -1026,16 +1072,48 @@ export const translations: Record<Locale, Translation> = {
             title: "The Medieval Vegetable Garden",
             subtitle: "An enchanting journey",
             content: "Inspired by a drawing by Joseph Hémard, an illustrious owner in the 1920s, we have reconstituted a medieval-inspired vegetable garden according to the principles of permaculture. A truly enchanting place, you will discover or rediscover the wonders of nature: palmette fruit trees, aromatic, medicinal, decorative herbs…"
+        },
+        salle_blanche: {
+            title: "Salle Blanche",
+            subtitle: "Elegant space for ceremonies",
+            content: "A bright and elegant space perfect for intimate ceremonies and civil weddings."
+        },
+        orangerie: {
+            title: "Orangerie",
+            subtitle: "Historic venue for cocktails",
+            content: "A charming historic space ideal for cocktail receptions and intimate gatherings."
+        },
+        chapelle: {
+            title: "Chapel",
+            subtitle: "Spiritual venue for religious weddings",
+            content: "A peaceful spiritual space for religious ceremonies and blessings."
+        },
+        terrasses: {
+            title: "Terraces",
+            subtitle: "Outdoor spaces with panoramic views",
+            content: "Beautiful terraces offering stunning panoramic views of the estate and surrounding countryside."
+        },
+        roseraie: {
+            title: "Rose Garden",
+            subtitle: "Romantic garden for photos",
+            content: "A romantic rose garden perfect for couple portraits and intimate moments."
+        },
+        mare: {
+            title: "Pond",
+            subtitle: "Picturesque water feature for ceremonies",
+            content: "A serene pond setting that creates a magical atmosphere for ceremonies and photos."
         }
       }
     },
     interactiveMap: {
       title: "Explore the Estate",
       subtitle: "Discover our accommodations and spaces by clicking on the map points",
+      exploreSpaces: "Discover the Estate Spaces",
       discover: "Discover",
       close: "Close",
       legend_accommodation: "Accommodations",
       legend_poi: "Points of Interest",
+      legend_space: "Spaces",
     },
     contact: {
       title: "Contact Us",
@@ -1060,7 +1138,9 @@ export const translations: Record<Locale, Translation> = {
   fr: {
     header: {
       home: "Accueil",
-      packages: "Forfaits",
+      packages: "Forfaits Mariage",
+      elopement: "Élopement",
+      faq: "FAQ",
       services: "Prestations",
       configurator: "Configurateur",
       blog: "Blog",
@@ -1299,6 +1379,11 @@ export const translations: Record<Locale, Translation> = {
       subtitle: "Inspirations, conseils et récits pour votre mariage parfait.",
       readMore: "Lire la suite",
       backToBlog: "Retour au blog",
+      pressTitle: "Presse & Médias",
+      pressSubtitle: "Découvrez les articles de presse qui ont mis en lumière le Manoir de Vacheresses",
+      pressButton: "Voir les articles de presse",
+      momentsTitle: "Moments Inoubliables",
+      momentsSubtitle: "Découvrez la magie de nos mariages à travers ces images",
     },
     dashboard: {
       title: "Mariage de Alex & Chloé",
@@ -1562,16 +1647,48 @@ export const translations: Record<Locale, Translation> = {
           title: "Le Potager médiéval",
           subtitle: "Un voyage enchanteur",
           content: "Inspiré d’un dessin de Joseph Hémard, illustre propriétaire dans les années 20, nous avons reconstitué un potager d’inspiration médiévale selon les principes de la permaculture.\n\nVéritable lieu enchanteur, vous découvrirez ou redécouvrirez les merveilles de la nature : arbres fruitiers à palmette, herbes aromatiques, médicinales, décoratives…"
+        },
+        salle_blanche: {
+          title: "Salle Blanche",
+          subtitle: "Espace élégant pour les cérémonies",
+          content: "Un espace lumineux et élégant parfait pour les cérémonies intimes et les mariages civils."
+        },
+        orangerie: {
+          title: "Orangerie",
+          subtitle: "Lieu historique pour les cocktails",
+          content: "Un espace historique charmant idéal pour les cocktails et les rassemblements intimes."
+        },
+        chapelle: {
+          title: "Chapelle",
+          subtitle: "Lieu spirituel pour les mariages religieux",
+          content: "Un espace spirituel paisible pour les cérémonies religieuses et les bénédictions."
+        },
+        terrasses: {
+          title: "Terrasses",
+          subtitle: "Espaces extérieurs avec vue panoramique",
+          content: "De belles terrasses offrant des vues panoramiques époustouflantes sur le domaine et la campagne environnante."
+        },
+        roseraie: {
+          title: "Roseraie",
+          subtitle: "Jardin romantique pour les photos",
+          content: "Un jardin romantique de roses parfait pour les portraits de couple et les moments intimes."
+        },
+        mare: {
+          title: "Mare",
+          subtitle: "Point d'eau pittoresque pour les cérémonies",
+          content: "Un cadre serein avec une mare qui crée une atmosphère magique pour les cérémonies et les photos."
         }
       }
     },
     interactiveMap: {
       title: "Explorez le Domaine",
       subtitle: "Découvrez nos hébergements et espaces en cliquant sur les points de la carte",
+      exploreSpaces: "Découvrez les Espaces du Domaine",
       discover: "Découvrir",
       close: "Fermer",
       legend_accommodation: "Hébergements",
       legend_poi: "Lieux d'intérêt",
+      legend_space: "Espaces",
     },
     contact: {
       title: "Contactez-nous",

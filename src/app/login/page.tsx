@@ -17,6 +17,8 @@ import { AlertCircle } from "lucide-react";
 
 export default function LoginPage() {
   const router = useRouter();
+  const search = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
+  const next = search?.get('next') || null;
   const { toast } = useToast();
   const { t } = useLocale();
   const [isLoading, setIsLoading] = useState(false);
@@ -48,13 +50,13 @@ export default function LoginPage() {
           title: t.login?.admin_success_title || "Connexion admin réussie",
           description: t.login?.admin_success_desc || "Bienvenue administrateur"
         });
-        router.push("/admin");
+        router.push(next || "/admin");
       } else {
         toast({
           title: t.login?.client_success_title || "Connexion réussie",
           description: t.login?.client_success_desc || "Bienvenue"
         });
-        router.push("/dashboard"); // REDIRIGER VERS LE DASHBOARD CLIENT
+        router.push(next || "/dashboard");
       }
     } catch (err: any) {
       setError(err.message || "Identifiants invalides");
@@ -102,7 +104,7 @@ export default function LoginPage() {
       });
 
       localStorage.setItem('user', JSON.stringify(profile));
-      router.push("/dashboard"); // REDIRIGER VERS LE DASHBOARD CLIENT
+      router.push(next || "/dashboard");
     } catch (err: any) {
       setError(err.message || "Erreur lors de l'inscription");
       toast({

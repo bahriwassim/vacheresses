@@ -6,7 +6,7 @@ import { useState, useMemo } from "react";
 import { useLocale } from "@/hooks/use-locale";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { MapPin, X, Users, Maximize2, Bed, Wifi, Trees } from "lucide-react";
+import { MapPin, X, Users, Maximize2, Bed, Wifi, Trees, Landmark } from "lucide-react";
 import Link from "next/link";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
@@ -17,7 +17,7 @@ interface HotspotData {
   x: number; // Position en pourcentage
   y: number; // Position en pourcentage
   link: string;
-  type: 'accommodation' | 'poi'; // Point of Interest
+  type: 'accommodation' | 'poi' | 'space';
 }
 
 export function InteractiveMap() {
@@ -33,7 +33,7 @@ export function InteractiveMap() {
       description: t.stay.rooms.heures_du_jour.type,
       x: 35,
       y: 45,
-      link: "/sejourner#heures_du_jour",
+      link: "/sejourner/heures_du_jour",
       type: 'accommodation',
     },
     {
@@ -42,7 +42,7 @@ export function InteractiveMap() {
       description: t.stay.rooms.ruines_antiques.type,
       x: 48,
       y: 52,
-      link: "/sejourner#ruines_antiques",
+      link: "/sejourner/ruines_antiques",
       type: 'accommodation',
     },
     {
@@ -51,7 +51,7 @@ export function InteractiveMap() {
       description: t.stay.rooms.jardins_tivoli.type,
       x: 52,
       y: 48,
-      link: "/sejourner#jardins_tivoli",
+      link: "/sejourner/jardins_tivoli",
       type: 'accommodation',
     },
     {
@@ -60,7 +60,7 @@ export function InteractiveMap() {
       description: t.stay.rooms.petit_trianon.type,
       x: 65,
       y: 50,
-      link: "/sejourner#petit_trianon",
+      link: "/sejourner/petit_trianon",
       type: 'accommodation',
     },
     {
@@ -69,7 +69,7 @@ export function InteractiveMap() {
       description: t.stay.rooms.la_loge.type,
       x: 42,
       y: 60,
-      link: "/sejourner#la_loge",
+      link: "/sejourner/la_loge",
       type: 'accommodation',
     },
     // Points of Interest
@@ -118,6 +118,61 @@ export function InteractiveMap() {
       link: "/domaine/potager",
       type: 'poi',
     },
+    // Spaces (Espaces du domaine)
+    {
+      id: "salle_blanche",
+      name: t.domain.poi.salle_blanche.title,
+      description: t.domain.poi.salle_blanche.subtitle,
+      x: 40,
+      y: 35,
+      link: "/domaine/salle_blanche",
+      type: 'space',
+    },
+    {
+      id: "orangerie",
+      name: t.domain.poi.orangerie.title,
+      description: t.domain.poi.orangerie.subtitle,
+      x: 55,
+      y: 40,
+      link: "/domaine/orangerie",
+      type: 'space',
+    },
+    {
+      id: "chapelle",
+      name: t.domain.poi.chapelle.title,
+      description: t.domain.poi.chapelle.subtitle,
+      x: 68,
+      y: 42,
+      link: "/domaine/chapelle",
+      type: 'space',
+    },
+    {
+      id: "terrasses",
+      name: t.domain.poi.terrasses.title,
+      description: t.domain.poi.terrasses.subtitle,
+      x: 72,
+      y: 30,
+      link: "/domaine/terrasses",
+      type: 'space',
+    },
+    {
+      id: "roseraie",
+      name: t.domain.poi.roseraie.title,
+      description: t.domain.poi.roseraie.subtitle,
+      x: 34,
+      y: 50,
+      link: "/domaine/roseraie",
+      type: 'space',
+    },
+    {
+      id: "mare",
+      name: t.domain.poi.mare.title,
+      description: t.domain.poi.mare.subtitle,
+      x: 25,
+      y: 60,
+      link: "/domaine/mare",
+      type: 'space',
+    },
   ];
 
   const activeHotspot = useMemo(() => {
@@ -147,13 +202,20 @@ export function InteractiveMap() {
     salle_reception: ["/salle_reception_6.jpg", "/salle_reception_7.jpg", "/salle_reception_8.jpg"],
     parc: ["/Parc_1.jpg", "/Parc_2.jpg", "/Parc_3.jpg"],
     preau_verger: ["/preau_verger_1.jpg", "/preau_verger_2.jpg", "/preau_verger_3.jpg"],
+    // New estate spaces
+    salle_blanche: ["/salle_reception_6.jpg", "/salle_reception_7.jpg", "/salle_reception_8.jpg"],
+    orangerie: ["/espace_8.jpg", "/espace_9.jpg", "/espace_15.jpg"],
+    chapelle: ["/vacheresses_13.jpg", "/vacheresses_17.jpg", "/vacheresses_20.jpg"],
+    terrasses: ["/Parc_1.jpg", "/Parc_2.jpg", "/Parc_3.jpg"],
+    roseraie: ["/Parc_3.jpg", "/preau_verger_3.jpg", "/preau_verger_4.jpg"],
+    mare: ["/espace_1.jpg", "/espace_2_(1).jpg", "/espace_4.jpg"],
   };
   
   const activeRoomDetails = activeHotspot && activeHotspot.type === 'accommodation'
     ? t.stay.rooms[activeHotspot.id as keyof typeof t.stay.rooms] 
     : null;
     
-  const activePoiDetails = activeHotspot && activeHotspot.type === 'poi'
+  const activePoiDetails = activeHotspot && activeHotspot.type !== 'accommodation'
     ? t.domain.poi[activeHotspot.id as keyof typeof t.domain.poi]
     : null;
 
@@ -170,6 +232,11 @@ export function InteractiveMap() {
           </h2>
           <p className="mt-4 text-lg text-muted-foreground max-w-2xl mx-auto">
             {t.interactiveMap.subtitle}
+          </p>
+          <p className="mt-2 text-base max-w-2xl mx-auto">
+            <Link href="/domaine" className="text-primary hover:underline">
+              {t.interactiveMap.exploreSpaces || 'Découvrez les Espaces du Domaine'}
+            </Link>
           </p>
         </div>
 
@@ -206,12 +273,20 @@ export function InteractiveMap() {
                           <MapPin className="w-5 h-5" />
                         </span>
                       </>
-                    ) : (
+                    ) : hotspot.type === 'poi' ? (
                       <>
                          <span className="absolute inset-0 w-12 h-12 -ml-6 -mt-6 bg-accent/30 rounded-full animate-ping" />
                         <span className="absolute inset-0 w-8 h-8 -ml-4 -mt-4 bg-accent/50 rounded-full animate-pulse" />
                         <span className="relative flex items-center justify-center w-8 h-8 -ml-4 -mt-4 bg-accent text-accent-foreground rounded-full shadow-lg transition-all duration-300 group-hover/hotspot:scale-125 group-hover/hotspot:shadow-2xl">
                           <Trees className="w-5 h-5" />
+                        </span>
+                      </>
+                    ) : (
+                      <>
+                        <span className="absolute inset-0 w-12 h-12 -ml-6 -mt-6 bg-secondary/30 rounded-full animate-ping" />
+                        <span className="absolute inset-0 w-8 h-8 -ml-4 -mt-4 bg-secondary/50 rounded-full animate-pulse" />
+                        <span className="relative flex items-center justify-center w-8 h-8 -ml-4 -mt-4 bg-secondary text-secondary-foreground rounded-full shadow-lg transition-all duration-300 group-hover/hotspot:scale-125 group-hover/hotspot:shadow-2xl">
+                          <Landmark className="w-5 h-5" />
                         </span>
                       </>
                     )}
@@ -229,6 +304,10 @@ export function InteractiveMap() {
                 <div className="flex items-center gap-2">
                   <Trees className="w-4 h-4 text-accent" />
                   <span>{t.interactiveMap.legend_poi}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Landmark className="w-4 h-4 text-foreground" />
+                  <span>{t.interactiveMap.legend_space}</span>
                 </div>
               </div>
             </div>

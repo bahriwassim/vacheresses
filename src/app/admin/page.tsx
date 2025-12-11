@@ -18,6 +18,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useToast } from "@/hooks/use-toast";
 import { Textarea } from "@/components/ui/textarea";
 import { sharedState } from '@/lib/mock-db';
+import { chatService } from '@/lib/chat-service';
 
 export default function AdminPage() {
   const { t } = useLocale();
@@ -358,10 +359,7 @@ export default function AdminPage() {
                                             </div>
                                         ))}
                                     </div>
-                                    <div className="mt-4 flex gap-2">
-                                        <Textarea placeholder="Répondre..." className="flex-1"/>
-                                        <Button><Send className="w-4 h-4"/></Button>
-                                    </div>
+                                    <AdminReply client={client.name} />
                                 </CardContent>
                             </Card>
                         ))}
@@ -446,6 +444,18 @@ export default function AdminPage() {
         </div>
       </main>
       <Footer />
+    </div>
+  );
+}
+
+function AdminReply({ client }: { client: string }) {
+  const [text, setText] = useState('');
+  return (
+    <div className="mt-4 flex gap-2">
+      <Textarea placeholder="Répondre..." className="flex-1" value={text} onChange={(e)=>setText(e.target.value)} />
+      <Button onClick={() => { if (text.trim()) { chatService.send(client, 'Admin', text.trim()); setText(''); } }}>
+        <Send className="w-4 h-4"/>
+      </Button>
     </div>
   );
 }

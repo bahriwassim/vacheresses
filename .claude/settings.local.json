@@ -8,7 +8,8 @@
       "Bash(nul)",
       "Bash(cat:*)",
       "Bash(git lfs:*)",
-      "Bash(ls:*)"
+      "Bash(ls:*)",
+      "Bash(curl:*)"
     ],
     "deny": [],
     "ask": []

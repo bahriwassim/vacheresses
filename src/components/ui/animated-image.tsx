@@ -17,6 +17,8 @@ interface AnimatedImageProps {
   animation?: "fade" | "slide" | "zoom" | "blur" | "none";
   hoverEffect?: "scale" | "brightness" | "grayscale" | "none";
   delay?: number;
+  sizes?: string;
+  unoptimized?: boolean;
 }
 
 export function AnimatedImage({
@@ -32,6 +34,8 @@ export function AnimatedImage({
   animation = "fade",
   hoverEffect = "scale",
   delay = 0,
+  sizes = "100vw",
+  unoptimized = true,
 }: AnimatedImageProps) {
   const [isLoaded, setIsLoaded] = useState(false);
 
@@ -61,7 +65,7 @@ export function AnimatedImage({
     <div
       className={cn(
         "relative overflow-hidden rounded-lg",
-        !fill && aspectRatioClasses[aspectRatio],
+        fill ? "w-full h-full" : aspectRatioClasses[aspectRatio],
         className
       )}
       style={{ animationDelay: `${delay}ms` }}
@@ -70,6 +74,8 @@ export function AnimatedImage({
         src={src}
         alt={alt}
         {...(fill ? { fill: true } : { width, height })}
+        {...(fill ? { sizes } : {})}
+        unoptimized={unoptimized}
         priority={priority}
         data-ai-hint={dataAiHint}
         className={cn(
@@ -79,6 +85,7 @@ export function AnimatedImage({
           hoverClasses[hoverEffect]
         )}
         onLoad={() => setIsLoaded(true)}
+        onError={() => setIsLoaded(true)}
         loading={priority ? "eager" : "lazy"}
       />
       
@@ -163,12 +170,12 @@ export function CardImage({
   ...props
 }: CardImageProps) {
   return (
-    <div className={cn("relative group", cardClassName)}>
+    <div className={cn("relative group h-full w-full", cardClassName)}>
       <AnimatedImage
         {...props}
         animation="fade"
         hoverEffect="scale"
-        className="transition-all duration-500 group-hover:brightness-75"
+        className={cn("transition-all duration-500 group-hover:brightness-75", props.className)}
       />
       
       {overlay && (

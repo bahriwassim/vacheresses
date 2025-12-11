@@ -6,6 +6,8 @@ import { Toaster } from "@/components/ui/toaster"
 import './globals.css';
 import { LocaleProvider } from '@/hooks/use-locale';
 import { WhatsAppButton } from '@/components/ui/whatsapp-button';
+import { CookieConsent } from '@/components/cookie-consent';
+import { ThemeProvider } from '@/components/theme-provider';
 
 // This is a client component, so metadata should be exported from a server component if needed, 
 // or defined in a generateMetadata function in a parent layout or page.
@@ -21,7 +23,7 @@ export default function RootLayout({
 }>) {
   return (
     <LocaleProvider>
-      <html lang="en" className="dark">
+      <html lang="en" suppressHydrationWarning>
         <head>
           <link rel="icon" href="/logo_white.png" type="image/png" sizes="32x32" />
           <link rel="shortcut icon" href="/logo_white.png" type="image/png" />
@@ -31,9 +33,12 @@ export default function RootLayout({
           <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=PT+Sans:wght@400;700&display=swap" rel="stylesheet" />
         </head>
         <body className="font-body antialiased">
-          {children}
-          <Toaster />
-          <WhatsAppButton />
+          <ThemeProvider>
+            {children}
+            <Toaster />
+            <WhatsAppButton />
+            <CookieConsent />
+          </ThemeProvider>
         </body>
       </html>
     </LocaleProvider>

@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { FileText, CreditCard, Heart, Calendar, Users, LogOut, User as UserIcon, Hotel } from "lucide-react";
+import { FileText, CreditCard, Heart, Calendar, Users, LogOut, User as UserIcon, Hotel, MessageSquare, Send } from "lucide-react";
 import { useLocale } from "@/hooks/use-locale";
 import { sharedState } from '@/lib/mock-db';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogClose } from "@/components/ui/dialog";
@@ -17,12 +17,14 @@ import { useToast } from "@/hooks/use-toast";
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { chatService } from '@/lib/chat-service';
 
 export default function DashboardPage() {
   const { t } = useLocale();
   const { toast } = useToast();
   const router = useRouter();
-  const [user, setUser] = useState<any>(null);
+  const [currentUser, setCurrentUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [profileData, setProfileData] = useState({ name: '', email: '', phone: '' });
   const [contracts, setContracts] = useState<any[]>([]);
@@ -36,7 +38,7 @@ export default function DashboardPage() {
         const storedUser = localStorage.getItem('user');
         if (storedUser) {
             const parsedUser = JSON.parse(storedUser);
-            setUser(parsedUser);
+            setCurrentUser(parsedUser);
             setProfileData({ name: parsedUser.name, email: parsedUser.email, phone: parsedUser.phone || '' });
             
             const initialState = sharedState.getState();
@@ -83,10 +85,10 @@ export default function DashboardPage() {
 
   const handleProfileUpdate = () => {
     // In a real app, this would call an API
-    if (user) {
-        const updatedUser = { ...user, ...profileData };
+    if (currentUser) {
+        const updatedUser = { ...currentUser, ...profileData };
         localStorage.setItem('user', JSON.stringify(updatedUser));
-        setUser(updatedUser);
+        setCurrentUser(updatedUser);
         toast({
           title: "Profil mis à jour",
           description: "Vos informations ont été sauvegardées.",
@@ -102,7 +104,7 @@ export default function DashboardPage() {
     );
   }
 
-  if (!user) {
+  if (!currentUser) {
     // This part should ideally not be reached if the redirection logic in useEffect is correct,
     // but it's a good fallback.
     return null;
@@ -115,7 +117,7 @@ export default function DashboardPage() {
         <div className="container max-w-7xl">
           <div className="flex flex-col md:flex-row gap-4 md:items-center justify-between mb-8">
             <div>
-              <h1 className="text-3xl font-bold font-headline">{t.dashboard.title.replace("Alex & Jordan", user.name)}</h1>
+              <h1 className="text-3xl font-bold font-headline">{t.dashboard.title.replace("Alex & Jordan", currentUser.name)}</h1>
               <p className="text-muted-foreground">{t.dashboard.subtitle}</p>
             </div>
              <div className="flex items-center gap-4">
@@ -130,10 +132,11 @@ export default function DashboardPage() {
 
           <Tabs defaultValue="overview">
             <TabsList className="grid w-full grid-cols-2 md:grid-cols-5">
-              <TabsTrigger value="overview"><Heart className="mr-2" />{t.dashboard.tabs.overview}</TabsTrigger>
-              <TabsTrigger value="contracts"><FileText className="mr-2" />{t.dashboard.tabs.contracts}</TabsTrigger>
-              <TabsTrigger value="payments"><CreditCard className="mr-2" />{t.dashboard.tabs.payments}</TabsTrigger>
+              <TabsTrigger value="overview"><Heart className="mr-2"/>{t.dashboard.tabs.overview}</TabsTrigger>
+              <TabsTrigger value="contracts"><FileText className="mr-2"/>{t.dashboard.tabs.contracts}</TabsTrigger>
+              <TabsTrigger value="payments"><CreditCard className="mr-2"/>{t.dashboard.tabs.payments}</TabsTrigger>
               <TabsTrigger value="accommodations"><Hotel className="mr-2"/>Hébergements</TabsTrigger>
+              <TabsTrigger value="messages"><MessageSquare className="mr-2"/>Messages</TabsTrigger>
               <TabsTrigger value="profile"><UserIcon className="mr-2"/>Mon Profil</TabsTrigger>
             </TabsList>
             
@@ -289,6 +292,20 @@ export default function DashboardPage() {
                 </Card>
             </TabsContent>
 
+            {currentUser && (
+              <TabsContent value="messages" className="mt-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Messagerie</CardTitle>
+                    <CardDescription>Discutez avec l'admin.</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <ClientChat clientName={currentUser.name} />
+                  </CardContent>
+                </Card>
+              </TabsContent>
+            )}
+
             <TabsContent value="profile" className="mt-6">
                 <Card>
                     <CardHeader>
@@ -315,7 +332,7 @@ export default function DashboardPage() {
                 </Card>
             </TabsContent>
 
-          </Tabs>
+        </Tabs>
 
            <Dialog open={isViewDialogOpen} onOpenChange={setViewDialogOpen}>
             <DialogContent className="max-w-2xl">
@@ -347,6 +364,34 @@ export default function DashboardPage() {
         </div>
       </main>
       <Footer />
+    </div>
+  );
+}
+
+function ClientChat({ clientName }: { clientName: string }) {
+  const [messages, setMessages] = useState(chatService.list(clientName));
+  const [text, setText] = useState('');
+  useEffect(()=>{
+    const unsub = chatService.subscribe((msg)=>{
+      if (msg.client === clientName) setMessages(chatService.list(clientName));
+    });
+    return ()=>unsub();
+  },[clientName]);
+  return (
+    <div>
+      <div className="space-y-3 max-h-64 overflow-y-auto pr-4">
+        {messages.map(msg=> (
+          <div key={msg.id} className={`flex ${msg.sender === 'Client' ? 'justify-end' : 'justify-start'}`}>
+            <p className={`p-3 rounded-lg max-w-[70%] ${msg.sender === 'Client' ? 'bg-primary text-primary-foreground' : 'bg-muted'}`}>{msg.text}</p>
+          </div>
+        ))}
+      </div>
+      <div className="mt-4 flex gap-2">
+        <Textarea placeholder="Écrire un message..." className="flex-1" value={text} onChange={(e)=>setText(e.target.value)} />
+        <Button onClick={()=>{ if(text.trim()){ chatService.send(clientName, 'Client', text.trim()); setText(''); } }}>
+          <Send className="w-4 h-4" />
+        </Button>
+      </div>
     </div>
   );
 }

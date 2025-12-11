@@ -47,6 +47,42 @@ export const VacheressesImages: VacheressesImage[] = [
     category: "package",
     imageHint: "réception mariage luxe"
   },
+  // Additional space images for better representation
+  {
+    id: "cour-honneur",
+    description: "Cour d'honneur du Manoir de Vacheresses",
+    imageUrl: "/vacheresses_7.jpg",
+    category: "gallery",
+    imageHint: "cour d'honneur manoir"
+  },
+  {
+    id: "salle-reception-main",
+    description: "Salle de réception principale du domaine",
+    imageUrl: "/salle_reception_9.jpg",
+    category: "gallery",
+    imageHint: "salle réception principale"
+  },
+  {
+    id: "salle-exposition",
+    description: "Salle d'exposition du Manoir",
+    imageUrl: "/espace_15.jpg",
+    category: "gallery",
+    imageHint: "salle exposition manoir"
+  },
+  {
+    id: "potager-maison",
+    description: "Maison du potager avec ses chambres",
+    imageUrl: "/potager_3.jpg",
+    category: "gallery",
+    imageHint: "maison potager chambres"
+  },
+  {
+    id: "parc-ombre",
+    description: "Parc ombragé pour les cérémonies en plein air",
+    imageUrl: "/Parc_2.jpg",
+    category: "gallery",
+    imageHint: "parc cérémonie plein air"
+  },
 
   // Gallery images - Espaces extérieurs et jardins
   {

@@ -11,6 +11,7 @@ import { VisualTour } from '@/components/sections/visual-tour';
 import { Testimonials } from '@/components/sections/testimonials';
 import { Access } from '@/components/sections/access';
 import { VideoSection } from '@/components/sections/video-section';
+import { ProprietorsSection } from '@/components/sections/proprietors-section';
 import { ScrollToTop } from '@/components/ui/scroll-to-top';
 import { BookingProvider } from '@/contexts/booking-context';
 import { InstagramFeed } from '@/components/sections/instagram-feed';
@@ -23,6 +24,7 @@ export default function Home() {
         <main className="flex-1">
           <Hero />
           <DomainTeaser />
+          <ProprietorsSection />
           <VideoSection />
           <InteractiveMap />
           <Packages />

@@ -209,6 +209,217 @@ export default function DomainePage() {
             </div>
           </div>
 
+          {/* Points d'intérêt du Domaine */}
+          <div className="mb-12">
+            <h2 className="text-4xl md:text-5xl font-headline font-bold text-center mb-4 animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-300">
+              Découvrez les Espaces du Domaine
+            </h2>
+            <p className="text-sm md:text-base tracking-wider text-muted-foreground uppercase text-center mb-12 animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-400">
+              Explorez nos différents lieux pour votre événement
+            </p>
+          </div>
+
+          {/* Grid des espaces */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
+            {/* Cour d'Honneur */}
+            <Card className="overflow-hidden transition-all duration-500 hover:shadow-xl hover:-translate-y-1">
+              <div className="relative h-48 overflow-hidden">
+                <Image
+                  src="/vacheresses_7.jpg"
+                  alt="Cour d'Honneur"
+                  fill
+                  className="object-cover"
+                />
+              </div>
+              <CardHeader>
+                <CardTitle className="font-headline text-xl">{t.domain.poi.cour_honneur.title}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground text-sm">{t.domain.poi.cour_honneur.subtitle}</p>
+              </CardContent>
+            </Card>
+
+            {/* Salle de Réception */}
+            <Card className="overflow-hidden transition-all duration-500 hover:shadow-xl hover:-translate-y-1">
+              <div className="relative h-48 overflow-hidden">
+                <Image
+                  src="/salle_reception_9.jpg"
+                  alt="Salle de Réception"
+                  fill
+                  className="object-cover"
+                />
+              </div>
+              <CardHeader>
+                <CardTitle className="font-headline text-xl">{t.domain.poi.salle_reception.title}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground text-sm">{t.domain.poi.salle_reception.subtitle}</p>
+              </CardContent>
+            </Card>
+
+            {/* Parc */}
+            <Card className="overflow-hidden transition-all duration-500 hover:shadow-xl hover:-translate-y-1">
+              <div className="relative h-48 overflow-hidden">
+                <Image
+                  src="/Parc_2.jpg"
+                  alt="Parc"
+                  fill
+                  className="object-cover"
+                />
+              </div>
+              <CardHeader>
+                <CardTitle className="font-headline text-xl">{t.domain.poi.parc.title}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground text-sm">{t.domain.poi.parc.subtitle}</p>
+              </CardContent>
+            </Card>
+
+            {/* Préau et Verger */}
+            <Card className="overflow-hidden transition-all duration-500 hover:shadow-xl hover:-translate-y-1">
+              <div className="relative h-48 overflow-hidden">
+                <Image
+                  src="/espace_7.jpg"
+                  alt="Préau et Verger"
+                  fill
+                  className="object-cover"
+                />
+              </div>
+              <CardHeader>
+                <CardTitle className="font-headline text-xl">{t.domain.poi.preau_verger.title}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground text-sm">{t.domain.poi.preau_verger.subtitle}</p>
+              </CardContent>
+            </Card>
+
+            {/* Potager Médiéval */}
+            <Card className="overflow-hidden transition-all duration-500 hover:shadow-xl hover:-translate-y-1">
+              <div className="relative h-48 overflow-hidden">
+                <Image
+                  src="/espace_9.jpg"
+                  alt="Potager Médiéval"
+                  fill
+                  className="object-cover"
+                />
+              </div>
+              <CardHeader>
+                <CardTitle className="font-headline text-xl">{t.domain.poi.potager.title}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground text-sm">{t.domain.poi.potager.subtitle}</p>
+              </CardContent>
+            </Card>
+
+            {/* Maison du Potager */}
+            <Card className="overflow-hidden transition-all duration-500 hover:shadow-xl hover:-translate-y-1">
+              <div className="relative h-48 overflow-hidden">
+                <Image
+                  src="/potager_3.jpg"
+                  alt="Maison du Potager"
+                  fill
+                  className="object-cover"
+                />
+              </div>
+              <CardHeader>
+                <CardTitle className="font-headline text-xl">Hébergements</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground text-sm">Charmantes chambres dans la Maison du Potager</p>
+              </CardContent>
+            </Card>
+
+            {/* Salle Blanche */}
+            <Card className="overflow-hidden transition-all duration-500 hover:shadow-xl hover:-translate-y-1">
+              <div className="relative h-48 overflow-hidden">
+                <Image
+                  src="/salle_reception_6.jpg"
+                  alt="Salle Blanche"
+                  fill
+                  className="object-cover"
+                />
+              </div>
+              <CardHeader>
+                <CardTitle className="font-headline text-xl">Salle Blanche</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground text-sm">Espace élégant pour les cérémonies</p>
+              </CardContent>
+            </Card>
+
+            {/* Orangerie */}
+            <Card className="overflow-hidden transition-all duration-500 hover:shadow-xl hover:-translate-y-1">
+              <div className="relative h-48 overflow-hidden">
+                <Image
+                  src="/espace_8.jpg"
+                  alt="Orangerie"
+                  fill
+                  className="object-cover"
+                />
+              </div>
+              <CardHeader>
+                <CardTitle className="font-headline text-xl">Orangerie</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground text-sm">Lieu historique pour les cocktails</p>
+              </CardContent>
+            </Card>
+
+            {/* Chapelle */}
+            <Card className="overflow-hidden transition-all duration-500 hover:shadow-xl hover:-translate-y-1">
+              <div className="relative h-48 overflow-hidden">
+                <Image
+                  src="/vacheresses_13.jpg"
+                  alt="Chapelle"
+                  fill
+                  className="object-cover"
+                />
+              </div>
+              <CardHeader>
+                <CardTitle className="font-headline text-xl">Chapelle</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground text-sm">Lieu spirituel pour les mariages religieux</p>
+              </CardContent>
+            </Card>
+
+            {/* Terrasses */}
+            <Card className="overflow-hidden transition-all duration-500 hover:shadow-xl hover:-translate-y-1">
+              <div className="relative h-48 overflow-hidden">
+                <Image
+                  src="/Parc_1.jpg"
+                  alt="Terrasses"
+                  fill
+                  className="object-cover"
+                />
+              </div>
+              <CardHeader>
+                <CardTitle className="font-headline text-xl">Terrasses</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground text-sm">Espaces extérieurs avec vue panoramique</p>
+              </CardContent>
+            </Card>
+
+            {/* Roseraie */}
+            <Card className="overflow-hidden transition-all duration-500 hover:shadow-xl hover:-translate-y-1">
+              <div className="relative h-48 overflow-hidden">
+                <Image
+                  src="/Parc_3.jpg"
+                  alt="Roseraie"
+                  fill
+                  className="object-cover"
+                />
+              </div>
+              <CardHeader>
+                <CardTitle className="font-headline text-xl">Roseraie</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground text-sm">Jardin romantique pour les photos</p>
+              </CardContent>
+            </Card>
+          </div>
+
           {/* Galerie finale */}
           <div className="mt-20 mb-12 animate-in fade-in duration-1000 delay-900">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-2">

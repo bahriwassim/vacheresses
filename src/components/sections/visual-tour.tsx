@@ -1,7 +1,7 @@
 
 "use client";
 
-import { getGalleryImages } from "@/lib/vacheresses-images";
+import { getGalleryImages, getImageById } from "@/lib/vacheresses-images";
 import { Card } from "@/components/ui/card";
 import { useLocale } from "@/hooks/use-locale";
 import { cn } from "@/lib/utils";
@@ -15,7 +15,16 @@ import { X, ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export function VisualTour() {
-  const galleryImages = getGalleryImages().slice(0, 12);
+  // Get a mix of gallery images and specific space images for better representation
+  const galleryImages = [
+    ...getGalleryImages().slice(0, 7),
+    getImageById("cour-honneur")!,
+    getImageById("salle-reception-main")!,
+    getImageById("salle-exposition")!,
+    getImageById("potager-maison")!,
+    getImageById("parc-ombre")!
+  ];
+  const images = galleryImages.filter((img, idx, arr) => img && arr.findIndex(i => i?.id === img?.id) === idx);
   const { t } = useLocale();
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -28,13 +37,13 @@ export function VisualTour() {
 
   const prevImage = () => {
     setCurrentIndex((prev) =>
-      prev === 0 ? galleryImages.length - 1 : prev - 1
+      prev === 0 ? images.length - 1 : prev - 1
     );
   };
 
   const nextImage = () => {
     setCurrentIndex((prev) =>
-      prev === galleryImages.length - 1 ? 0 : prev + 1
+      prev === images.length - 1 ? 0 : prev + 1
     );
   };
 
@@ -52,7 +61,7 @@ export function VisualTour() {
 
         {/* GRID IMAGES */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {galleryImages.map((image, index) => (
+          {images.map((image, index) => (
             <div
               key={image.id}
               className={cn(
@@ -111,8 +120,8 @@ export function VisualTour() {
             {/* IMAGE */}
             <div className="relative w-full h-full flex items-center justify-center">
               <Image
-                src={galleryImages[currentIndex].imageUrl}
-                alt={galleryImages[currentIndex].description}
+                src={images[currentIndex].imageUrl}
+                alt={images[currentIndex].description}
                 fill
                 className="object-contain"
               />
@@ -120,7 +129,7 @@ export function VisualTour() {
 
             {/* COUNTER */}
             <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-white text-sm px-4 py-1 bg-black/40 rounded-full">
-              {currentIndex + 1} / {galleryImages.length}
+              {currentIndex + 1} / {images.length}
             </div>
           </DialogContent>
         </Dialog>

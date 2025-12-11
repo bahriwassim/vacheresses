@@ -28,14 +28,11 @@ export function InstagramFeed() {
   const [loading, setLoading] = useState(true);
   const [useFallback, setUseFallback] = useState(false);
 
-  // Fallback images from database
+  // Fallback images from database (only 3)
   const fallbackImages = [
     getImageById("testimonial-1"),
     getImageById("testimonial-2"),
     getImageById("testimonial-3"),
-    getImageById("gallery-1"),
-    getImageById("gallery-2"),
-    getImageById("gallery-5"),
   ].filter(Boolean);
 
   useEffect(() => {
@@ -95,7 +92,7 @@ export function InstagramFeed() {
           </p>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-4xl mx-auto">
           {useFallback ? (
             // Fallback: Display images from database
             fallbackImages.map((image, index) => (
@@ -121,7 +118,7 @@ export function InstagramFeed() {
             ))
           ) : (
             // Real Instagram posts
-            posts.slice(0, 6).map((post, index) => (
+            posts.slice(0, 3).map((post, index) => (
               <Link
                 key={post.id}
                 href={post.permalink}

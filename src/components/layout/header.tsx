@@ -22,6 +22,8 @@ const navLinks = [
   { href: "/#packages", label: "packages" },
   { href: "/prestations", label: "services" },
   { href: "/sejourner", label: "stay" },
+  { href: "/elopement-packages", label: "elopement" },
+  { href: "/faq", label: "faq" },
 ];
 
 function useTheme() {
@@ -52,11 +54,31 @@ function useTheme() {
 
 export function Header() {
   const [isSheetOpen, setIsSheetOpen] = useState(false);
+  const [lastScrollY, setLastScrollY] = useState(0);
+  const [headerHidden, setHeaderHidden] = useState(false);
   const { theme, setTheme } = useTheme();
   const { locale, setLocale, t } = useLocale();
 
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      
+      // Hide header when scrolling down, show when scrolling up
+      if (currentScrollY > lastScrollY && currentScrollY > 100) {
+        setHeaderHidden(true);
+      } else if (currentScrollY < lastScrollY) {
+        setHeaderHidden(false);
+      }
+      
+      setLastScrollY(currentScrollY);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [lastScrollY]);
+
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className={`sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 transition-transform duration-300 ${headerHidden ? '-translate-y-full' : 'translate-y-0'}`}>
       <div className="container flex h-16 max-w-7xl items-center justify-between">
         <Link href="/" className="flex items-center">
           <Image src="/logo_white.png" alt="Manoir de Vacheresses" width={64} height={64} className="h-16 w-16 invert dark:invert-0" />

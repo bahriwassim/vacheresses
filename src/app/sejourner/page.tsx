@@ -11,6 +11,7 @@ import { useLocale } from "@/hooks/use-locale";
 import { Separator } from "@/components/ui/separator";
 import { useState, useEffect } from "react";
 import Image from "next/image";
+import Link from "next/link";
 
 interface RoomData {
   id: string;
@@ -422,6 +423,146 @@ export default function SejournerPage() {
                         </div>
                     </div>
                 </div>
+            </Card>
+          </section>
+
+          {/* Partner Accommodations Section */}
+          <section id="partenaires" className="mt-20">
+            <Separator className="my-16" />
+            <div className="text-center mb-12">
+              <h2 className="text-4xl font-headline font-bold mb-4">Hébergements Partenaires</h2>
+              <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
+                Nous collaborons avec des hébergements à proximité pour offrir plus d'options à nos invités. 
+                Nous pouvons faciliter les réservations pour ces établissements partenaires.
+              </p>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {/* Partner 1 */}
+              <Card className="flex flex-col overflow-hidden transition-all duration-500 hover:shadow-2xl hover:shadow-primary/20">
+                <div className="relative h-48 overflow-hidden">
+                  <Image 
+                    src="/espace_1.jpg" 
+                    alt="Hôtel Partenaire 1" 
+                    fill 
+                    className="object-cover"
+                  />
+                </div>
+                <CardHeader>
+                  <CardTitle className="font-headline">Hôtel du Centre</CardTitle>
+                  <CardDescription>À 5 minutes en voiture</CardDescription>
+                </CardHeader>
+                <CardContent className="flex-1">
+                  <p className="text-muted-foreground text-sm mb-4">
+                    Hôtel 3 étoiles avec piscine et spa. Chambres confortables et restaurant gastronomique.
+                  </p>
+                  <div className="flex items-center text-sm text-muted-foreground mb-2">
+                    <BedDouble className="h-4 w-4 mr-2 text-primary" />
+                    <span>30 chambres</span>
+                  </div>
+                  <div className="flex items-center text-sm text-muted-foreground">
+                    <Users className="h-4 w-4 mr-2 text-primary" />
+                    <span>Capacité jusqu'à 60 personnes</span>
+                  </div>
+                </CardContent>
+                <CardFooter>
+                  <Button asChild variant="outline" className="w-full">
+                    <a href="https://www.booking.com" target="_blank" rel="noopener noreferrer">
+                      Voir le site
+                    </a>
+                  </Button>
+                </CardFooter>
+              </Card>
+
+              {/* Partner 2 */}
+              <Card className="flex flex-col overflow-hidden transition-all duration-500 hover:shadow-2xl hover:shadow-primary/20">
+                <div className="relative h-48 overflow-hidden">
+                  <Image 
+                    src="/espace_4.jpg" 
+                    alt="Chambres d'Hôtes Partenaire" 
+                    fill 
+                    className="object-cover"
+                  />
+                </div>
+                <CardHeader>
+                  <CardTitle className="font-headline">Chambres d'Hôtes Les Glycines</CardTitle>
+                  <CardDescription>À 3 minutes en voiture</CardDescription>
+                </CardHeader>
+                <CardContent className="flex-1">
+                  <p className="text-muted-foreground text-sm mb-4">
+                    Charmantes chambres d'hôtes dans un cadre bucolique. Petit-déjeuner inclus.
+                  </p>
+                  <div className="flex items-center text-sm text-muted-foreground mb-2">
+                    <BedDouble className="h-4 w-4 mr-2 text-primary" />
+                    <span>8 chambres</span>
+                  </div>
+                  <div className="flex items-center text-sm text-muted-foreground">
+                    <Users className="h-4 w-4 mr-2 text-primary" />
+                    <span>Capacité jusqu'à 16 personnes</span>
+                  </div>
+                </CardContent>
+                <CardFooter>
+                  <Button asChild variant="outline" className="w-full">
+                    <a href="https://www.booking.com" target="_blank" rel="noopener noreferrer">
+                      Voir le site
+                    </a>
+                  </Button>
+                </CardFooter>
+              </Card>
+
+              {/* Partner 3 */}
+              <Card className="flex flex-col overflow-hidden transition-all duration-500 hover:shadow-2xl hover:shadow-primary/20">
+                <div className="relative h-48 overflow-hidden">
+                  <Image 
+                    src="/espace_5.jpg" 
+                    alt="Gîte Partenaire" 
+                    fill 
+                    className="object-cover"
+                  />
+                </div>
+                <CardHeader>
+                  <CardTitle className="font-headline">Gîte de Campagne La Grange</CardTitle>
+                  <CardDescription>À 7 minutes en voiture</CardDescription>
+                </CardHeader>
+                <CardContent className="flex-1">
+                  <p className="text-muted-foreground text-sm mb-4">
+                    Gîte entier pouvant accueillir jusqu'à 12 personnes. Idéal pour les familles.
+                  </p>
+                  <div className="flex items-center text-sm text-muted-foreground mb-2">
+                    <Home className="h-4 w-4 mr-2 text-primary" />
+                    <span>300 m² de surface</span>
+                  </div>
+                  <div className="flex items-center text-sm text-muted-foreground">
+                    <Users className="h-4 w-4 mr-2 text-primary" />
+                    <span>Capacité jusqu'à 12 personnes</span>
+                  </div>
+                </CardContent>
+                <CardFooter>
+                  <Button asChild variant="outline" className="w-full">
+                    <a href="https://www.booking.com" target="_blank" rel="noopener noreferrer">
+                      Voir le site
+                    </a>
+                  </Button>
+                </CardFooter>
+              </Card>
+            </div>
+
+            <Card className="mt-12 bg-primary/5 border-primary/20">
+              <CardContent className="p-8 text-center">
+                <h3 className="text-2xl font-headline font-bold mb-4">Besoin d'aide pour les réservations ?</h3>
+                <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
+                  Nous pouvons vous accompagner dans l'organisation des réservations externes en tant que facilitateurs. 
+                  Contactez-nous pour obtenir des tarifs préférentiels auprès de nos partenaires.
+                </p>
+                <div className="flex flex-col sm:flex-row justify-center gap-4">
+                  <Button asChild>
+                    <Link href="/contact">Nous Contacter</Link>
+                  </Button>
+                  <Button asChild variant="outline">
+                    <Link href="mailto:contact@manoirdevacheresses.com">Envoyer un Email</Link>
+                  </Button>
+                </div>
+              </CardContent>
             </Card>
           </section>
         </div>
