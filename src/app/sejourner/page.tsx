@@ -12,6 +12,7 @@ import { Separator } from "@/components/ui/separator";
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useLocale as useLocaleHook } from "@/hooks/use-locale";
 
 interface RoomData {
   id: string;
@@ -209,6 +210,7 @@ export default function SejournerPage() {
             alt={room.name}
             fill
             className="object-cover transition-transform duration-700 group-hover:scale-110"
+            unoptimized
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
@@ -262,6 +264,7 @@ export default function SejournerPage() {
                         alt={`${room.name} - Photo ${idx + 1}`}
                         fill
                         className="object-cover transition-all duration-500 group-hover:scale-110 group-hover:brightness-110"
+                        unoptimized
                       />
                       <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300" />
                     </div>
@@ -313,11 +316,6 @@ export default function SejournerPage() {
               </div>
             </DialogContent>
           </Dialog>
-          {room.hasReservation ? (
-            <Button className="w-full">{t.stay.reserve_online}</Button>
-          ) : (
-            <Button className="w-full" variant="secondary">{t.stay.contact_us}</Button>
-          )}
         </CardFooter>
       </Card>
   );
@@ -326,7 +324,7 @@ export default function SejournerPage() {
     <div className="flex flex-col min-h-screen">
       <Header />
 
-      {/* Hero Section */}
+      {/* Hero Section with YouTube background */}
       <div className="relative h-[60vh] overflow-hidden">
         <div
           className="absolute inset-0 w-full h-full"
@@ -335,12 +333,13 @@ export default function SejournerPage() {
             transition: 'transform 0.1s ease-out'
           }}
         >
-          <Image
-            src="/potager_3.jpg"
-            alt="Maison du Potager"
-            fill
-            className="object-cover"
-            priority
+          <iframe
+            src="https://www.youtube.com/embed/QQ9AocEtlJA?autoplay=1&mute=1&loop=1&playlist=QQ9AocEtlJA&controls=0&modestbranding=1&showinfo=0"
+            title="Séjourner au Manoir de Vacheresses"
+            className="absolute inset-0 w-full h-full"
+            frameBorder="0"
+            allow="autoplay; encrypted-media"
+            allowFullScreen
           />
         </div>
         <div className="absolute inset-0 bg-black/40" />
@@ -365,9 +364,9 @@ export default function SejournerPage() {
 
           {/* La Maison du Potager Section */}
           <section id="maison-potager" className="mb-20">
-            <Card className="shadow-2xl border-primary/20 overflow-hidden backdrop-blur-sm bg-card/95 animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-300">
-              <div className="grid md:grid-cols-2 gap-0">
-                <div className="p-8 md:p-12 flex flex-col justify-center order-2 md:order-1">
+          <Card className="shadow-2xl border-primary/20 overflow-hidden backdrop-blur-sm bg-card/95 animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-300">
+            <div className="grid md:grid-cols-2 gap-0">
+              <div className="p-8 md:p-12 flex flex-col justify-center order-2 md:order-1">
                   <CardTitle className="font-headline text-3xl md:text-4xl text-primary mb-6">
                     {t.stay.maison_potager_title}
                   </CardTitle>
@@ -384,17 +383,18 @@ export default function SejournerPage() {
                       {t.stay.privatize_description}
                     </p>
                   </div>
-                </div>
-                <div className="relative h-[400px] md:h-auto overflow-hidden group order-1 md:order-2">
-                  <Image
-                    src="/potager_4.jpg"
-                    alt="Maison du Potager"
-                    fill
-                    className="object-cover transition-transform duration-700 group-hover:scale-110"
-                  />
-                </div>
               </div>
-            </Card>
+              <div className="relative h-[400px] md:h-auto overflow-hidden group order-1 md:order-2">
+                <Image
+                  src="/potager_4.jpg"
+                  alt="Maison du Potager"
+                  fill
+                  className="object-cover transition-transform duration-700 group-hover:scale-110"
+                  unoptimized
+                />
+              </div>
+            </div>
+          </Card>
 
             <div className="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {potagerRooms.map(renderRoomCard)}
@@ -413,13 +413,13 @@ export default function SejournerPage() {
                     </div>
                     <div className="grid grid-cols-2 gap-2 p-4">
                         <div className="relative h-64 rounded-lg overflow-hidden group">
-                             <Image src="/mariage_Véronique__Florian_-959.jpg" alt="La Loge photo 1" fill className="object-cover transition-transform duration-500 group-hover:scale-110"/>
+                             <Image src="/mariage_Véronique__Florian_-959.jpg" alt="La Loge photo 1" fill className="object-cover transition-transform duration-500 group-hover:scale-110" unoptimized/>
                         </div>
                         <div className="relative h-64 rounded-lg overflow-hidden group">
-                            <Image src="/salle_reception_10.jpg" alt="La Loge photo 2" fill className="object-cover transition-transform duration-500 group-hover:scale-110"/>
+                            <Image src="/salle_reception_10.jpg" alt="La Loge photo 2" fill className="object-cover transition-transform duration-500 group-hover:scale-110" unoptimized/>
                         </div>
                         <div className="relative h-64 col-span-2 rounded-lg overflow-hidden group">
-                           <Image src="/vacheresses_13.jpg" alt="La Loge photo 3" fill className="object-cover transition-transform duration-500 group-hover:scale-110"/>
+                           <Image src="/vacheresses_13.jpg" alt="La Loge photo 3" fill className="object-cover transition-transform duration-500 group-hover:scale-110" unoptimized/>
                         </div>
                     </div>
                 </div>
@@ -446,6 +446,7 @@ export default function SejournerPage() {
                     alt="Hôtel Partenaire 1" 
                     fill 
                     className="object-cover"
+                    unoptimized
                   />
                 </div>
                 <CardHeader>
@@ -482,6 +483,7 @@ export default function SejournerPage() {
                     alt="Chambres d'Hôtes Partenaire" 
                     fill 
                     className="object-cover"
+                    unoptimized
                   />
                 </div>
                 <CardHeader>
@@ -518,6 +520,7 @@ export default function SejournerPage() {
                     alt="Gîte Partenaire" 
                     fill 
                     className="object-cover"
+                    unoptimized
                   />
                 </div>
                 <CardHeader>
@@ -551,17 +554,8 @@ export default function SejournerPage() {
               <CardContent className="p-8 text-center">
                 <h3 className="text-2xl font-headline font-bold mb-4">Besoin d'aide pour les réservations ?</h3>
                 <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
-                  Nous pouvons vous accompagner dans l'organisation des réservations externes en tant que facilitateurs. 
-                  Contactez-nous pour obtenir des tarifs préférentiels auprès de nos partenaires.
+                  Nous pouvons vous accompagner dans l'organisation des réservations externes en tant que facilitateurs.
                 </p>
-                <div className="flex flex-col sm:flex-row justify-center gap-4">
-                  <Button asChild>
-                    <Link href="/contact">Nous Contacter</Link>
-                  </Button>
-                  <Button asChild variant="outline">
-                    <Link href="mailto:contact@manoirdevacheresses.com">Envoyer un Email</Link>
-                  </Button>
-                </div>
               </CardContent>
             </Card>
           </section>

@@ -95,7 +95,7 @@ export default function PressPage() {
                 <div className="relative h-48">
                   <CardImage
                     src={article.image}
-                    alt={article.title}
+                    alt={article.title[locale]}
                     fill
                     className="object-cover"
                   />
