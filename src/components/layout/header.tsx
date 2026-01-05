@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useLocale } from "@/hooks/use-locale";
 import { translations } from "@/lib/translations";
+import { EditableText } from "@/components/ui/editable-text";
 
 const navLinks = [
   { href: "/", label: "home" },
@@ -91,11 +92,11 @@ export function Header() {
               href={link.href}
               className="transition-colors hover:text-foreground/80 text-foreground/60"
             >
-              {t.header[link.label as keyof typeof t.header]}
+              <EditableText path={`header.${link.label}`} value={t.header[link.label as keyof typeof t.header]} />
             </Link>
           ))}
            <Link href="/blog" className="transition-colors hover:text-foreground/80 text-foreground/60">
-              {t.header.blog}
+              <EditableText path="header.blog" value={t.header.blog} />
            </Link>
         </nav>
 
@@ -109,10 +110,10 @@ export function Header() {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuItem onClick={() => setLocale('en')}>
-                {t.header.english}
+                <EditableText path="header.english" value={t.header.english} />
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => setLocale('fr')}>
-                {t.header.french}
+                <EditableText path="header.french" value={t.header.french} />
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -126,7 +127,9 @@ export function Header() {
             <span className="sr-only">Toggle theme</span>
           </Button>
           <Button asChild>
-            <Link href="/login">{t.header.portal}</Link>
+            <Link href="/login">
+              <EditableText path="header.portal" value={t.header.portal} />
+            </Link>
           </Button>
 
           <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
@@ -148,7 +151,7 @@ export function Header() {
                     className="transition-colors hover:text-foreground/80 text-foreground/60"
                     onClick={() => setIsSheetOpen(false)}
                   >
-                    {t.header[link.label as keyof typeof t.header]}
+                    <EditableText path={`header.${link.label}`} value={t.header[link.label as keyof typeof t.header]} />
                   </Link>
                 ))}
                  <Link
@@ -156,14 +159,14 @@ export function Header() {
                     className="transition-colors hover:text-foreground/80 text-foreground/60"
                     onClick={() => setIsSheetOpen(false)}
                   >
-                    {t.header.blog}
+                    <EditableText path="header.blog" value={t.header.blog} />
                   </Link>
                  <Link
                   href="/login"
                   className="transition-colors hover:text-foreground/80 text-foreground/60"
                   onClick={() => setIsSheetOpen(false)}
                 >
-                  {t.header.portal}
+                  <EditableText path="header.portal" value={t.header.portal} />
                 </Link>
               </nav>
             </SheetContent>

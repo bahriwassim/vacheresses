@@ -460,11 +460,30 @@ export const VacheressesImages: VacheressesImage[] = [
 
 // Fonctions utilitaires pour récupérer les images par catégorie
 export const getImagesByCategory = (category: VacheressesImage['category']) => {
-  return VacheressesImages.filter(img => img.category === category);
+  const list = VacheressesImages.filter(img => img.category === category);
+  try {
+    const raw = typeof window !== 'undefined' ? localStorage.getItem('imageOverridesById') : null;
+    const overrides = raw ? JSON.parse(raw) as Record<string, string> : null;
+    if (!overrides) return list;
+    return list.map(img => overrides[img.id] ? { ...img, imageUrl: overrides[img.id] } : img);
+  } catch {
+    return list;
+  }
 };
 
 export const getImageById = (id: string) => {
-  return VacheressesImages.find(img => img.id === id);
+  const base = VacheressesImages.find(img => img.id === id);
+  if (!base) return undefined;
+  try {
+    const raw = typeof window !== 'undefined' ? localStorage.getItem('imageOverridesById') : null;
+    const overrides = raw ? JSON.parse(raw) as Record<string, string> : null;
+    if (overrides && overrides[id]) {
+      return { ...base, imageUrl: overrides[id] };
+    }
+    return base;
+  } catch {
+    return base;
+  }
 };
 
 export const getHeroImages = () => {

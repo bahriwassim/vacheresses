@@ -66,6 +66,28 @@ export type Translation = {
     byCar: string;
     byTrain: string;
     byAir: string;
+    distances?: {
+      byCar: string[];
+      byTrain: string[];
+      byAir: string[];
+    };
+  };
+  proprietors?: {
+    title: string;
+    subtitle: string;
+    description1: string;
+    description2: string;
+  };
+  faq?: {
+    title: string;
+    subtitle: string;
+    intro: string;
+    sidebarTitle: string;
+    sidebarDesc: string;
+    emailButton: string;
+    phoneButton: string;
+    viewPackages: string;
+    items: { id: string; question: string; answer: string }[];
   };
   services: {
     title: string;
@@ -643,6 +665,80 @@ export const translations: Record<Locale, Translation> = {
       byCar: "By Car",
       byTrain: "By Train",
       byAir: "By Air",
+      distances: {
+        byCar: [
+          "47 miles from Paris (~1h 15min)",
+          "28 miles from Versailles (~45 min)",
+          "19 miles from Chartres (~30 min)",
+          "14 miles from Rambouillet (~25 min)",
+          "4 miles from Maintenon (~10 min)",
+        ],
+        byTrain: [
+          "Maintenon station (55 min from Gare Montparnasse)",
+        ],
+        byAir: [
+          "Paris Orly: 53 miles",
+          "Paris Roissy Charles de Gaulle: 72 miles",
+        ],
+      },
+    },
+    proprietors: {
+      title: "Our Proprietors",
+      subtitle: "Frédérique & Philippe",
+      description1: "Passionate about art, history and old stones, Frédérique and Philippe succumbed to the authenticity and architecture of the building which reminded Philippe of childhood memories and his English origins.",
+      description2: "Since 2017, they have undertaken renovation work and opened this family home to create new emotions and share values dear to them: conviviality, generosity, elegance, the French art of living…",
+    },
+    faq: {
+      title: "FAQ",
+      subtitle: "Frequently Asked Questions",
+      intro: "Find answers to common questions about weddings at Domaine des Vacheresses.",
+      sidebarTitle: "Still have questions?",
+      sidebarDesc: "Our team is here to help you plan your perfect day.",
+      emailButton: "Email Us",
+      phoneButton: "Call Us",
+      viewPackages: "View Packages",
+      items: [
+        {
+          id: "booking",
+          question: "How do I book a wedding date at the Manor?",
+          answer: "To book a wedding date, please contact us directly via email or phone. We recommend booking at least 12-18 months in advance for popular dates. A 50% deposit is required to secure your date, with the balance due 30 days before the event.",
+        },
+        {
+          id: "packages",
+          question: "What's included in your wedding packages?",
+          answer: "Our wedding packages include venue rental, seating arrangements, basic floral decorations, and access to all estate facilities for your event duration. Premium and Luxury packages include additional services like catering coordination, enhanced floral design, and entertainment options. All packages include accommodation for 21 guests in the estate.",
+        },
+        {
+          id: "guests",
+          question: "How many guests can the Manor accommodate?",
+          answer: "Our estate can comfortably accommodate up to 200 guests for a seated dinner. The exact capacity depends on your chosen package and layout preferences. We can also arrange additional accommodations at nearby partner hotels for larger groups.",
+        },
+        {
+          id: "catering",
+          question: "Do you provide catering services?",
+          answer: "We work with a curated list of experienced caterers who specialize in wedding events. While we don't provide catering directly, we coordinate with our preferred vendors to ensure seamless service. You're also welcome to work with your own caterer if you prefer.",
+        },
+        {
+          id: "decor",
+          question: "Can I bring my own decorations?",
+          answer: "Absolutely! We encourage personal touches that reflect your style. However, we ask that you coordinate with our team to ensure your decorations align with our venue guidelines and won't damage the historic property. Our team can also provide advice on what works best in our spaces.",
+        },
+        {
+          id: "weather",
+          question: "What happens if it rains on my wedding day?",
+          answer: "Our estate offers both indoor and outdoor spaces, providing flexibility for weather changes. The Reception Hall, Exhibition Hall, and Courtyard can accommodate your ceremony or reception in case of rain. We also provide marquees that can be set up for additional covered areas if needed.",
+        },
+        {
+          id: "accommodation",
+          question: "What accommodation options are available for guests?",
+          answer: "The Manor offers accommodation for 21 guests in our beautifully appointed rooms. For larger groups, we partner with nearby hotels and guesthouses. We can facilitate bookings at these partner accommodations and often secure preferential rates for our wedding parties.",
+        },
+        {
+          id: "accessibility",
+          question: "Is the Manor accessible for guests with mobility issues?",
+          answer: "We have made efforts to accommodate guests with mobility issues. The Jardins Tivoli room is specifically designed for wheelchair access. Other areas of the estate have varying levels of accessibility due to the historic nature of the buildings. Please contact us to discuss specific requirements, and we'll do our best to accommodate your needs.",
+        },
+      ],
     },
     services: {
         title: "Our Services",
@@ -1218,6 +1314,80 @@ export const translations: Record<Locale, Translation> = {
       byCar: "En Voiture",
       byTrain: "En Train",
       byAir: "Via les Aéroports",
+      distances: {
+        byCar: [
+          "75 km de Paris (~1h 15min)",
+          "45 km de Versailles (~45 min)",
+          "30 km de Chartres (~30 min)",
+          "22 km de Rambouillet (~25 min)",
+          "6 km de Maintenon (~10 min)",
+        ],
+        byTrain: [
+          "Gare de Maintenon (55 mn de la Gare Montparnasse)",
+        ],
+        byAir: [
+          "Paris Orly : 86 km",
+          "Paris Roissy Charles de Gaulle : 116 km",
+        ],
+      },
+    },
+    proprietors: {
+      title: "Nos Propriétaires",
+      subtitle: "Frédérique & Philippe",
+      description1: "Passionnés d'art, d'histoire et de vieilles pierres, Frédérique et Philippe ont succombé à l'authenticité et à l'architecture du bâti qui rappelait à Philippe des souvenirs d'enfance et ses origines anglaises.",
+      description2: "Depuis 2017, ils ont entrepris des travaux de rénovation et ouvrent cette demeure de famille pour faire naître de nouvelles émotions et partager des valeurs qui leur sont chères : convivialité, générosité, élégance, art de vivre à la française…",
+    },
+    faq: {
+      title: "FAQ",
+      subtitle: "Questions Fréquentes",
+      intro: "Trouvez les réponses aux questions courantes sur les mariages au Domaine des Vacheresses.",
+      sidebarTitle: "Vous avez d'autres questions ?",
+      sidebarDesc: "Notre équipe est là pour vous aider à planifier votre journée parfaite.",
+      emailButton: "Nous Écrire",
+      phoneButton: "Nous Appeler",
+      viewPackages: "Voir les Forfaits",
+      items: [
+        {
+          id: "booking",
+          question: "Comment réserver une date de mariage au Manoir ?",
+          answer: "Pour réserver une date de mariage, veuillez nous contacter directement par email ou téléphone. Nous recommandons de réserver au moins 12-18 mois à l'avance pour les dates prisées. Un acompte de 50% est requis pour sécuriser votre date, le solde étant dû 30 jours avant l'événement.",
+        },
+        {
+          id: "packages",
+          question: "Que comprennent vos forfaits de mariage ?",
+          answer: "Nos forfaits de mariage comprennent la location du lieu, les aménagements de sièges, les décorations florales de base et l'accès à toutes les installations du domaine pendant la durée de votre événement. Les forfaits Premium et Luxe incluent des services supplémentaires comme la coordination du traiteur, une conception florale améliorée et des options de divertissement. Tous les forfaits incluent l'hébergement pour 21 invités dans le domaine.",
+        },
+        {
+          id: "guests",
+          question: "Combien d'invités le Manoir peut-il accueillir ?",
+          answer: "Notre domaine peut accueillir confortablement jusqu'à 200 invités pour un dîner assis. La capacité exacte dépend de votre forfait choisi et de vos préférences d'aménagement. Nous pouvons également organiser des hébergements supplémentaires dans des hôtels partenaires à proximité pour des groupes plus importants.",
+        },
+        {
+          id: "catering",
+          question: "Proposez-vous des services de restauration ?",
+          answer: "Nous travaillons avec une liste sélectionnée de traiteurs expérimentés spécialisés dans les événements de mariage. Bien que nous ne fournissions pas directement la restauration, nous coordonnons avec nos fournisseurs préférés pour garantir un service sans faille. Vous pouvez également travailler avec votre propre traiteur si vous préférez.",
+        },
+        {
+          id: "decor",
+          question: "Puis-je apporter mes propres décorations ?",
+          answer: "Absolument ! Nous encourageons les touches personnelles qui reflètent votre style. Cependant, nous vous demandons de coordonner avec notre équipe pour vous assurer que vos décorations respectent les directives de notre lieu et n'endommageront pas la propriété historique. Notre équipe peut également vous conseiller sur ce qui fonctionne le mieux dans nos espaces.",
+        },
+        {
+          id: "weather",
+          question: "Que se passe-t-il s'il pleut le jour de mon mariage ?",
+          answer: "Notre domaine offre à la fois des espaces intérieurs et extérieurs, offrant une flexibilité pour les changements de temps. La Salle de Réception, la Salle d'Exposition et la Cour d'Honneur peuvent accueillir votre cérémonie ou votre réception en cas de pluie. Nous fournissons également des chapiteaux qui peuvent être installés pour des zones couvertes supplémentaires si nécessaire.",
+        },
+        {
+          id: "accommodation",
+          question: "Quelles options d'hébergement sont disponibles pour les invités ?",
+          answer: "Le Manoir offre un hébergement pour 21 invités dans nos chambres magnifiquement aménagées. Pour des groupes plus importants, nous collaborons avec des hôtels et des chambres d'hôtes à proximité. Nous pouvons faciliter les réservations dans ces hébergements partenaires et obtenir souvent des tarifs préférentiels pour nos groupes de mariage.",
+        },
+        {
+          id: "accessibility",
+          question: "Le Manoir est-il accessible aux invités ayant des problèmes de mobilité ?",
+          answer: "Nous avons fait des efforts pour accueillir les invités ayant des problèmes de mobilité. La chambre Jardins Tivoli est spécifiquement conçue pour l'accès en fauteuil roulant. D'autres zones du domaine ont des niveaux d'accessibilité variables en raison de la nature historique des bâtiments. Veuillez nous contacter pour discuter d'exigences spécifiques, et nous ferons de notre mieux pour répondre à vos besoins.",
+        },
+      ],
     },
     services: {
         title: "Nos Prestations",

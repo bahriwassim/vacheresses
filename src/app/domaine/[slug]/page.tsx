@@ -7,6 +7,8 @@ import { useParams } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getGallery } from "@/lib/gallery-maps";
 import { CardImage } from "@/components/ui/animated-image";
+import { useEffect, useState } from "react";
+import { loadMediaOverridesByPath } from "@/lib/supabase";
 
 export default function DomainSpacePage() {
   const { t } = useLocale();
@@ -14,6 +16,22 @@ export default function DomainSpacePage() {
   const slug = (params?.slug as string) || "";
   const poi = t.domain.poi[slug as keyof typeof t.domain.poi] as any;
   const images = getGallery(slug);
+  const overridePath = (path: string) => {
+    try {
+      const raw = typeof window !== 'undefined' ? localStorage.getItem('imageOverridesByPath') : null;
+      const map = raw ? JSON.parse(raw) as Record<string,string> : null;
+      return map && map[path] ? map[path] : path;
+    } catch {
+      return path;
+    }
+  };
+  const [refresh, setRefresh] = useState(0);
+  useEffect(() => {
+    (async () => {
+      await loadMediaOverridesByPath();
+      setRefresh(x => x + 1);
+    })();
+  }, []);
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -42,7 +60,7 @@ export default function DomainSpacePage() {
               <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                 {images.map((src, i) => (
                   <div key={i} className="relative aspect-square rounded-xl overflow-hidden">
-                    <CardImage src={src} alt={`${poi?.title || slug} ${i + 1}`} fill className="object-cover" />
+                    <CardImage src={overridePath(src)} alt={`${poi?.title || slug} ${i + 1}`} fill className="object-cover" />
                   </div>
                 ))}
               </div>

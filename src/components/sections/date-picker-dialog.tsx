@@ -29,7 +29,7 @@ function monthStart(d: Date): Date {
 
 export function DatePickerDialog({ open, onOpenChange, onDateSelected }: DatePickerDialogProps) {
   const { t, locale } = useLocale();
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
   const todayStart = useMemo(() => monthStart(new Date()), []);
   const [currentMonth, setCurrentMonth] = useState(todayStart);
 
@@ -39,7 +39,7 @@ export function DatePickerDialog({ open, onOpenChange, onDateSelected }: DatePic
     }
   }, [open, selectedDate, todayStart]);
 
-  const handleDateSelect = (date: Date | null) => {
+  const handleDateSelect = (date: Date | undefined) => {
     if (date) {
       setSelectedDate(date);
       onDateSelected(date);

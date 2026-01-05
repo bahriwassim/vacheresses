@@ -14,6 +14,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useLocale } from "@/hooks/use-locale";
 import { authService } from "@/lib/supabase";
 import { AlertCircle } from "lucide-react";
+import { EditableText } from "@/components/ui/editable-text";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -44,8 +45,7 @@ export default function LoginPage() {
       // Stocker le profil dans localStorage pour accès rapide
       localStorage.setItem('user', JSON.stringify(profile));
 
-      // Vérifier si c'est un admin
-      if (profile?.role === "admin") {
+      if (profile?.role === "admin" || profile?.role === "super_admin") {
         toast({
           title: t.login?.admin_success_title || "Connexion admin réussie",
           description: t.login?.admin_success_desc || "Bienvenue administrateur"
@@ -92,9 +92,10 @@ export default function LoginPage() {
     setIsLoading(true);
 
     try {
-      const { user, profile } = await authService.signUp(email, password, name, phone);
+      const { user } = await authService.signUp(email, password, name, phone);
+      const cu = user ? await authService.getCurrentUser() : null;
       
-      if (!profile) {
+      if (!cu || !cu.profile) {
         throw new Error("La création du profil a échoué.");
       }
 
@@ -103,7 +104,7 @@ export default function LoginPage() {
         description: t.login?.signup_success_desc || "Votre compte a été créé"
       });
 
-      localStorage.setItem('user', JSON.stringify(profile));
+      localStorage.setItem('user', JSON.stringify(cu.profile));
       router.push(next || "/dashboard");
     } catch (err: any) {
       setError(err.message || "Erreur lors de l'inscription");
@@ -128,13 +129,21 @@ export default function LoginPage() {
               <span className="text-2xl font-bold font-headline">Vacheresses</span>
             </Link>
           </div>
-          <CardTitle className="font-headline text-2xl">{t.login.title}</CardTitle>
-          <CardDescription>{t.login.description}</CardDescription>
+          <CardTitle className="font-headline text-2xl">
+            <EditableText path="login.title" value={t.login.title} />
+          </CardTitle>
+          <CardDescription>
+            <EditableText path="login.description" value={t.login.description} />
+          </CardDescription>
         </CardHeader>
         <Tabs defaultValue="login" className="w-full">
             <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="login">{t.login.login_tab}</TabsTrigger>
-              <TabsTrigger value="signup">{t.login.signup_tab}</TabsTrigger>
+              <TabsTrigger value="login">
+                <EditableText path="login.login_tab" value={t.login.login_tab} />
+              </TabsTrigger>
+              <TabsTrigger value="signup">
+                <EditableText path="login.signup_tab" value={t.login.signup_tab} />
+              </TabsTrigger>
             </TabsList>
             <TabsContent value="login">
              <form onSubmit={handleLogin}>
@@ -146,7 +155,9 @@ export default function LoginPage() {
                   </div>
                 )}
                 <div className="grid gap-2">
-                  <Label htmlFor="email">{t.login?.email_label || "Email"}</Label>
+                  <Label htmlFor="email">
+                    <EditableText path="login.email_label" value={t.login?.email_label || "Email"} />
+                  </Label>
                   <Input
                     id="email"
                     type="email"
@@ -158,7 +169,9 @@ export default function LoginPage() {
                   />
                 </div>
                 <div className="grid gap-2">
-                  <Label htmlFor="password">{t.login?.password_label || "Mot de passe"}</Label>
+                  <Label htmlFor="password">
+                    <EditableText path="login.password_label" value={t.login?.password_label || "Mot de passe"} />
+                  </Label>
                   <Input
                     id="password"
                     type="password"
@@ -171,10 +184,12 @@ export default function LoginPage() {
               </CardContent>
               <CardFooter className="flex flex-col gap-4">
                 <Button type="submit" className="w-full" disabled={isLoading}>
-                  {isLoading ? "Connexion..." : (t.login?.login_button || "Se connecter")}
+                  {isLoading ? "Connexion..." : (
+                    <EditableText path="login.login_button" value={t.login?.login_button || "Se connecter"} />
+                  )}
                 </Button>
                 <p className="text-xs text-muted-foreground text-center">
-                  Admin: admin@manoirdevacheresses.com / (any password)
+                  Super Admin: contact@startindev.com / password
                 </p>
               </CardFooter>
              </form>
@@ -189,7 +204,9 @@ export default function LoginPage() {
                   </div>
                 )}
                 <div className="grid gap-2">
-                    <Label htmlFor="name-signup">{t.login?.name_label || "Nom complet"}</Label>
+                    <Label htmlFor="name-signup">
+                      <EditableText path="login.name_label" value={t.login?.name_label || "Nom complet"} />
+                    </Label>
                     <Input
                       id="name-signup"
                       placeholder="John Smith"
@@ -211,7 +228,9 @@ export default function LoginPage() {
                   />
                 </div>
                 <div className="grid gap-2">
-                  <Label htmlFor="email-signup">{t.login?.email_label || "Email"}</Label>
+                  <Label htmlFor="email-signup">
+                    <EditableText path="login.email_label" value={t.login?.email_label || "Email"} />
+                  </Label>
                   <Input
                     id="email-signup"
                     type="email"
@@ -223,7 +242,9 @@ export default function LoginPage() {
                   />
                 </div>
                 <div className="grid gap-2">
-                  <Label htmlFor="password-signup">{t.login?.password_label || "Mot de passe"}</Label>
+                  <Label htmlFor="password-signup">
+                    <EditableText path="login.password_label" value={t.login?.password_label || "Mot de passe"} />
+                  </Label>
                   <Input
                     id="password-signup"
                     type="password"
@@ -237,7 +258,9 @@ export default function LoginPage() {
               </CardContent>
               <CardFooter>
                 <Button type="submit" className="w-full" disabled={isLoading}>
-                  {isLoading ? "Création..." : (t.login?.signup_button || "S'inscrire")}
+                  {isLoading ? "Création..." : (
+                    <EditableText path="login.signup_button" value={t.login?.signup_button || "S'inscrire"} />
+                  )}
                 </Button>
               </CardFooter>
               </form>

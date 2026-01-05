@@ -16,27 +16,31 @@ import { DomainTeaser } from "@/components/sections/domain-teaser";
 import { Testimonials } from "@/components/sections/testimonials";
 import { Access } from "@/components/sections/access";
 import { InstagramFeed } from "@/components/sections/instagram-feed";
+import { EditableText } from "@/components/ui/editable-text";
+import { loadMediaOverridesByPath } from "@/lib/supabase";
+import { BookingProvider, useBooking } from "@/contexts/booking-context";
 
-export default function ElopementPackagesPage() {
+function ElopementContent() {
   const { t } = useLocale();
   const router = useRouter();
+  const { dates, setDates } = useBooking();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [bookingContext, setBookingContext] = useState<any>(null);
-  const dates = bookingContext?.dates;
-  const setDates = bookingContext?.setDates;
-
-  // Dynamically load booking context on client side only
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      import('@/contexts/booking-context').then(module => {
-        try {
-          const context = module.useBooking();
-          setBookingContext(context);
-        } catch (error) {
-          console.warn('Booking context not available:', error);
-        }
-      });
+  const [refresh, setRefresh] = useState(0);
+  const overridePath = (path: string) => {
+    try {
+      const raw = typeof window !== 'undefined' ? localStorage.getItem('imageOverridesByPath') : null;
+      const map = raw ? JSON.parse(raw) as Record<string,string> : null;
+      return map && map[path] ? map[path] : path;
+    } catch {
+      return path;
     }
+  };
+
+  useEffect(() => {
+    (async () => {
+      await loadMediaOverridesByPath();
+      setRefresh(x => x + 1);
+    })();
   }, []);
 
   const elopementPackages = [
@@ -90,45 +94,25 @@ export default function ElopementPackagesPage() {
     }
   ];
 
-  const handlePackageClick = (packageId: string) => {
-    // If booking context is not available (during SSR), just open the dialog
-    if (!bookingContext) {
-      setIsDialogOpen(true);
-      return;
+  const buildPackageUrl = (packageId: string) => {
+    const params = new URLSearchParams({ package: packageId });
+    if (dates?.from) {
+      params.set('eventDate', dates.from.toISOString());
     }
-    
+    return `/configurator-elopement?${params.toString()}`;
+  };
+
+  const handlePackageClick = (packageId: string) => {
     if (!dates) {
-      // Open date picker dialog
       setIsDialogOpen(true);
     } else {
-      // Navigate to configurator with package and date
-      const params = new URLSearchParams({ package: packageId, eventDate: dates.from!.toISOString() });
-      if (typeof window !== 'undefined') {
-        const user = localStorage.getItem('user');
-        const next = `/configurator?${params.toString()}`;
-        if (!user) {
-          router.push(`/login?next=${encodeURIComponent(next)}`);
-        } else {
-          router.push(next);
-        }
-      }
+      router.push(buildPackageUrl(packageId));
     }
   };
 
   const handleDateSelected = (date: Date) => {
-    if (setDates) {
-      setDates({ from: date, to: date });
-    }
+    setDates({ from: date, to: date });
     setIsDialogOpen(false);
-    if (typeof window !== 'undefined') {
-      const user = localStorage.getItem('user');
-      const params = new URLSearchParams({ eventDate: date.toISOString() });
-      const next = `/configurator?${params.toString()}`;
-      if (!user) {
-        router.push(`/login?next=${encodeURIComponent(next)}`);
-        return;
-      }
-    }
   };
 
   return (
@@ -139,14 +123,17 @@ export default function ElopementPackagesPage() {
           {/* Hero Section */}
           <div className="text-center mb-16 animate-in fade-in slide-in-from-bottom-8 duration-1000">
             <p className="text-sm md:text-base tracking-wider text-primary uppercase font-semibold">
-              Mariages Intimes
+              <EditableText path="elopement.hero.kicker" value="Mariages Intimes" />
             </p>
             <h1 className="text-4xl md:text-5xl font-headline font-bold mt-2">
-              Forfaits Élopement
+              <EditableText path="elopement.hero.title" value="Forfaits Élopement" />
             </h1>
             <p className="mt-4 text-lg text-muted-foreground max-w-3xl mx-auto">
-              Célébrez votre amour dans l'intimité absolue de notre domaine enchanteur. 
-              Des expériences personnalisées pour des mariages intimes et mémorables.
+              <EditableText
+                path="elopement.hero.subtitle"
+                value="Célébrez votre amour dans l'intimité absolue de notre domaine enchanteur. Des expériences personnalisées pour des mariages intimes et mémorables."
+                multiline
+              />
             </p>
           </div>
 
@@ -154,20 +141,27 @@ export default function ElopementPackagesPage() {
           <div className="bg-card rounded-xl shadow-lg p-8 mb-16 border border-primary/10">
             <div className="grid md:grid-cols-2 gap-8 items-center">
               <div>
-                <h2 className="text-3xl font-headline font-bold mb-4">Mariages Intimes au Manoir</h2>
+                <h2 className="text-3xl font-headline font-bold mb-4">
+                  <EditableText path="elopement.intro.title" value="Mariages Intimes au Manoir" />
+                </h2>
                 <p className="text-muted-foreground mb-4">
-                  Nos forfaits élopement sont conçus pour les couples qui souhaitent célébrer leur union 
-                  dans un cadre intime et enchanteur. Profitez de la beauté naturelle de notre domaine 
-                  sans les contraintes d'un grand mariage.
+                  <EditableText
+                    path="elopement.intro.p1"
+                    value="Nos forfaits élopement sont conçus pour les couples qui souhaitent célébrer leur union dans un cadre intime et enchanteur. Profitez de la beauté naturelle de notre domaine sans les contraintes d'un grand mariage."
+                    multiline
+                  />
                 </p>
                 <p className="text-muted-foreground">
-                  Tous nos forfaits incluent l'hébergement pour 2 personnes dans le domaine, 
-                  contrairement à nos forfaits de mariage traditionnels où l'hébergement est en option.
+                  <EditableText
+                    path="elopement.intro.p2"
+                    value="Tous nos forfaits incluent l'hébergement pour 2 personnes dans le domaine, contrairement à nos forfaits de mariage traditionnels où l'hébergement est en option."
+                    multiline
+                  />
                 </p>
               </div>
               <div className="relative h-80 rounded-xl overflow-hidden">
                 <CardImage
-                  src="/potager_4.jpg"
+                  src={overridePath("/potager_4.jpg")}
                   alt="Mariage Intime au Manoir"
                   fill
                   className="object-cover"
@@ -178,9 +172,11 @@ export default function ElopementPackagesPage() {
 
           {/* Gallery Section */}
           <div className="mb-16">
-            <h2 className="text-3xl font-headline font-bold text-center mb-4">Moments Inoubliables</h2>
+            <h2 className="text-3xl font-headline font-bold text-center mb-4">
+              <EditableText path="elopement.gallery1.title" value="Moments Inoubliables" />
+            </h2>
             <p className="text-muted-foreground text-center mb-8 max-w-2xl mx-auto">
-              Découvrez la magie de nos mariages intimes à travers ces images
+              <EditableText path="elopement.gallery1.subtitle" value="Découvrez la magie de nos mariages intimes à travers ces images" />
             </p>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {[
@@ -191,7 +187,7 @@ export default function ElopementPackagesPage() {
               ].map((img, i) => (
                 <div key={i} className="relative aspect-square rounded-xl overflow-hidden group">
                   <CardImage
-                    src={img}
+                    src={overridePath(img)}
                     alt={`Mariage intime ${i + 1}`}
                     fill
                     className="object-cover transition-transform duration-500 group-hover:scale-110"
@@ -201,33 +197,14 @@ export default function ElopementPackagesPage() {
             </div>
           </div>
 
-          {/* Additional Gallery Section */}
-          <div className="mb-16">
-            <h2 className="text-3xl font-headline font-bold text-center mb-4">Détails Romantiques</h2>
-            <p className="text-muted-foreground text-center mb-8 max-w-2xl mx-auto">
-              Découvrez les détails qui font la magie de nos mariages intimes
-            </p>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              {[
-                "/potager_3.jpg", "/potager_4.jpg", "/espace_8.jpg", "/Parc_5.jpg"
-              ].map((img, i) => (
-                <div key={i} className="relative aspect-square rounded-xl overflow-hidden group">
-                  <CardImage
-                    src={img}
-                    alt={`Détail romantique ${i + 1}`}
-                    fill
-                    className="object-cover transition-transform duration-500 group-hover:scale-110"
-                  />
-                </div>
-              ))}
-            </div>
-          </div>
 
           {/* Packages Section */}
           <div className="mb-16">
-            <h2 className="text-3xl font-headline font-bold text-center mb-4">Nos Forfaits Élopement</h2>
+            <h2 className="text-3xl font-headline font-bold text-center mb-4">
+              <EditableText path="elopement.packages.title" value="Nos Forfaits Élopement" />
+            </h2>
             <p className="text-muted-foreground text-center mb-12 max-w-2xl mx-auto">
-              Choisissez parmi nos forfaits soigneusement conçus pour créer des souvenirs inoubliables
+              <EditableText path="elopement.packages.subtitle" value="Choisissez parmi nos forfaits soigneusement conçus pour créer des souvenirs inoubliables" />
             </p>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -252,25 +229,36 @@ export default function ElopementPackagesPage() {
                           height={400}
                           dataAiHint={image.imageHint}
                           aspectRatio="landscape"
+                          overrideKey={pkg.imageId}
                           overlay={true}
                           overlayContent={
                             <div className="text-center text-white">
-                              <p className="text-sm font-medium">Découvrir</p>
+                              <p className="text-sm font-medium">
+                                <EditableText path="elopement.packages.discover" value="Découvrir" />
+                              </p>
                             </div>
                           }
                           className="mb-4"
                         />
                       )}
-                      <CardTitle className="font-headline">{pkg.title}</CardTitle>
-                      <CardDescription>{pkg.description}</CardDescription>
-                      <div className="mt-2 text-2xl font-bold text-primary">{pkg.price}</div>
+                      <CardTitle className="font-headline">
+                        <EditableText path={`elopement.packages.${pkg.id}_title`} value={pkg.title} />
+                      </CardTitle>
+                      <CardDescription>
+                        <EditableText path={`elopement.packages.${pkg.id}_desc`} value={pkg.description} />
+                      </CardDescription>
+                      <div className="mt-2 text-2xl font-bold text-primary">
+                        <EditableText path={`elopement.packages.${pkg.id}_price`} value={pkg.price} />
+                      </div>
                     </CardHeader>
                     <CardContent className="flex-1">
                       <ul className="space-y-3">
                         {pkg.features.map((feature) => (
                           <li key={feature} className="flex items-start">
                             <Check className="h-5 w-5 text-primary mr-2 flex-shrink-0 mt-0.5" />
-                            <span className="text-muted-foreground">{feature}</span>
+                            <span className="text-muted-foreground">
+                              <EditableText path={`elopement.packages.${pkg.id}_feature_${feature.length}_${feature.slice(0,10)}`} value={feature} />
+                            </span>
                           </li>
                         ))}
                       </ul>
@@ -282,7 +270,11 @@ export default function ElopementPackagesPage() {
                         variant={pkg.highlighted ? 'default' : 'outline'}
                         // Button is enabled by default, will work on client-side
                       >
-                        {dates ? "Sélectionner" : "Choisir une date"}
+                        {dates ? (
+                          <EditableText path="elopement.packages.button_select" value="Sélectionner" />
+                        ) : (
+                          <EditableText path="elopement.packages.button_choice" value="Choisir une date" />
+                        )}
                       </Button>
                     </CardFooter>
                   </Card>
@@ -293,22 +285,27 @@ export default function ElopementPackagesPage() {
 
           {/* Contact Section */}
           <div className="bg-primary/5 rounded-xl p-8 text-center">
-            <h2 className="text-3xl font-headline font-bold mb-4">Envie d'un Forfait Personnalisé ?</h2>
+            <h2 className="text-3xl font-headline font-bold mb-4">
+              <EditableText path="elopement.contact.title" value="Envie d'un Forfait Personnalisé ?" />
+            </h2>
             <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
-              Nous pouvons créer un forfait spécial adapté à vos besoins et préférences spécifiques. 
-              Contactez-nous pour discuter de vos idées.
+              <EditableText
+                path="elopement.contact.subtitle"
+                value="Nous pouvons créer un forfait spécial adapté à vos besoins et préférences spécifiques. Contactez-nous pour discuter de vos idées."
+                multiline
+              />
             </p>
             <div className="flex flex-col sm:flex-row justify-center gap-4">
               <Button asChild className="gap-2">
                 <Link href="mailto:contact@manoirdevacheresses.com">
                   <Mail className="h-4 w-4" />
-                  Envoyer un Email
+                  <EditableText path="elopement.contact.button_email" value="Envoyer un Email" />
                 </Link>
               </Button>
               <Button asChild variant="outline" className="gap-2">
                 <Link href="tel:+33611842021">
                   <Phone className="h-4 w-4" />
-                  Appeler le Manoir
+                  <EditableText path="elopement.contact.button_call" value="Appeler le Manoir" />
                 </Link>
               </Button>
             </div>
@@ -329,5 +326,13 @@ export default function ElopementPackagesPage() {
       </main>
       <Footer />
     </div>
+  );
+}
+
+export default function ElopementPackagesPage() {
+  return (
+    <BookingProvider>
+      <ElopementContent />
+    </BookingProvider>
   );
 }

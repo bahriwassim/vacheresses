@@ -6,6 +6,8 @@ import { Footer } from "@/components/layout/footer";
 import { useLocale } from "@/hooks/use-locale";
 import Image from "next/image";
 import { Card, CardContent } from "@/components/ui/card";
+import { useEffect, useState } from "react";
+import { loadMediaOverridesByPath } from "@/lib/supabase";
 
 const images = [
   "/vacheresses_13.jpg",
@@ -17,6 +19,22 @@ const images = [
 export default function CourHonneurPage() {
   const { t } = useLocale();
   const poi = t.domain.poi.cour_honneur;
+  const overridePath = (path: string) => {
+    try {
+      const raw = typeof window !== 'undefined' ? localStorage.getItem('imageOverridesByPath') : null;
+      const map = raw ? JSON.parse(raw) as Record<string,string> : null;
+      return map && map[path] ? map[path] : path;
+    } catch {
+      return path;
+    }
+  };
+  const [refresh, setRefresh] = useState(0);
+  useEffect(() => {
+    (async () => {
+      const res = await loadMediaOverridesByPath();
+      setRefresh(x => x + 1);
+    })();
+  }, []);
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -24,7 +42,7 @@ export default function CourHonneurPage() {
       <main className="flex-1">
         <div className="relative h-[50vh] overflow-hidden">
           <Image
-            src={images[0]}
+            src={overridePath(images[0])}
             alt={poi.title}
             fill
             className="object-cover brightness-75"
@@ -57,7 +75,7 @@ export default function CourHonneurPage() {
                     {images.map((img, i) => (
                         <div key={i} className="relative h-64 md:h-96 overflow-hidden rounded-lg group">
                             <Image
-                            src={img}
+                            src={overridePath(img)}
                             alt={`${poi.title} - ${i + 1}`}
                             fill
                             className="object-cover transition-transform duration-500 group-hover:scale-110"

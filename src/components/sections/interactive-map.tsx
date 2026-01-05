@@ -2,13 +2,15 @@
 "use client";
 
 import Image from "next/image";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useLocale } from "@/hooks/use-locale";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { MapPin, X, Users, Maximize2, Bed, Wifi, Trees, Landmark } from "lucide-react";
 import Link from "next/link";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { EditableText } from "@/components/ui/editable-text";
+import { loadMediaOverridesByPath } from "@/lib/supabase";
 
 interface HotspotData {
   id: string;
@@ -24,6 +26,22 @@ export function InteractiveMap() {
   const { t } = useLocale();
   const [activeHotspotId, setActiveHotspotId] = useState<string | null>(null);
   const [selectedImage, setSelectedImage] = useState(0);
+  const [refresh, setRefresh] = useState(0);
+  const overridePath = (path: string) => {
+    try {
+      const raw = typeof window !== 'undefined' ? localStorage.getItem('imageOverridesByPath') : null;
+      const map = raw ? JSON.parse(raw) as Record<string,string> : null;
+      return map && map[path] ? map[path] : path;
+    } catch {
+      return path;
+    }
+  };
+  useEffect(() => {
+    (async () => {
+      await loadMediaOverridesByPath();
+      setRefresh(x => x + 1);
+    })();
+  }, []);
 
   const hotspots: HotspotData[] = [
     // Accommodations
@@ -228,14 +246,14 @@ export function InteractiveMap() {
           className="text-center mb-12 animate-in fade-in slide-in-from-bottom-8 duration-1000"
         >
           <h2 className="text-3xl md:text-4xl font-headline font-bold">
-            {t.interactiveMap.title}
+            <EditableText path="interactiveMap.title" value={t.interactiveMap.title} />
           </h2>
           <p className="mt-4 text-lg text-muted-foreground max-w-2xl mx-auto">
-            {t.interactiveMap.subtitle}
+            <EditableText path="interactiveMap.subtitle" value={t.interactiveMap.subtitle} />
           </p>
           <p className="mt-2 text-base max-w-2xl mx-auto">
             <Link href="/domaine" className="text-primary hover:underline">
-              {t.interactiveMap.exploreSpaces || 'Découvrez les Espaces du Domaine'}
+              <EditableText path="interactiveMap.exploreSpaces" value={t.interactiveMap.exploreSpaces || 'Découvrez les Espaces du Domaine'} />
             </Link>
           </p>
         </div>
@@ -245,7 +263,7 @@ export function InteractiveMap() {
             <div className="relative w-full group">
               <div className="relative w-full aspect-[16/10]">
                 <Image
-                  src="/vacheresses_17.jpg"
+                  src={overridePath("/vacheresses_17.jpg")}
                   alt="Vue aérienne du Manoir de Vacheresses"
                   fill
                   className="object-cover"
@@ -299,15 +317,21 @@ export function InteractiveMap() {
               <div className="flex flex-wrap items-center justify-center gap-4 text-sm text-muted-foreground">
                 <div className="flex items-center gap-2">
                   <MapPin className="w-4 h-4 text-primary" />
-                  <span>{t.interactiveMap.legend_accommodation}</span>
+                  <span>
+                    <EditableText path="interactiveMap.legend_accommodation" value={t.interactiveMap.legend_accommodation} />
+                  </span>
                 </div>
                 <div className="flex items-center gap-2">
                   <Trees className="w-4 h-4 text-accent" />
-                  <span>{t.interactiveMap.legend_poi}</span>
+                  <span>
+                    <EditableText path="interactiveMap.legend_poi" value={t.interactiveMap.legend_poi} />
+                  </span>
                 </div>
                 <div className="flex items-center gap-2">
                   <Landmark className="w-4 h-4 text-foreground" />
-                  <span>{t.interactiveMap.legend_space}</span>
+                  <span>
+                    <EditableText path="interactiveMap.legend_space" value={t.interactiveMap.legend_space} />
+                  </span>
                 </div>
               </div>
             </div>
@@ -331,7 +355,7 @@ export function InteractiveMap() {
 
               <div className="relative w-full h-96">
                 <Image
-                  src={activeImages[selectedImage]}
+                  src={overridePath(activeImages[selectedImage])}
                   alt={activeHotspot.name}
                   fill
                   className="object-cover"
@@ -357,7 +381,7 @@ export function InteractiveMap() {
                       }`}
                     >
                       <Image
-                        src={img}
+                        src={overridePath(img)}
                         alt={`${activeHotspot.name} ${idx + 1}`}
                         width={64}
                         height={64}
@@ -419,12 +443,12 @@ export function InteractiveMap() {
                 <div className="flex gap-4 pt-4">
                   <Button asChild className="flex-1" size="lg">
                     <Link href={activeHotspot.link}>
-                      {t.interactiveMap.discover}
+                      <EditableText path="interactiveMap.discover" value={t.interactiveMap.discover} />
                     </Link>
                   </Button>
                   <Button asChild variant="outline" className="flex-1" size="lg">
                     <Link href="/contact">
-                      {t.stay.contact_us}
+                      <EditableText path="stay.contact_us" value={t.stay.contact_us} />
                     </Link>
                   </Button>
                 </div>

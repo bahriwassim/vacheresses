@@ -4,6 +4,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useLocale } from "@/hooks/use-locale";
+import { EditableText } from "@/components/ui/editable-text";
 
 const YouTubeIcon = () => (
     <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 576 512">
@@ -79,9 +80,11 @@ export function Footer() {
       <div className="container max-w-7xl border-t">
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 py-4">
              <p className="text-sm text-muted-foreground">
-              {t.footer.copyright.replace('{year}', currentYear.toString())}
+              <EditableText path="footer.copyright" value={t.footer.copyright.replace('{year}', currentYear.toString())} />
             </p>
-            <Link href="/legal" className="text-sm text-muted-foreground hover:text-foreground transition-colors">{t.footer.legal}</Link>
+            <Link href="/legal" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+              <EditableText path="footer.legal" value={t.footer.legal} />
+            </Link>
         </div>
       </div>
     </footer>

@@ -1,8 +1,11 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { uploadAndOverrideMedia } from "@/lib/supabase";
 
 interface AnimatedImageProps {
   src: string;
@@ -19,6 +22,8 @@ interface AnimatedImageProps {
   delay?: number;
   sizes?: string;
   unoptimized?: boolean;
+  overrideKey?: string;
+  editable?: boolean;
 }
 
 export function AnimatedImage({
@@ -36,8 +41,23 @@ export function AnimatedImage({
   delay = 0,
   sizes = "100vw",
   unoptimized = true,
+  overrideKey,
+  editable = true,
 }: AnimatedImageProps) {
   const [isLoaded, setIsLoaded] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [file, setFile] = useState<File | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
+  const [currentSrc, setCurrentSrc] = useState<string>(src);
+  const [userRole] = useState<string | null>(() => {
+    try {
+      const raw = typeof window !== "undefined" ? localStorage.getItem("user") : null;
+      const u = raw ? JSON.parse(raw) : null;
+      return u?.role || null;
+    } catch {
+      return null;
+    }
+  });
 
   const aspectRatioClasses = {
     square: "aspect-square",
@@ -61,6 +81,22 @@ export function AnimatedImage({
     none: "",
   };
 
+  const isAdmin = userRole === "super_admin";
+  const key = overrideKey || (typeof src === "string" && src.startsWith("/") ? src : null);
+
+  function getOverriddenSrc(original: string): string {
+    try {
+      const raw = typeof window !== "undefined" ? localStorage.getItem("imageOverridesByPath") : null;
+      const map = raw ? JSON.parse(raw) as Record<string, string> : null;
+      if (map && original && map[original]) return map[original];
+    } catch {}
+    return original;
+  }
+
+  useEffect(() => {
+    setCurrentSrc(getOverriddenSrc(src));
+  }, [src]);
+
   return (
     <div
       className={cn(
@@ -71,7 +107,7 @@ export function AnimatedImage({
       style={{ animationDelay: `${delay}ms` }}
     >
       <Image
-        src={src}
+        src={currentSrc}
         alt={alt}
         {...(fill ? { fill: true } : { width, height })}
         {...(fill ? { sizes } : {})}
@@ -89,13 +125,73 @@ export function AnimatedImage({
         loading={priority ? "eager" : "lazy"}
       />
       
-      {/* Overlay pour effet de chargement */}
       {!isLoaded && (
         <div className="absolute inset-0 bg-muted animate-pulse rounded-lg" />
       )}
       
-      {/* Effet de brillance au survol */}
       <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full hover:translate-x-full transition-transform duration-1000 ease-out opacity-0 hover:opacity-100" />
+
+      {editable && isAdmin && key && (
+        <div className="absolute top-2 right-2 flex gap-2 z-20">
+          {!isEditing && (
+            <Button
+              size="sm"
+              variant="secondary"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                setIsEditing(true);
+              }}
+            >
+              Changer
+            </Button>
+          )}
+        </div>
+      )}
+
+      {editable && isAdmin && isEditing && key && (
+        <div
+          className="absolute inset-0 bg-black/60 flex items-center justify-center p-4 z-30"
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+          }}
+        >
+          <div className="bg-white rounded-lg p-4 w-full max-w-sm space-y-3">
+            <Input type="file" accept="image/*" onChange={(e) => setFile(e.target.files?.[0] || null)} />
+            <div className="flex gap-2">
+              <Button
+                onClick={async (e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  if (!file) return;
+                  try {
+                    setIsUploading(true);
+                    const url = await uploadAndOverrideMedia(key, "image", file);
+                    setCurrentSrc(url);
+                    setIsEditing(false);
+                  } finally {
+                    setIsUploading(false);
+                  }
+                }}
+                disabled={!file || isUploading}
+              >
+                {isUploading ? "Upload..." : "Uploader"}
+              </Button>
+              <Button
+                variant="secondary"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setIsEditing(false);
+                }}
+              >
+                Annuler
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -179,7 +275,7 @@ export function CardImage({
       />
       
       {overlay && (
-        <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+        <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center pointer-events-none z-10">
           {overlayContent}
         </div>
       )}

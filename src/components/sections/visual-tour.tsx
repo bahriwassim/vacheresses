@@ -13,6 +13,7 @@ import {
 import Image from "next/image";
 import { X, ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { EditableText } from "@/components/ui/editable-text";
 
 export function VisualTour() {
   // Get a mix of gallery images and specific space images for better representation
@@ -52,10 +53,10 @@ export function VisualTour() {
       <div className="container max-w-7xl px-4">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-headline font-bold">
-            {t.visualTour.title}
+            <EditableText path="visualTour.title" value={t.visualTour.title} />
           </h2>
           <p className="mt-2 text-lg text-muted-foreground max-w-2xl mx-auto">
-            {t.visualTour.subtitle}
+            <EditableText path="visualTour.subtitle" value={t.visualTour.subtitle} />
           </p>
         </div>
 

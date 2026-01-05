@@ -10,9 +10,11 @@ import { CheckCircle, Users, Home, BedDouble } from "lucide-react";
 import { useLocale } from "@/hooks/use-locale";
 import { Separator } from "@/components/ui/separator";
 import { useState, useEffect } from "react";
-import Image from "next/image";
+import { AnimatedImage } from "@/components/ui/animated-image";
 import Link from "next/link";
 import { useLocale as useLocaleHook } from "@/hooks/use-locale";
+import { EditableText } from "@/components/ui/editable-text";
+import { loadMediaOverridesByPath } from "@/lib/supabase";
 
 interface RoomData {
   id: string;
@@ -34,6 +36,18 @@ export default function SejournerPage() {
   const [selectedRoom, setSelectedRoom] = useState<RoomData | null>(null);
   const [scrollY, setScrollY] = useState(0);
   const [highlightedRoom, setHighlightedRoom] = useState<string | null>(null);
+  const [refresh, setRefresh] = useState(0);
+  const [hydrated, setHydrated] = useState(false);
+  const overridePath = (path: string) => {
+    try {
+      if (!hydrated) return path;
+      const raw = typeof window !== 'undefined' ? localStorage.getItem('imageOverridesByPath') : null;
+      const map = raw ? JSON.parse(raw) as Record<string,string> : null;
+      return map && map[path] ? map[path] : path;
+    } catch {
+      return path;
+    }
+  };
 
   useEffect(() => {
     const handleScroll = () => setScrollY(window.scrollY);
@@ -42,6 +56,14 @@ export default function SejournerPage() {
   }, []);
 
   useEffect(() => {
+    (async () => {
+      await loadMediaOverridesByPath();
+      setRefresh(x => x + 1);
+    })();
+  }, []);
+
+  useEffect(() => {
+    setHydrated(true);
     // Vérifier si on arrive avec un hash dans l'URL
     const hash = window.location.hash.replace('#', '');
     if (hash) {
@@ -205,10 +227,11 @@ export default function SejournerPage() {
       >
         {/* Image de la chambre */}
         <div className="relative h-56 overflow-hidden">
-          <Image
-            src={room.image}
+          <AnimatedImage
+            src={overridePath(room.image)}
             alt={room.name}
             fill
+            overrideKey={room.image}
             className="object-cover transition-transform duration-700 group-hover:scale-110"
             unoptimized
           />
@@ -223,8 +246,12 @@ export default function SejournerPage() {
         </div>
 
         <CardHeader>
-          <CardTitle className="font-headline text-2xl">{room.name}</CardTitle>
-          <CardDescription className="text-base">{room.type}</CardDescription>
+          <CardTitle className="font-headline text-2xl">
+            <EditableText path={`stay.rooms.${room.id}.name`} value={room.name} />
+          </CardTitle>
+          <CardDescription className="text-base">
+            <EditableText path={`stay.rooms.${room.id}.type`} value={room.type} />
+          </CardDescription>
         </CardHeader>
 
         <CardContent className="flex-1 space-y-3">
@@ -246,23 +273,28 @@ export default function SejournerPage() {
           <Dialog>
             <DialogTrigger asChild>
               <Button variant="outline" className="w-full" onClick={() => setSelectedRoom(room)}>
-                {t.stay.view_details}
+                <EditableText path="stay.view_details" value={t.stay.view_details} />
               </Button>
             </DialogTrigger>
             <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
               <DialogHeader>
-                <DialogTitle className="font-headline text-3xl">{room.name}</DialogTitle>
-                <DialogDescription className="text-base">{room.type}</DialogDescription>
+                <DialogTitle className="font-headline text-3xl">
+                  <EditableText path={`stay.rooms.${room.id}.name`} value={room.name} />
+                </DialogTitle>
+                <DialogDescription className="text-base">
+                  <EditableText path={`stay.rooms.${room.id}.type`} value={room.type} />
+                </DialogDescription>
               </DialogHeader>
               <div className="space-y-6 py-4">
                 {/* Galerie de photos */}
                 <div className="grid grid-cols-3 gap-2 rounded-lg overflow-hidden">
                   {room.gallery.map((img, idx) => (
                     <div key={idx} className="relative h-40 md:h-56 overflow-hidden group rounded-lg">
-                      <Image
-                        src={img}
+                      <AnimatedImage
+                        src={overridePath(img)}
                         alt={`${room.name} - Photo ${idx + 1}`}
                         fill
+                        overrideKey={img}
                         className="object-cover transition-all duration-500 group-hover:scale-110 group-hover:brightness-110"
                         unoptimized
                       />
@@ -347,13 +379,13 @@ export default function SejournerPage() {
         <div className="relative h-full flex items-center justify-center text-center px-4">
           <div className="animate-in fade-in slide-in-from-bottom-8 duration-1000 max-w-4xl text-white">
             <h1 className="text-5xl md:text-7xl font-headline font-bold drop-shadow-2xl">
-              {t.stay.intro_title}
+              <EditableText path="stay.intro_title" value={t.stay.intro_title} />
             </h1>
             <p className="text-xl md:text-2xl tracking-wider uppercase drop-shadow-lg mt-4 mb-6">
-              {t.stay.subtitle}
+              <EditableText path="stay.subtitle" value={t.stay.subtitle} />
             </p>
             <p className="text-lg md:text-xl max-w-2xl mx-auto whitespace-pre-line drop-shadow-lg">
-              {t.stay.intro_description.split('\n\n')[0]}
+              <EditableText path="stay.intro_description" value={t.stay.intro_description.split('\n\n')[0]} multiline />
             </p>
           </div>
         </div>
@@ -368,27 +400,30 @@ export default function SejournerPage() {
             <div className="grid md:grid-cols-2 gap-0">
               <div className="p-8 md:p-12 flex flex-col justify-center order-2 md:order-1">
                   <CardTitle className="font-headline text-3xl md:text-4xl text-primary mb-6">
-                    {t.stay.maison_potager_title}
+                    <EditableText path="stay.maison_potager_title" value={t.stay.maison_potager_title} />
                   </CardTitle>
                   <p className="text-muted-foreground text-lg leading-relaxed mb-4">
-                    {t.stay.maison_potager_description}
+                    <EditableText path="stay.maison_potager_description" value={t.stay.maison_potager_description} multiline />
                   </p>
                   <p className="text-muted-foreground leading-relaxed whitespace-pre-line">
-                    {t.stay.maison_potager_common_area}
+                    <EditableText path="stay.maison_potager_common_area" value={t.stay.maison_potager_common_area} multiline />
                   </p>
                   <Separator className="my-6" />
                   <div className="bg-primary/10 p-6 rounded-lg border border-primary/20">
-                    <h3 className="font-semibold text-xl text-primary mb-3">{t.stay.privatize_title}</h3>
+                    <h3 className="font-semibold text-xl text-primary mb-3">
+                      <EditableText path="stay.privatize_title" value={t.stay.privatize_title} />
+                    </h3>
                     <p className="text-muted-foreground whitespace-pre-line">
-                      {t.stay.privatize_description}
+                      <EditableText path="stay.privatize_description" value={t.stay.privatize_description} multiline />
                     </p>
                   </div>
               </div>
               <div className="relative h-[400px] md:h-auto overflow-hidden group order-1 md:order-2">
-                <Image
-                  src="/potager_4.jpg"
+                <AnimatedImage
+                  src={overridePath("/potager_4.jpg")}
                   alt="Maison du Potager"
                   fill
+                  overrideKey="/potager_4.jpg"
                   className="object-cover transition-transform duration-700 group-hover:scale-110"
                   unoptimized
                 />
@@ -413,13 +448,13 @@ export default function SejournerPage() {
                     </div>
                     <div className="grid grid-cols-2 gap-2 p-4">
                         <div className="relative h-64 rounded-lg overflow-hidden group">
-                             <Image src="/mariage_Véronique__Florian_-959.jpg" alt="La Loge photo 1" fill className="object-cover transition-transform duration-500 group-hover:scale-110" unoptimized/>
+                             <AnimatedImage src={overridePath("/mariage_Véronique__Florian_-959.jpg")} alt="La Loge photo 1" fill overrideKey="/mariage_Véronique__Florian_-959.jpg" className="object-cover transition-transform duration-500 group-hover:scale-110" unoptimized/>
                         </div>
                         <div className="relative h-64 rounded-lg overflow-hidden group">
-                            <Image src="/salle_reception_10.jpg" alt="La Loge photo 2" fill className="object-cover transition-transform duration-500 group-hover:scale-110" unoptimized/>
+                            <AnimatedImage src={overridePath("/salle_reception_10.jpg")} alt="La Loge photo 2" fill overrideKey="/salle_reception_10.jpg" className="object-cover transition-transform duration-500 group-hover:scale-110" unoptimized/>
                         </div>
                         <div className="relative h-64 col-span-2 rounded-lg overflow-hidden group">
-                           <Image src="/vacheresses_13.jpg" alt="La Loge photo 3" fill className="object-cover transition-transform duration-500 group-hover:scale-110" unoptimized/>
+                           <AnimatedImage src={overridePath("/vacheresses_13.jpg")} alt="La Loge photo 3" fill overrideKey="/vacheresses_13.jpg" className="object-cover transition-transform duration-500 group-hover:scale-110" unoptimized/>
                         </div>
                     </div>
                 </div>
@@ -441,10 +476,11 @@ export default function SejournerPage() {
               {/* Partner 1 */}
               <Card className="flex flex-col overflow-hidden transition-all duration-500 hover:shadow-2xl hover:shadow-primary/20">
                 <div className="relative h-48 overflow-hidden">
-                  <Image 
-                    src="/espace_1.jpg" 
+                  <AnimatedImage 
+                    src={overridePath("/espace_1.jpg")} 
                     alt="Hôtel Partenaire 1" 
                     fill 
+                    overrideKey="/espace_1.jpg"
                     className="object-cover"
                     unoptimized
                   />
@@ -478,10 +514,11 @@ export default function SejournerPage() {
               {/* Partner 2 */}
               <Card className="flex flex-col overflow-hidden transition-all duration-500 hover:shadow-2xl hover:shadow-primary/20">
                 <div className="relative h-48 overflow-hidden">
-                  <Image 
-                    src="/espace_4.jpg" 
+                  <AnimatedImage 
+                    src={overridePath("/espace_4.jpg")} 
                     alt="Chambres d'Hôtes Partenaire" 
                     fill 
+                    overrideKey="/espace_4.jpg"
                     className="object-cover"
                     unoptimized
                   />
@@ -515,10 +552,11 @@ export default function SejournerPage() {
               {/* Partner 3 */}
               <Card className="flex flex-col overflow-hidden transition-all duration-500 hover:shadow-2xl hover:shadow-primary/20">
                 <div className="relative h-48 overflow-hidden">
-                  <Image 
-                    src="/espace_5.jpg" 
+                  <AnimatedImage 
+                    src={overridePath("/espace_5.jpg")} 
                     alt="Gîte Partenaire" 
                     fill 
+                    overrideKey="/espace_5.jpg"
                     className="object-cover"
                     unoptimized
                   />

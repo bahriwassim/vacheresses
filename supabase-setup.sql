@@ -23,6 +23,10 @@ CREATE TABLE IF NOT EXISTS public.users (
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
+-- Autoriser le rôle super_admin dans la contrainte
+ALTER TABLE public.users DROP CONSTRAINT IF EXISTS users_role_check;
+ALTER TABLE public.users ADD CONSTRAINT users_role_check CHECK (role IN ('client', 'admin', 'super_admin'));
+
 -- Table des forfaits de mariage
 CREATE TABLE IF NOT EXISTS public.packages (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -205,6 +209,18 @@ CREATE TABLE IF NOT EXISTS public.blog_posts (
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
+-- Table des overrides de contenu
+CREATE TABLE IF NOT EXISTS public.content_overrides (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    path TEXT NOT NULL,
+    locale VARCHAR(5) NOT NULL,
+    content TEXT NOT NULL,
+    created_by UUID REFERENCES public.users(id),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    CONSTRAINT content_overrides_unique UNIQUE (path, locale)
+);
+
 -- =====================================================
 -- FONCTIONS UTILITAIRES
 -- =====================================================
@@ -286,6 +302,94 @@ CREATE TRIGGER update_contracts_updated_at BEFORE UPDATE ON public.contracts
 CREATE TRIGGER update_payments_updated_at BEFORE UPDATE ON public.payments
     FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
+CREATE TRIGGER update_content_overrides_updated_at BEFORE UPDATE ON public.content_overrides
+    FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+-- Historique des overrides de contenu
+CREATE TABLE IF NOT EXISTS public.content_override_history (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    path TEXT NOT NULL,
+    locale VARCHAR(5) NOT NULL,
+    content TEXT,
+    action VARCHAR(10) NOT NULL CHECK (action IN ('insert', 'update', 'delete')),
+    modified_by UUID REFERENCES public.users(id),
+    modified_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Fonction d'audit pour historiser les modifications
+CREATE OR REPLACE FUNCTION audit_content_overrides()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF (TG_OP = 'INSERT') THEN
+        INSERT INTO public.content_override_history(path, locale, content, action, modified_by, modified_at)
+        VALUES (NEW.path, NEW.locale, NEW.content, 'insert', NEW.created_by, NOW());
+        RETURN NEW;
+    ELSIF (TG_OP = 'UPDATE') THEN
+        INSERT INTO public.content_override_history(path, locale, content, action, modified_by, modified_at)
+        VALUES (NEW.path, NEW.locale, NEW.content, 'update', NEW.created_by, NOW());
+        RETURN NEW;
+    ELSIF (TG_OP = 'DELETE') THEN
+        INSERT INTO public.content_override_history(path, locale, content, action, modified_by, modified_at)
+        VALUES (OLD.path, OLD.locale, OLD.content, 'delete', OLD.created_by, NOW());
+        RETURN OLD;
+    END IF;
+    RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER audit_content_overrides_trigger
+AFTER INSERT OR UPDATE OR DELETE ON public.content_overrides
+FOR EACH ROW EXECUTE FUNCTION audit_content_overrides();
+
+-- Overrides de médias (images/vidéos)
+CREATE TABLE IF NOT EXISTS public.media_overrides (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    path TEXT NOT NULL,
+    media_type TEXT NOT NULL CHECK (media_type IN ('image', 'video')),
+    url TEXT NOT NULL,
+    created_by UUID REFERENCES public.users(id),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    CONSTRAINT media_overrides_unique UNIQUE (path)
+);
+
+CREATE TRIGGER update_media_overrides_updated_at BEFORE UPDATE ON public.media_overrides
+    FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+CREATE TABLE IF NOT EXISTS public.media_override_history (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    path TEXT NOT NULL,
+    media_type TEXT NOT NULL CHECK (media_type IN ('image', 'video')),
+    url TEXT,
+    action VARCHAR(10) NOT NULL CHECK (action IN ('insert', 'update', 'delete')),
+    modified_by UUID REFERENCES public.users(id),
+    modified_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+CREATE OR REPLACE FUNCTION audit_media_overrides()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF (TG_OP = 'INSERT') THEN
+        INSERT INTO public.media_override_history(path, media_type, url, action, modified_by, modified_at)
+        VALUES (NEW.path, NEW.media_type, NEW.url, 'insert', NEW.created_by, NOW());
+        RETURN NEW;
+    ELSIF (TG_OP = 'UPDATE') THEN
+        INSERT INTO public.media_override_history(path, media_type, url, action, modified_by, modified_at)
+        VALUES (NEW.path, NEW.media_type, NEW.url, 'update', NEW.created_by, NOW());
+        RETURN NEW;
+    ELSIF (TG_OP = 'DELETE') THEN
+        INSERT INTO public.media_override_history(path, media_type, url, action, modified_by, modified_at)
+        VALUES (OLD.path, OLD.media_type, OLD.url, 'delete', OLD.created_by, NOW());
+        RETURN OLD;
+    END IF;
+    RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER audit_media_overrides_trigger
+AFTER INSERT OR UPDATE OR DELETE ON public.media_overrides
+FOR EACH ROW EXECUTE FUNCTION audit_media_overrides();
+
 -- Trigger pour générer automatiquement une référence de réservation
 CREATE OR REPLACE FUNCTION set_booking_reference()
 RETURNS TRIGGER AS $$
@@ -326,6 +430,10 @@ ALTER TABLE public.contracts ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.payments ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.messages ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.accommodation_bookings ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.content_overrides ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.content_override_history ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.media_overrides ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.media_override_history ENABLE ROW LEVEL SECURITY;
 
 -- Politique pour les utilisateurs : peuvent voir et modifier leurs propres données
 CREATE POLICY users_select_own ON public.users
@@ -338,7 +446,7 @@ CREATE POLICY users_update_own ON public.users
 CREATE POLICY bookings_select_own ON public.bookings
     FOR SELECT USING (
         user_id = auth.uid() OR
-        EXISTS (SELECT 1 FROM public.users WHERE id = auth.uid() AND role = 'admin')
+        EXISTS (SELECT 1 FROM public.users WHERE id = auth.uid() AND role IN ('admin','super_admin'))
     );
 
 -- Politique pour les contrats : clients voient leurs contrats
@@ -347,7 +455,7 @@ CREATE POLICY contracts_select_own ON public.contracts
         EXISTS (
             SELECT 1 FROM public.bookings
             WHERE bookings.id = contracts.booking_id
-            AND (bookings.user_id = auth.uid() OR EXISTS (SELECT 1 FROM public.users WHERE id = auth.uid() AND role = 'admin'))
+            AND (bookings.user_id = auth.uid() OR EXISTS (SELECT 1 FROM public.users WHERE id = auth.uid() AND role IN ('admin','super_admin')))
         )
     );
 
@@ -357,7 +465,7 @@ CREATE POLICY payments_select_own ON public.payments
         EXISTS (
             SELECT 1 FROM public.bookings
             WHERE bookings.id = payments.booking_id
-            AND (bookings.user_id = auth.uid() OR EXISTS (SELECT 1 FROM public.users WHERE id = auth.uid() AND role = 'admin'))
+            AND (bookings.user_id = auth.uid() OR EXISTS (SELECT 1 FROM public.users WHERE id = auth.uid() AND role IN ('admin','super_admin')))
         )
     );
 
@@ -368,10 +476,63 @@ CREATE POLICY messages_select_own ON public.messages
         EXISTS (
             SELECT 1 FROM public.bookings
             WHERE bookings.id = messages.booking_id
-            AND (bookings.user_id = auth.uid() OR EXISTS (SELECT 1 FROM public.users WHERE id = auth.uid() AND role = 'admin'))
+            AND (bookings.user_id = auth.uid() OR EXISTS (SELECT 1 FROM public.users WHERE id = auth.uid() AND role IN ('admin','super_admin')))
         )
     );
 
+-- Politiques pour content_overrides
+CREATE POLICY content_overrides_select_all ON public.content_overrides
+    FOR SELECT USING (true);
+
+CREATE POLICY content_overrides_insert_admin ON public.content_overrides
+    FOR INSERT WITH CHECK (
+        EXISTS (SELECT 1 FROM public.users WHERE id = auth.uid() AND role IN ('admin','super_admin'))
+    );
+
+CREATE POLICY content_overrides_update_admin ON public.content_overrides
+    FOR UPDATE USING (
+        EXISTS (SELECT 1 FROM public.users WHERE id = auth.uid() AND role IN ('admin','super_admin'))
+    );
+
+CREATE POLICY content_overrides_delete_admin ON public.content_overrides
+    FOR DELETE USING (
+        EXISTS (SELECT 1 FROM public.users WHERE id = auth.uid() AND role IN ('admin','super_admin'))
+    );
+
+-- Politiques pour l'historique des overrides
+CREATE POLICY content_override_history_select_all ON public.content_override_history
+    FOR SELECT USING (true);
+
+CREATE POLICY content_override_history_insert_admin ON public.content_override_history
+    FOR INSERT WITH CHECK (
+        EXISTS (SELECT 1 FROM public.users WHERE id = auth.uid() AND role IN ('admin','super_admin'))
+    );
+-- Politiques pour media_overrides
+CREATE POLICY media_overrides_select_all ON public.media_overrides
+    FOR SELECT USING (true);
+
+CREATE POLICY media_overrides_insert_admin ON public.media_overrides
+    FOR INSERT WITH CHECK (
+        EXISTS (SELECT 1 FROM public.users WHERE id = auth.uid() AND role IN ('admin','super_admin'))
+    );
+
+CREATE POLICY media_overrides_update_admin ON public.media_overrides
+    FOR UPDATE USING (
+        EXISTS (SELECT 1 FROM public.users WHERE id = auth.uid() AND role IN ('admin','super_admin'))
+    );
+
+CREATE POLICY media_overrides_delete_admin ON public.media_overrides
+    FOR DELETE USING (
+        EXISTS (SELECT 1 FROM public.users WHERE id = auth.uid() AND role IN ('admin','super_admin'))
+    );
+
+CREATE POLICY media_override_history_select_all ON public.media_override_history
+    FOR SELECT USING (true);
+
+CREATE POLICY media_override_history_insert_admin ON public.media_override_history
+    FOR INSERT WITH CHECK (
+        EXISTS (SELECT 1 FROM public.users WHERE id = auth.uid() AND role IN ('admin','super_admin'))
+    );
 -- =====================================================
 -- DONNÉES INITIALES
 -- =====================================================

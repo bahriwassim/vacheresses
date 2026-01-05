@@ -17,7 +17,7 @@ function monthStart(d: Date) {
 export function DateSelector() {
   const { t, locale } = useLocale();
   const { setDates } = useBooking();
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
   const [currentMonth, setCurrentMonth] = useState<Date>(() => monthStart(new Date()));
   const todayStart = monthStart(new Date());
 
@@ -94,8 +94,8 @@ export function DateSelector() {
 
               <Calendar
                 mode="single"
-                selected={selectedDate} // null si rien
-                onSelect={(d) => setSelectedDate(d)}
+                selected={selectedDate}
+                onSelect={(d) => setSelectedDate(d ?? undefined)}
                 month={currentMonth}
                 disabled={(day) => {
                   const today = new Date();
@@ -103,7 +103,6 @@ export function DateSelector() {
                   return day < today;
                 }}
                 className="rounded-md shadow-md"
-                dayKey={(day) => day.getTime()} // clé unique pour chaque jour
               />
             </CardContent>
           </Card>

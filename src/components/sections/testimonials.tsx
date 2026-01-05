@@ -5,6 +5,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent } from "@/components/ui/card";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { useLocale } from "@/hooks/use-locale";
+import { EditableText } from "@/components/ui/editable-text";
 
 const testimonialsData = (t: any) => [
   {
@@ -36,10 +37,10 @@ export function Testimonials() {
       <div className="container max-w-7xl px-4">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-headline font-bold animate-in fade-in slide-in-from-bottom-8 duration-1000">
-            {t.testimonials.title}
+            <EditableText path="testimonials.title" value={t.testimonials.title} />
           </h2>
           <p className="mt-2 text-lg text-muted-foreground max-w-2xl mx-auto animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-200">
-            {t.testimonials.subtitle}
+            <EditableText path="testimonials.subtitle" value={t.testimonials.subtitle} />
           </p>
         </div>
         <Carousel
@@ -56,7 +57,9 @@ export function Testimonials() {
                   <Card className="h-full flex flex-col justify-between transition-all duration-500 hover-lift hover-glow hover:border-primary/30 animate-in fade-in slide-in-from-bottom-8"
                         style={{ animationDelay: `${index * 200}ms` }}>
                     <CardContent className="p-6 flex flex-col items-center text-center flex-grow">
-                      <p className="text-muted-foreground italic mb-6">"{testimonial.quote}"</p>
+                      <p className="text-muted-foreground italic mb-6">
+                        “<EditableText path={`testimonials.quote_${index + 1}`} value={testimonial.quote} />”
+                      </p>
                       <div className="flex items-center gap-4">
                         <Avatar className="ring-2 ring-primary/20 transition-all duration-300 group-hover:ring-4 group-hover:ring-primary/40 hover:scale-110">
                           <AvatarImage src={testimonial.image} alt={testimonial.name} className="object-cover" />

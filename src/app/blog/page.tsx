@@ -10,6 +10,7 @@ import { blogPosts } from "@/lib/blog-posts";
 import { getImageById } from "@/lib/vacheresses-images";
 import { Button } from "@/components/ui/button";
 import { CardImage } from "@/components/ui/animated-image";
+import { EditableText } from "@/components/ui/editable-text";
 
 export default function BlogPage() {
   const { t, locale } = useLocale();
@@ -17,6 +18,15 @@ export default function BlogPage() {
   const otherPosts = blogPosts.slice(1);
 
   const featuredImage = getImageById(featuredPost.imageId);
+  const overridePath = (path: string) => {
+    try {
+      const raw = typeof window !== 'undefined' ? localStorage.getItem('imageOverridesByPath') : null;
+      const map = raw ? JSON.parse(raw) as Record<string,string> : null;
+      return map && map[path] ? map[path] : path;
+    } catch {
+      return path;
+    }
+  };
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -25,13 +35,13 @@ export default function BlogPage() {
         <div className="container max-w-7xl">
           <div className="text-center mb-16 animate-in fade-in slide-in-from-bottom-8 duration-1000">
             <p className="text-sm md:text-base tracking-wider text-primary uppercase font-semibold">
-              {t.blog.title}
+              <EditableText path="blog.title" value={t.blog.title} />
             </p>
             <h1 className="text-4xl md:text-5xl font-headline font-bold mt-2">
-              {t.blog.title}
+              <EditableText path="blog.title" value={t.blog.title} />
             </h1>
             <p className="mt-4 text-lg text-muted-foreground max-w-3xl mx-auto">
-              {t.blog.subtitle}
+              <EditableText path="blog.subtitle" value={t.blog.subtitle} />
             </p>
           </div>
 
@@ -103,7 +113,7 @@ export default function BlogPage() {
               ].map((img, i) => (
                 <div key={i} className="relative aspect-square rounded-xl overflow-hidden group">
                   <CardImage
-                    src={img}
+                    src={overridePath(img)}
                     alt={`Mariage ${i + 1}`}
                     fill
                     className="object-cover transition-transform duration-500 group-hover:scale-110"
@@ -149,7 +159,9 @@ export default function BlogPage() {
                     </CardContent>
                     <div className="pt-4 mt-auto">
                       <Button asChild variant="link" className="p-0">
-                        <Link href={`/blog/${post.slug}`}>{t.blog.readMore}</Link>
+                        <Link href={`/blog/${post.slug}`}>
+                          <EditableText path="blog.readMore" value={t.blog.readMore} />
+                        </Link>
                       </Button>
                     </div>
                   </div>

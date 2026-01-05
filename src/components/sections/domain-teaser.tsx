@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { useLocale } from "@/hooks/use-locale";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import { EditableText } from "@/components/ui/editable-text";
 
 export function DomainTeaser() {
   const { t } = useLocale();
@@ -18,26 +19,26 @@ export function DomainTeaser() {
             <div className="text-center space-y-6">
               <div className="space-y-3 animate-in fade-in slide-in-from-bottom-8 duration-1000">
                 <h2 className="text-3xl md:text-5xl font-headline font-bold text-primary">
-                  {t.domain.spirit_title}
+                  <EditableText path="domain.spirit_title" value={t.domain.spirit_title} />
                 </h2>
                 <p className="text-sm md:text-base tracking-wider text-muted-foreground uppercase">
-                  {t.domain.subtitle}
+                  <EditableText path="domain.subtitle" value={t.domain.subtitle} />
                 </p>
               </div>
 
               <div className="max-w-4xl mx-auto space-y-6 animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-200">
                 <p className="text-lg md:text-xl text-muted-foreground leading-relaxed">
-                  {t.domain.spirit_content.split('\n\n')[0]}
+                  <EditableText path="domain.spirit_content" value={t.domain.spirit_content.split('\n\n')[0]} multiline />
                 </p>
                 <p className="text-base md:text-lg text-muted-foreground leading-relaxed">
-                  {t.domain.spirit_content.split('\n\n')[1]}
+                  <EditableText path="domain.spirit_content" value={t.domain.spirit_content.split('\n\n')[1]} multiline />
                 </p>
               </div>
 
               <div className="pt-6 animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-400">
                 <Button asChild size="lg" className="group">
                   <Link href="/domaine" className="flex items-center gap-2">
-                    {t.domain.discover_more}
+                    <EditableText path="domain.discover_more" value={t.domain.discover_more} />
                     <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
                   </Link>
                 </Button>

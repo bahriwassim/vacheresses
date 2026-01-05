@@ -12,6 +12,7 @@ import { useBooking } from "@/contexts/booking-context";
 import { DatePickerDialog } from "./date-picker-dialog";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { EditableText } from "@/components/ui/editable-text";
 
 const packagesData = (t: any) => [
   {
@@ -79,10 +80,10 @@ export function Packages() {
       <div className="container max-w-7xl px-4">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-headline font-bold animate-in fade-in slide-in-from-bottom-8 duration-1000">
-            {t.packages.title}
+            <EditableText path="packages.title" value={t.packages.title} />
           </h2>
           <p className="mt-2 text-lg text-muted-foreground max-w-2xl mx-auto animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-200">
-            {t.packages.subtitle}
+            <EditableText path="packages.subtitle" value={t.packages.subtitle} />
           </p>
         </div>
 
@@ -110,21 +111,29 @@ export function Packages() {
                       overlay={true}
                       overlayContent={
                         <div className="text-center text-white">
-                          <p className="text-sm font-medium">{t.packages.discover}</p>
+                          <p className="text-sm font-medium">
+                            <EditableText path="packages.discover" value={t.packages.discover} />
+                          </p>
                         </div>
                       }
                       className="mb-4"
                     />
                   )}
-                  <CardTitle className="font-headline">{pkg.title}</CardTitle>
-                  <CardDescription>{pkg.description}</CardDescription>
+                  <CardTitle className="font-headline">
+                    <EditableText path={`packages.${pkg.id}_title`} value={pkg.title} />
+                  </CardTitle>
+                  <CardDescription>
+                    <EditableText path={`packages.${pkg.id}_desc`} value={pkg.description} />
+                  </CardDescription>
                 </CardHeader>
                 <CardContent className="flex-1">
                   <ul className="space-y-3">
-                    {pkg.features.map((feature) => (
-                      <li key={feature} className="flex items-start">
+                    {pkg.features.map((feature: string, i: number) => (
+                      <li key={`${pkg.id}-${i}`} className="flex items-start">
                         <Check className="h-5 w-5 text-primary mr-2 flex-shrink-0 mt-0.5" />
-                        <span className="text-muted-foreground">{feature}</span>
+                        <span className="text-muted-foreground">
+                          {feature}
+                        </span>
                       </li>
                     ))}
                   </ul>
@@ -135,7 +144,11 @@ export function Packages() {
                     className="w-full"
                     variant={pkg.highlighted ? 'default' : 'outline'}
                   >
-                    {dates ? t.packages.button : t.packages.selectAndContinue || t.packages.button}
+                    {dates ? (
+                      <EditableText path="packages.button" value={t.packages.button} />
+                    ) : (
+                      <EditableText path="packages.selectAndContinue" value={t.packages.selectAndContinue || t.packages.button} />
+                    )}
                   </Button>
                 </CardFooter>
               </Card>

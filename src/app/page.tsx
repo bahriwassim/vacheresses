@@ -19,11 +19,19 @@ import { useLocale } from '@/hooks/use-locale';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import { CardImage } from '@/components/ui/animated-image';
+import { useEffect, useState } from 'react';
+import { loadMediaOverridesByPath } from '@/lib/supabase';
 
 export default function Home() {
   const { t, locale } = useLocale();
+  const [refresh, setRefresh] = useState(0);
+  useEffect(() => {
+    (async () => {
+      await loadMediaOverridesByPath();
+      setRefresh(x => x + 1);
+    })();
+  }, []);
   const pressArticles = [
     {
       image: '/vacheresses_7.jpg',
@@ -62,6 +70,12 @@ export default function Home() {
         : 'How Manoir de Vacheresses reinvents intimate weddings with elegance.',
     },
   ];
+  const pressLogos = [
+    { id: 'press-vogue', name: locale === 'fr' ? 'Vogue Mariages' : 'Vogue Weddings', src: 'https://picsum.photos/seed/vogue/200/200' },
+    { id: 'press-elle', name: 'Elle Decoration', src: 'https://picsum.photos/seed/elle/200/200' },
+    { id: 'press-bridal', name: 'Bridal Magazine', src: 'https://picsum.photos/seed/bridal/200/200' },
+    { id: 'press-marieclaire', name: 'Marie Claire', src: 'https://picsum.photos/seed/marieclaire/200/200' },
+  ];
   return (
     <BookingProvider>
       <div className="flex flex-col min-h-screen bg-background">
@@ -84,35 +98,22 @@ export default function Home() {
                   {t.blog.pressSubtitle}
                 </p>
               </div>
-              <Carousel opts={{ align: 'start', loop: true }} className="w-full max-w-6xl mx-auto">
-                <CarouselContent>
-                  {pressArticles.map((article, index) => (
-                    <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
-                      <div className="p-1 h-full">
-                        <Card className="h-full flex flex-col justify-between transition-all duration-500 hover-lift hover-glow hover:border-primary/30 animate-in fade-in slide-in-from-bottom-8" style={{ animationDelay: `${index * 200}ms` }}>
-                          <div className="relative h-40 overflow-hidden">
-                            <CardImage src={article.image} alt={article.title} fill className="object-cover" />
-                          </div>
-                          <CardHeader>
-                            <CardTitle className="font-headline text-lg">{article.title}</CardTitle>
-                          </CardHeader>
-                          <CardContent className="p-6 flex flex-col gap-4">
-                            <p className="text-muted-foreground italic">"{article.excerpt}"</p>
-                            <div className="text-sm text-primary/80 font-medium">{article.publication} • {article.date}</div>
-                            <div>
-                              <Button asChild variant="link" className="p-0">
-                                <Link href="/blog/press">{t.blog.readMore} &rarr;</Link>
-                              </Button>
-                            </div>
-                          </CardContent>
-                        </Card>
-                      </div>
-                    </CarouselItem>
-                  ))}
-                </CarouselContent>
-                <CarouselPrevious />
-                <CarouselNext />
-              </Carousel>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-6xl mx-auto">
+                {pressLogos.map((logo) => (
+                  <Link key={logo.id} href="/blog/press" className="group">
+                    <div className="relative aspect-square rounded-xl border bg-card hover:border-primary/40 transition-all duration-300 hover:shadow-md overflow-hidden">
+                      <CardImage
+                        src={logo.src}
+                        alt={logo.name}
+                        fill
+                        aspectRatio="square"
+                        overrideKey={logo.id}
+                        className="object-contain p-4"
+                      />
+                    </div>
+                  </Link>
+                ))}
+              </div>
             </div>
           </section>
           <Testimonials />

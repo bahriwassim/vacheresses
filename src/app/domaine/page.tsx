@@ -5,17 +5,42 @@ import { Footer } from "@/components/layout/footer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useLocale } from "@/hooks/use-locale";
 import { Separator } from "@/components/ui/separator";
-import Image from "next/image";
+import { AnimatedImage } from "@/components/ui/animated-image";
 import { useState, useEffect } from "react";
+import { EditableText } from "@/components/ui/editable-text";
+import { loadMediaOverridesByPath } from "@/lib/supabase";
 
 export default function DomainePage() {
   const { t } = useLocale();
   const [scrollY, setScrollY] = useState(0);
+  const [refresh, setRefresh] = useState(0);
+  const [hydrated, setHydrated] = useState(false);
+  const overridePath = (path: string) => {
+    try {
+      if (!hydrated) return path;
+      const raw = typeof window !== 'undefined' ? localStorage.getItem('imageOverridesByPath') : null;
+      const map = raw ? JSON.parse(raw) as Record<string,string> : null;
+      return map && map[path] ? map[path] : path;
+    } catch {
+      return path;
+    }
+  };
 
   useEffect(() => {
     const handleScroll = () => setScrollY(window.scrollY);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  useEffect(() => {
+    (async () => {
+      await loadMediaOverridesByPath();
+      setRefresh(x => x + 1);
+    })();
+  }, []);
+  
+  useEffect(() => {
+    setHydrated(true);
   }, []);
 
   return (
@@ -31,10 +56,11 @@ export default function DomainePage() {
             transition: 'transform 0.1s ease-out'
           }}
         >
-          <Image
-            src="/vacheresses_7.jpg"
+          <AnimatedImage
+            src={overridePath("/vacheresses_7.jpg")}
             alt="Manoir de Vacheresses"
             fill
+            overrideKey="/vacheresses_7.jpg"
             className="object-cover brightness-75"
             priority
           />
@@ -43,10 +69,10 @@ export default function DomainePage() {
         <div className="relative h-full flex items-center justify-center text-center px-4">
           <div className="animate-in fade-in slide-in-from-bottom-8 duration-1000">
             <h1 className="text-5xl md:text-7xl font-headline font-bold text-white mb-4 drop-shadow-2xl">
-              {t.domain.title}
+              <EditableText path="domain.title" value={t.domain.title} />
             </h1>
             <p className="text-xl md:text-2xl tracking-wider text-white/90 uppercase drop-shadow-lg">
-              {t.domain.subtitle}
+              <EditableText path="domain.subtitle" value={t.domain.subtitle} />
             </p>
           </div>
         </div>
@@ -61,10 +87,11 @@ export default function DomainePage() {
               <div className="grid md:grid-cols-2 gap-0">
                 {/* Image gauche */}
                 <div className="relative h-64 md:h-auto overflow-hidden group">
-                  <Image
-                    src="/vacheresses_13.jpg"
+                  <AnimatedImage
+                    src={overridePath("/vacheresses_13.jpg")}
                     alt="L'esprit du Manoir"
                     fill
+                    overrideKey="/vacheresses_13.jpg"
                     className="object-cover transition-transform duration-700 group-hover:scale-110"
                   />
                 </div>
@@ -72,11 +99,11 @@ export default function DomainePage() {
                 {/* Contenu */}
                 <div className="p-8 md:p-12 flex flex-col justify-center">
                   <CardTitle className="font-headline text-3xl md:text-4xl text-primary mb-6">
-                    {t.domain.spirit_title}
+                    <EditableText path="domain.spirit_title" value={t.domain.spirit_title} />
                   </CardTitle>
                   <div className="prose prose-lg max-w-none dark:prose-invert">
                     <p className="text-muted-foreground whitespace-pre-line leading-relaxed text-base md:text-lg">
-                      {t.domain.spirit_content}
+                      <EditableText path="domain.spirit_content" value={t.domain.spirit_content} multiline />
                     </p>
                   </div>
                 </div>
@@ -86,10 +113,11 @@ export default function DomainePage() {
               <div className="grid grid-cols-3 gap-0.5 bg-background/50">
                 {['/renaissance.jpg', '/VacheressesHistoire.jpg', '/TerracottaOttoman(37).jpg'].map((img, i) => (
                   <div key={i} className="relative h-40 overflow-hidden group">
-                    <Image
-                      src={img}
+                    <AnimatedImage
+                      src={overridePath(img)}
                       alt={`Détail ${i + 1}`}
                       fill
+                      overrideKey={img}
                       className="object-cover transition-all duration-500 group-hover:scale-110 group-hover:brightness-110"
                     />
                   </div>
@@ -103,10 +131,10 @@ export default function DomainePage() {
           {/* L'Histoire Section */}
           <div className="mb-12">
             <h2 className="text-4xl md:text-5xl font-headline font-bold text-center mb-4 animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-300">
-              {t.domain.history_title}
+              <EditableText path="domain.history_title" value={t.domain.history_title} />
             </h2>
             <p className="text-sm md:text-base tracking-wider text-muted-foreground uppercase text-center mb-12 animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-400">
-              {t.domain.subtitle}
+              <EditableText path="domain.subtitle" value={t.domain.subtitle} />
             </p>
           </div>
 
@@ -117,19 +145,20 @@ export default function DomainePage() {
               <Card className="shadow-2xl hover:shadow-primary/20 transition-all duration-500 overflow-hidden group">
                 <div className="grid md:grid-cols-5 gap-0">
                   <div className="md:col-span-2 relative h-64 md:h-auto overflow-hidden">
-                    <Image
-                      src="/VacheressesHistoire.jpg"
-                      alt="L'âge d'or"
-                      fill
-                      className="object-cover transition-transform duration-700 group-hover:scale-105"
-                    />
+                  <AnimatedImage
+                    src={overridePath("/VacheressesHistoire.jpg")}
+                    alt="L'âge d'or"
+                    fill
+                    overrideKey="/VacheressesHistoire.jpg"
+                    className="object-cover transition-transform duration-700 group-hover:scale-105"
+                  />
                   </div>
                   <div className="md:col-span-3 p-8 md:p-10">
                     <CardTitle className="font-headline text-2xl md:text-3xl text-primary mb-4">
-                      {t.domain.age_or_title}
+                      <EditableText path="domain.age_or_title" value={t.domain.age_or_title} />
                     </CardTitle>
                     <p className="text-muted-foreground whitespace-pre-line leading-relaxed">
-                      {t.domain.age_or_content}
+                      <EditableText path="domain.age_or_content" value={t.domain.age_or_content} multiline />
                     </p>
                   </div>
                 </div>
@@ -142,17 +171,18 @@ export default function DomainePage() {
                 <div className="grid md:grid-cols-5 gap-0">
                   <div className="md:col-span-3 p-8 md:p-10 order-2 md:order-1">
                     <CardTitle className="font-headline text-2xl md:text-3xl text-primary mb-4">
-                      {t.domain.renaissance_title}
+                      <EditableText path="domain.renaissance_title" value={t.domain.renaissance_title} />
                     </CardTitle>
                     <p className="text-muted-foreground whitespace-pre-line leading-relaxed">
-                      {t.domain.renaissance_content}
+                      <EditableText path="domain.renaissance_content" value={t.domain.renaissance_content} multiline />
                     </p>
                   </div>
                   <div className="md:col-span-2 relative h-64 md:h-auto overflow-hidden order-1 md:order-2">
-                    <Image
-                      src="/renaissance.jpg"
+                    <AnimatedImage
+                      src={overridePath("/renaissance.jpg")}
                       alt="Renaissance"
                       fill
+                      overrideKey="/renaissance.jpg"
                       className="object-cover transition-transform duration-700 group-hover:scale-105"
                     />
                   </div>
@@ -165,19 +195,20 @@ export default function DomainePage() {
               <Card className="shadow-2xl hover:shadow-primary/20 transition-all duration-500 overflow-hidden group">
                 <div className="grid md:grid-cols-5 gap-0">
                   <div className="md:col-span-2 relative h-64 md:h-auto overflow-hidden">
-                    <Image
-                      src="/dynastiedenoailles.jpg"
+                  <AnimatedImage
+                      src={overridePath("/dynastiedenoailles.jpg")}
                       alt="Dynastie de Noailles"
                       fill
+                      overrideKey="/dynastiedenoailles.jpg"
                       className="object-cover transition-transform duration-700 group-hover:scale-105"
                     />
                   </div>
                   <div className="md:col-span-3 p-8 md:p-10">
                     <CardTitle className="font-headline text-2xl md:text-3xl text-primary mb-4">
-                      {t.domain.noailles_title}
+                      <EditableText path="domain.noailles_title" value={t.domain.noailles_title} />
                     </CardTitle>
                     <p className="text-muted-foreground whitespace-pre-line leading-relaxed">
-                      {t.domain.noailles_content}
+                      <EditableText path="domain.noailles_content" value={t.domain.noailles_content} multiline />
                     </p>
                   </div>
                 </div>
@@ -190,17 +221,18 @@ export default function DomainePage() {
                 <div className="grid md:grid-cols-5 gap-0">
                   <div className="md:col-span-3 p-8 md:p-10 order-2 md:order-1">
                     <CardTitle className="font-headline text-2xl md:text-3xl text-primary mb-4">
-                      {t.domain.modern_title}
+                      <EditableText path="domain.modern_title" value={t.domain.modern_title} />
                     </CardTitle>
                     <p className="text-muted-foreground whitespace-pre-line leading-relaxed">
-                      {t.domain.modern_content}
+                      <EditableText path="domain.modern_content" value={t.domain.modern_content} multiline />
                     </p>
                   </div>
                   <div className="md:col-span-2 relative h-64 md:h-auto overflow-hidden order-1 md:order-2">
-                    <Image
-                      src="/vacheresses_17.jpg"
+                    <AnimatedImage
+                      src={overridePath("/vacheresses_17.jpg")}
                       alt="Temps modernes"
                       fill
+                      overrideKey="/vacheresses_17.jpg"
                       className="object-cover transition-transform duration-700 group-hover:scale-105"
                     />
                   </div>
@@ -224,10 +256,11 @@ export default function DomainePage() {
             {/* Cour d'Honneur */}
             <Card className="overflow-hidden transition-all duration-500 hover:shadow-xl hover:-translate-y-1">
               <div className="relative h-48 overflow-hidden">
-                <Image
-                  src="/vacheresses_7.jpg"
+                <AnimatedImage
+                  src={overridePath("/vacheresses_7.jpg")}
                   alt="Cour d'Honneur"
                   fill
+                  overrideKey="/vacheresses_7.jpg"
                   className="object-cover"
                 />
               </div>
@@ -242,10 +275,11 @@ export default function DomainePage() {
             {/* Salle de Réception */}
             <Card className="overflow-hidden transition-all duration-500 hover:shadow-xl hover:-translate-y-1">
               <div className="relative h-48 overflow-hidden">
-                <Image
-                  src="/salle_reception_9.jpg"
+                <AnimatedImage
+                  src={overridePath("/salle_reception_9.jpg")}
                   alt="Salle de Réception"
                   fill
+                  overrideKey="/salle_reception_9.jpg"
                   className="object-cover"
                 />
               </div>
@@ -260,10 +294,11 @@ export default function DomainePage() {
             {/* Parc */}
             <Card className="overflow-hidden transition-all duration-500 hover:shadow-xl hover:-translate-y-1">
               <div className="relative h-48 overflow-hidden">
-                <Image
-                  src="/Parc_2.jpg"
+                <AnimatedImage
+                  src={overridePath("/Parc_2.jpg")}
                   alt="Parc"
                   fill
+                  overrideKey="/Parc_2.jpg"
                   className="object-cover"
                 />
               </div>
@@ -278,10 +313,11 @@ export default function DomainePage() {
             {/* Préau et Verger */}
             <Card className="overflow-hidden transition-all duration-500 hover:shadow-xl hover:-translate-y-1">
               <div className="relative h-48 overflow-hidden">
-                <Image
-                  src="/espace_7.jpg"
+                <AnimatedImage
+                  src={overridePath("/espace_7.jpg")}
                   alt="Préau et Verger"
                   fill
+                  overrideKey="/espace_7.jpg"
                   className="object-cover"
                 />
               </div>
@@ -296,10 +332,11 @@ export default function DomainePage() {
             {/* Potager Médiéval */}
             <Card className="overflow-hidden transition-all duration-500 hover:shadow-xl hover:-translate-y-1">
               <div className="relative h-48 overflow-hidden">
-                <Image
-                  src="/espace_9.jpg"
+                <AnimatedImage
+                  src={overridePath("/espace_9.jpg")}
                   alt="Potager Médiéval"
                   fill
+                  overrideKey="/espace_9.jpg"
                   className="object-cover"
                 />
               </div>
@@ -314,10 +351,11 @@ export default function DomainePage() {
             {/* Maison du Potager */}
             <Card className="overflow-hidden transition-all duration-500 hover:shadow-xl hover:-translate-y-1">
               <div className="relative h-48 overflow-hidden">
-                <Image
-                  src="/potager_3.jpg"
+                <AnimatedImage
+                  src={overridePath("/potager_3.jpg")}
                   alt="Maison du Potager"
                   fill
+                  overrideKey="/potager_3.jpg"
                   className="object-cover"
                 />
               </div>
@@ -332,10 +370,11 @@ export default function DomainePage() {
             {/* Salle Blanche */}
             <Card className="overflow-hidden transition-all duration-500 hover:shadow-xl hover:-translate-y-1">
               <div className="relative h-48 overflow-hidden">
-                <Image
-                  src="/salle_reception_6.jpg"
+                <AnimatedImage
+                  src={overridePath("/salle_reception_6.jpg")}
                   alt="Salle Blanche"
                   fill
+                  overrideKey="/salle_reception_6.jpg"
                   className="object-cover"
                 />
               </div>
@@ -350,10 +389,11 @@ export default function DomainePage() {
             {/* Orangerie */}
             <Card className="overflow-hidden transition-all duration-500 hover:shadow-xl hover:-translate-y-1">
               <div className="relative h-48 overflow-hidden">
-                <Image
-                  src="/espace_8.jpg"
+                <AnimatedImage
+                  src={overridePath("/espace_8.jpg")}
                   alt="Orangerie"
                   fill
+                  overrideKey="/espace_8.jpg"
                   className="object-cover"
                 />
               </div>
@@ -368,10 +408,11 @@ export default function DomainePage() {
             {/* Chapelle */}
             <Card className="overflow-hidden transition-all duration-500 hover:shadow-xl hover:-translate-y-1">
               <div className="relative h-48 overflow-hidden">
-                <Image
-                  src="/vacheresses_13.jpg"
+                <AnimatedImage
+                  src={overridePath("/vacheresses_13.jpg")}
                   alt="Chapelle"
                   fill
+                  overrideKey="/vacheresses_13.jpg"
                   className="object-cover"
                 />
               </div>
@@ -386,10 +427,11 @@ export default function DomainePage() {
             {/* Terrasses */}
             <Card className="overflow-hidden transition-all duration-500 hover:shadow-xl hover:-translate-y-1">
               <div className="relative h-48 overflow-hidden">
-                <Image
-                  src="/Parc_1.jpg"
+                <AnimatedImage
+                  src={overridePath("/Parc_1.jpg")}
                   alt="Terrasses"
                   fill
+                  overrideKey="/Parc_1.jpg"
                   className="object-cover"
                 />
               </div>
@@ -404,10 +446,11 @@ export default function DomainePage() {
             {/* Roseraie */}
             <Card className="overflow-hidden transition-all duration-500 hover:shadow-xl hover:-translate-y-1">
               <div className="relative h-48 overflow-hidden">
-                <Image
-                  src="/Parc_3.jpg"
+                <AnimatedImage
+                  src={overridePath("/Parc_3.jpg")}
                   alt="Roseraie"
                   fill
+                  overrideKey="/Parc_3.jpg"
                   className="object-cover"
                 />
               </div>
@@ -425,10 +468,11 @@ export default function DomainePage() {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
               {['/Parc_2.jpg', '/Parc_3.jpg', '/Parc_5.jpg', '/preau_verger_1.jpg'].map((img, i) => (
                 <div key={i} className="relative h-48 md:h-64 overflow-hidden rounded-lg group">
-                  <Image
+                  <AnimatedImage
                     src={img}
                     alt={`Galerie ${i + 1}`}
                     fill
+                    overrideKey={img}
                     className="object-cover transition-all duration-700 group-hover:scale-110 group-hover:brightness-110"
                   />
                   <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300" />

@@ -1,8 +1,31 @@
 
 "use client";
+import { useEffect, useState } from "react";
+import { loadMediaOverridesByPath } from "@/lib/supabase";
 
 export function VideoSection() {
-  const videoId = "II3mIKxM_JI";
+  const [videoId, setVideoId] = useState("II3mIKxM_JI");
+
+  useEffect(() => {
+    const applyLocal = () => {
+      try {
+        const raw = typeof window !== 'undefined' ? localStorage.getItem('videoId') : null;
+        const override = raw ? JSON.parse(raw) : null;
+        if (override && typeof override === 'string' && override.trim().length > 0) {
+          setVideoId(override.trim());
+        }
+      } catch {}
+    };
+    applyLocal();
+    (async () => {
+      const res = await loadMediaOverridesByPath();
+      if (res?.videoId && typeof res.videoId === 'string' && res.videoId.trim().length > 0) {
+        setVideoId(res.videoId.trim());
+      } else {
+        applyLocal();
+      }
+    })();
+  }, []);
   
   return (
     <section className="py-8 md:py-12 bg-secondary/50">
@@ -21,7 +44,7 @@ export function VideoSection() {
             frameBorder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             allowFullScreen
-          ></iframe>
+          />
         </div>
       </div>
     </section>
