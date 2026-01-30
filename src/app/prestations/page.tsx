@@ -8,7 +8,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { CheckCircle, PlusCircle } from "lucide-react";
 import { useLocale } from "@/hooks/use-locale";
 import { Separator } from "@/components/ui/separator";
-import { getServiceImages, getImageById } from "@/lib/vacheresses-images";
+import { getImageById } from "@/lib/vacheresses-images";
 import { CardImage } from "@/components/ui/animated-image";
 import { EditableText } from "@/components/ui/editable-text";
 import { useState } from "react";
@@ -67,18 +67,59 @@ export default function ServicesPage() {
                   </li>
                 ))}
               </ul>
-              <Separator className="my-8"/>
-              <div className="flex items-center">
-                 <PlusCircle className="h-6 w-6 text-primary mr-3 flex-shrink-0" />
-                 <div className="w-full">
-                    <h3 className="font-semibold">
-                      <EditableText path="services.caterer_title" value={t.services.caterer_title} />
-                    </h3>
-                    <p className="text-muted-foreground">
-                      <EditableText path="services.caterer_desc" value={t.services.caterer_desc} />
-                    </p>
-                 </div>
-              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="shadow-lg mb-12 animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-300">
+             <CardHeader>
+              <CardTitle className="font-headline">
+                <EditableText path="services.imposed_title" value={t.services.imposed_title} />
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+                <div className="space-y-8">
+                    <div>
+                        <h3 className="text-xl font-semibold mb-2">
+                             <EditableText path="services.imposed_dj_title" value={t.services.imposed_dj_title} />
+                        </h3>
+                        <div className="flex flex-col space-y-2">
+                            <p className="text-muted-foreground">
+                                <EditableText path="services.imposed_dj_desc" value={t.services.imposed_dj_desc} />
+                            </p>
+                            <a href="https://evidanseparis.com/" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
+                                https://evidanseparis.com/
+                            </a>
+                        </div>
+                    </div>
+
+                    <Separator />
+
+                    <div>
+                        <h3 className="text-xl font-semibold mb-2">
+                            <EditableText path="services.imposed_caterer_title" value={t.services.imposed_caterer_title} />
+                        </h3>
+                        <p className="text-muted-foreground mb-4">
+                            <EditableText path="services.imposed_caterer_desc" value={t.services.imposed_caterer_desc} />
+                        </p>
+                        <ul className="space-y-2">
+                            <li>
+                                <a href="https://www.gauthier-traiteur.fr/" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
+                                    Gauthier Traiteur (https://www.gauthier-traiteur.fr/)
+                                </a>
+                            </li>
+                             <li>
+                                <a href="https://grandchemintraiteur.fr/" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
+                                    Grand Chemin Traiteur (https://grandchemintraiteur.fr/)
+                                </a>
+                            </li>
+                             <li>
+                                <a href="https://www.epicura-receptions.fr/" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
+                                    Epicura Réceptions (https://www.epicura-receptions.fr/)
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
             </CardContent>
           </Card>
 

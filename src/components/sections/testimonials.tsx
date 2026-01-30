@@ -26,6 +26,24 @@ const testimonialsData = (t: any) => [
     image: "/vacheresses_20.jpg",
     quote: t.testimonials.quote_3,
   },
+  {
+    name: "Emma & Lucas",
+    avatar: "EL",
+    image: "/espace_4.jpg",
+    quote: t.testimonials.quote_4,
+  },
+  {
+    name: "Sophie & Claire",
+    avatar: "SC",
+    image: "/espace_1.jpg",
+    quote: t.testimonials.quote_5,
+  },
+  {
+    name: "Marie & Thomas",
+    avatar: "MT",
+    image: "/espace_5.jpg",
+    quote: t.testimonials.quote_6,
+  },
 ];
 
 export function Testimonials() {

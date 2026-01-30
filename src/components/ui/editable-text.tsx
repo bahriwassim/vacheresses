@@ -1,13 +1,13 @@
  "use client";
  
- import { useState, useMemo } from "react";
+ import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Check, X, Pencil } from "lucide-react";
 import { useLocale } from "@/hooks/use-locale";
 import { cn } from "@/lib/utils";
-import { saveTextOverride } from "@/lib/supabase";
+import { saveTextOverride, authService } from "@/lib/supabase";
  
  type Props = {
    path: string;
@@ -16,34 +16,46 @@ import { saveTextOverride } from "@/lib/supabase";
    multiline?: boolean;
   html?: boolean;
 };
- 
- function setNested(obj: any, path: string[], val: any) {
-   let cur = obj;
-   for (let i = 0; i < path.length - 1; i++) {
-     const k = path[i];
-     if (typeof cur[k] !== "object" || cur[k] === null || Array.isArray(cur[k])) {
-       cur[k] = {};
-     }
-     cur = cur[k];
-   }
-   cur[path[path.length - 1]] = val;
-   return obj;
- }
- 
- export function EditableText({ path, value, className, multiline, html }: Props) {
-   const { locale } = useLocale();
-   const [editing, setEditing] = useState(false);
-   const [draft, setDraft] = useState<string>(value);
-   const userRole = useMemo(() => {
-     try {
-       const raw = localStorage.getItem("user");
-       if (!raw) return null;
-       const u = JSON.parse(raw);
-       return u?.role || null;
-     } catch {
-       return null;
-     }
+
+export function EditableText({ path, value, className, multiline, html }: Props) {
+  const { locale } = useLocale();
+  const [editing, setEditing] = useState(false);
+  const [draft, setDraft] = useState<string>(value);
+  const [userRole, setUserRole] = useState<string | null>(null);
+
+  useEffect(() => {
+    // Check role using authService + localStorage fallback
+    const checkRole = async () => {
+      try {
+        // 1. Quick check localStorage (fastest)
+        const raw = localStorage.getItem("user");
+        if (raw) {
+           const u = JSON.parse(raw);
+           if (u?.role) setUserRole(u.role);
+        }
+
+        // 2. Verified check from authService
+        const { profile } = await authService.getCurrentUser();
+        if (profile?.role) {
+            setUserRole(profile.role);
+        }
+      } catch (e) {
+        // Silent fail
+      }
+    };
+    
+    checkRole();
+
+    // Listen for auth changes
+    const { data: { subscription } } = authService.onAuthStateChange((event, session) => {
+        checkRole();
+    });
+    
+    return () => {
+        subscription.unsubscribe();
+    };
   }, []);
+
   const isAdmin = userRole === "super_admin";
  
   const save = () => {

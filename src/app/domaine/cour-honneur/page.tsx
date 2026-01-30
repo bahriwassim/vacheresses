@@ -28,7 +28,7 @@ export default function CourHonneurPage() {
       return path;
     }
   };
-  const [refresh, setRefresh] = useState(0);
+  const [, setRefresh] = useState(0);
   useEffect(() => {
     (async () => {
       const res = await loadMediaOverridesByPath();

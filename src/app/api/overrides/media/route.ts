@@ -13,7 +13,7 @@ export async function POST(request: Request) {
     }
 
     const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-    const serviceKey = process.env.SUPABASE_SERVICE_ROLE;
+    const serviceKey = process.env.SUPABASE_SERVICE_ROLE || process.env.SUPABASE_SERVICE_ROLE_KEY;
     const mediaBucket = process.env.NEXT_PUBLIC_SUPABASE_MEDIA_BUCKET || 'site-media';
     if (!url || !serviceKey) {
       return NextResponse.json({ ok: false, error: 'Supabase server env not configured' }, { status: 500 });
@@ -36,7 +36,7 @@ export async function POST(request: Request) {
 
     const { error } = await supabase
       .from('media_overrides')
-      .upsert({ path, media_type: mediaType, url: publicUrl });
+      .upsert({ path, media_type: mediaType, url: publicUrl }, { onConflict: 'path' });
     if (error) {
       return NextResponse.json({ ok: false, error: String(error.message || error) }, { status: 500 });
     }
@@ -47,3 +47,22 @@ export async function POST(request: Request) {
   }
 }
 
+export async function GET() {
+  try {
+    const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const serviceKey = process.env.SUPABASE_SERVICE_ROLE || process.env.SUPABASE_SERVICE_ROLE_KEY;
+    if (!url || !serviceKey) {
+      return NextResponse.json({ ok: false, error: 'Supabase server env not configured' }, { status: 500 });
+    }
+    const supabase = createClient(url, serviceKey);
+    const { data, error } = await supabase
+      .from('media_overrides')
+      .select('path, url, media_type');
+    if (error) {
+      return NextResponse.json({ ok: false, error: String(error.message || error) }, { status: 500 });
+    }
+    return NextResponse.json({ ok: true, data });
+  } catch (e: any) {
+    return NextResponse.json({ ok: false, error: String(e?.message || e) }, { status: 500 });
+  }
+}

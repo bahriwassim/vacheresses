@@ -6,7 +6,7 @@ import { Car, Train, Plane } from "lucide-react";
 import { EditableText } from "@/components/ui/editable-text";
 
 export function Access() {
-  const { t, locale } = useLocale();
+  const { t } = useLocale();
 
   const accessInfo = [
     {

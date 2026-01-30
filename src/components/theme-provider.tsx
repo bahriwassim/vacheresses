@@ -13,11 +13,8 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setTheme] = useState<Theme>("light");
-  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
-
     // Check if user has manual preference
     const savedTheme = localStorage.getItem("theme-preference") as Theme | null;
 
@@ -26,32 +23,10 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       applyTheme(savedTheme);
       setTheme(savedTheme);
     } else {
-      // Auto mode based on time
-      const autoTheme = getThemeBasedOnTime();
-      applyTheme(autoTheme);
-      setTheme(autoTheme);
-
-      // Update theme every hour
-      const interval = setInterval(() => {
-        const newTheme = getThemeBasedOnTime();
-        if (newTheme !== theme) {
-          applyTheme(newTheme);
-          setTheme(newTheme);
-        }
-      }, 60000); // Check every minute
-
-      return () => clearInterval(interval);
+      applyTheme("light");
+      setTheme("light");
     }
   }, []);
-
-  const getThemeBasedOnTime = (): Theme => {
-    const hour = new Date().getHours();
-    // Dark mode from 6 PM (18:00) to 6 AM (06:00)
-    if (hour >= 18 || hour < 6) {
-      return "dark";
-    }
-    return "light";
-  };
 
   const applyTheme = (newTheme: Theme) => {
     const root = document.documentElement;
@@ -67,11 +42,6 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     applyTheme(newTheme);
     localStorage.setItem("theme-preference", newTheme);
   };
-
-  // Prevent flash of incorrect theme
-  if (!mounted) {
-    return <>{children}</>;
-  }
 
   return (
     <ThemeContext.Provider value={{ theme, setTheme: updateTheme }}>

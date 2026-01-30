@@ -10,6 +10,7 @@ import { Label } from "@/components/ui/label";
 import { useLocale } from "@/hooks/use-locale";
 import { Phone, Mail, MapPin, Clock, Send } from "lucide-react";
 import { useState } from "react";
+import { EditableText } from "@/components/ui/editable-text";
 
 export default function ContactPage() {
   const { t } = useLocale();
@@ -67,10 +68,10 @@ export default function ContactPage() {
           {/* En-tête */}
           <div className="text-center mb-12 animate-in fade-in slide-in-from-bottom-8 duration-1000">
             <h1 className="text-4xl md:text-5xl font-headline font-bold">
-              {t.contact?.title || "Contactez-nous"}
+              <EditableText path="contact.title" value={t.contact.title} />
             </h1>
             <p className="mt-4 text-lg text-muted-foreground max-w-2xl mx-auto">
-              {t.contact?.subtitle || "Nous sommes à votre écoute pour répondre à toutes vos questions"}
+              <EditableText path="contact.subtitle" value={t.contact.subtitle} />
             </p>
           </div>
 
@@ -79,18 +80,16 @@ export default function ContactPage() {
             <div className="lg:col-span-1 space-y-6">
               <Card className="animate-in fade-in slide-in-from-left-8 duration-1000 delay-200">
                 <CardHeader>
-                  <CardTitle className="font-headline">Informations</CardTitle>
-                  <CardDescription>Comment nous joindre</CardDescription>
+                  <CardTitle className="font-headline"><EditableText path="contact.info_title" value={t.contact.info_title} /></CardTitle>
+                  <CardDescription><EditableText path="contact.info_subtitle" value={t.contact.info_subtitle} /></CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="flex items-start gap-3">
                     <MapPin className="w-5 h-5 text-primary mt-1 flex-shrink-0" />
                     <div>
-                      <p className="font-semibold text-sm">Adresse</p>
-                      <p className="text-sm text-muted-foreground">
-                        Manoir de Vacheresses<br />
-                        38700 Corenc<br />
-                        France
+                      <p className="font-semibold text-sm"><EditableText path="contact.address_label" value={t.contact.address_label} /></p>
+                      <p className="text-sm text-muted-foreground whitespace-pre-line">
+                        <EditableText path="contact.address_value" value={t.contact.address_value} multiline />
                       </p>
                     </div>
                   </div>
@@ -98,9 +97,9 @@ export default function ContactPage() {
                   <div className="flex items-start gap-3">
                     <Phone className="w-5 h-5 text-primary mt-1 flex-shrink-0" />
                     <div>
-                      <p className="font-semibold text-sm">Téléphone</p>
-                      <a href="tel:+33611842021" className="text-sm text-muted-foreground hover:text-primary transition-colors">
-                        +33 6 11 84 20 21
+                      <p className="font-semibold text-sm"><EditableText path="contact.phone_label" value={t.contact.phone_label} /></p>
+                      <a href={`tel:${t.contact.phone_value.replace(/\s/g, '')}`} className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                        <EditableText path="contact.phone_value" value={t.contact.phone_value} />
                       </a>
                     </div>
                   </div>
@@ -108,9 +107,9 @@ export default function ContactPage() {
                   <div className="flex items-start gap-3">
                     <Mail className="w-5 h-5 text-primary mt-1 flex-shrink-0" />
                     <div>
-                      <p className="font-semibold text-sm">Email</p>
-                      <a href="mailto:contact@vacheresses.com" className="text-sm text-muted-foreground hover:text-primary transition-colors">
-                        contact@vacheresses.com
+                      <p className="font-semibold text-sm"><EditableText path="contact.email_label" value={t.contact.email_label} /></p>
+                      <a href={`mailto:${t.contact.email_value}`} className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                        <EditableText path="contact.email_value" value={t.contact.email_value} />
                       </a>
                     </div>
                   </div>
@@ -118,10 +117,9 @@ export default function ContactPage() {
                   <div className="flex items-start gap-3">
                     <Clock className="w-5 h-5 text-primary mt-1 flex-shrink-0" />
                     <div>
-                      <p className="font-semibold text-sm">Horaires</p>
-                      <p className="text-sm text-muted-foreground">
-                        Lundi - Vendredi : 9h - 18h<br />
-                        Weekend : Sur rendez-vous
+                      <p className="font-semibold text-sm"><EditableText path="contact.hours_label" value={t.contact.hours_label} /></p>
+                      <p className="text-sm text-muted-foreground whitespace-pre-line">
+                        <EditableText path="contact.hours_value" value={t.contact.hours_value} multiline />
                       </p>
                     </div>
                   </div>
@@ -143,13 +141,13 @@ export default function ContactPage() {
                       </svg>
                     </div>
                     <div>
-                      <p className="font-semibold text-green-900">WhatsApp</p>
-                      <p className="text-sm text-green-700">Réponse rapide</p>
+                      <p className="font-semibold text-green-900"><EditableText path="contact.whatsapp_title" value={t.contact.whatsapp_title} /></p>
+                      <p className="text-sm text-green-700"><EditableText path="contact.whatsapp_subtitle" value={t.contact.whatsapp_subtitle} /></p>
                     </div>
                   </div>
                   <Button asChild className="w-full bg-green-500 hover:bg-green-600">
                     <a href="https://wa.me/33611842021" target="_blank" rel="noopener noreferrer">
-                      Ouvrir WhatsApp
+                      <EditableText path="contact.whatsapp_button" value={t.contact.whatsapp_button} />
                     </a>
                   </Button>
                 </CardContent>
@@ -160,23 +158,23 @@ export default function ContactPage() {
             <div className="lg:col-span-2">
               <Card className="animate-in fade-in slide-in-from-right-8 duration-1000 delay-200">
                 <CardHeader>
-                  <CardTitle className="font-headline text-2xl">Envoyez-nous un message</CardTitle>
+                  <CardTitle className="font-headline text-2xl"><EditableText path="contact.form_title" value={t.contact.form_title} /></CardTitle>
                   <CardDescription>
-                    Remplissez le formulaire ci-dessous et nous vous répondrons dans les plus brefs délais
+                    <EditableText path="contact.form_subtitle" value={t.contact.form_subtitle} />
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
                   {submitSuccess && (
                     <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg animate-in fade-in slide-in-from-top-4 duration-500">
-                      <p className="text-green-800 font-semibold">✓ Message envoyé avec succès !</p>
-                      <p className="text-green-700 text-sm mt-1">Nous vous répondrons dans les plus brefs délais.</p>
+                      <p className="text-green-800 font-semibold"><EditableText path="contact.success_title" value={t.contact.success_title} /></p>
+                      <p className="text-green-700 text-sm mt-1"><EditableText path="contact.success_message" value={t.contact.success_message} /></p>
                     </div>
                   )}
 
                   <form onSubmit={handleSubmit} className="space-y-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div className="space-y-2">
-                        <Label htmlFor="name">Nom complet *</Label>
+                        <Label htmlFor="name"><EditableText path="contact.name_label" value={t.contact.name_label} /></Label>
                         <Input
                           id="name"
                           name="name"
@@ -190,7 +188,7 @@ export default function ContactPage() {
                       </div>
 
                       <div className="space-y-2">
-                        <Label htmlFor="email">Email *</Label>
+                        <Label htmlFor="email"><EditableText path="contact.email_label" value={t.contact.email_label} /></Label>
                         <Input
                           id="email"
                           name="email"
@@ -206,7 +204,7 @@ export default function ContactPage() {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div className="space-y-2">
-                        <Label htmlFor="phone">Téléphone</Label>
+                        <Label htmlFor="phone"><EditableText path="contact.phone_label" value={t.contact.phone_label} /></Label>
                         <Input
                           id="phone"
                           name="phone"
@@ -219,7 +217,7 @@ export default function ContactPage() {
                       </div>
 
                       <div className="space-y-2">
-                        <Label htmlFor="subject">Sujet *</Label>
+                        <Label htmlFor="subject"><EditableText path="contact.subject_label" value={t.contact.subject_label} /></Label>
                         <Input
                           id="subject"
                           name="subject"
@@ -234,7 +232,7 @@ export default function ContactPage() {
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="message">Message *</Label>
+                      <Label htmlFor="message"><EditableText path="contact.message_label" value={t.contact.message_label} /></Label>
                       <Textarea
                         id="message"
                         name="message"
@@ -256,12 +254,12 @@ export default function ContactPage() {
                         {isSubmitting ? (
                           <>
                             <span className="animate-spin mr-2">⏳</span>
-                            Envoi en cours...
+                            <EditableText path="contact.sending_button" value={t.contact.sending_button} />
                           </>
                         ) : (
                           <>
                             <Send className="w-4 h-4 mr-2" />
-                            Envoyer le message
+                            <EditableText path="contact.submit_button" value={t.contact.submit_button} />
                           </>
                         )}
                       </Button>

@@ -45,7 +45,7 @@ export function CookieConsent() {
               </h3>
               <p className="text-muted-foreground mb-4 leading-relaxed">
                 Nous utilisons des cookies pour améliorer votre expérience sur notre site.
-                Ces cookies nous permettent d'analyser le trafic et de personnaliser le contenu.
+                Ces cookies nous permettent d&apos;analyser le trafic et de personnaliser le contenu.
                 En continuant, vous acceptez notre utilisation des cookies.
               </p>
 

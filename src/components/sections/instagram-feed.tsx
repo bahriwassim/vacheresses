@@ -76,8 +76,6 @@ export function InstagramFeed() {
     );
   }
 
-  const displayPosts = useFallback ? fallbackImages : posts;
-
   return (
     <section id="instagram-feed" className="py-12 md:py-20 bg-secondary/50">
       <div className="container max-w-7xl px-4">

@@ -18,14 +18,14 @@ import { Access } from "@/components/sections/access";
 import { InstagramFeed } from "@/components/sections/instagram-feed";
 import { EditableText } from "@/components/ui/editable-text";
 import { loadMediaOverridesByPath } from "@/lib/supabase";
-import { BookingProvider, useBooking } from "@/contexts/booking-context";
+import { useBooking } from "@/contexts/booking-context";
 
 function ElopementContent() {
   const { t } = useLocale();
   const router = useRouter();
   const { dates, setDates } = useBooking();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [refresh, setRefresh] = useState(0);
+  const [, setRefresh] = useState(0);
   const overridePath = (path: string) => {
     try {
       const raw = typeof window !== 'undefined' ? localStorage.getItem('imageOverridesByPath') : null;
@@ -45,50 +45,78 @@ function ElopementContent() {
 
   const elopementPackages = [
     {
-      id: "intimate",
-      title: "Séance Photo Intime",
-      price: "À partir de 1 500 €",
-      description: "Shooting élopement épuré pour deux, dans un lieu du domaine",
+      id: "pack1",
+      title: "Pack 1 — Secret Elopement in the Garden",
+      price: "À partir de 4 950 €",
+      description: "Une expérience chaleureuse et élégante, idéale pour la saison hivernale.",
       imageId: "package-classic",
       features: [
-        "Photographe professionnel – 2 heures de couverture",
-        "1 lieu emblématique du domaine",
-        "Direction artistique légère et assistance pose",
-        "50 photos retouchées en haute définition",
-        "Galerie en ligne privée",
-        "Coordination sur place (30 min)"
+        "Cérémonie d’elopement intimiste en intérieur",
+        "Séance First Look dans la bibliothèque du Manoir",
+        "3h de couverture photo & vidéo avec film monté",
+        "Officiant de cérémonie anglophone",
+        "Toast au champagne près de la cheminée",
+        "Déjeuner romantique à la française préparé par notre chef privé",
+        "Accès aux salons historiques du Manoir"
       ],
       highlighted: false
     },
     {
-      id: "romantic",
-      title: "Élopement Romantique – Shooting",
-      price: "À partir de 2 900 €",
-      description: "Expérience photo complète avec plusieurs scènes et stylisme",
+      id: "pack2",
+      title: "Pack 2 — Elopement Secret (1 Journée)",
+      price: "À partir de 5 950 €",
+      description: "Parfait pour une célébration romantique et symbolique en plein air.",
       imageId: "package-premium",
       features: [
-        "Photographe professionnel – 4 heures de couverture",
-        "2 à 3 lieux (Parc, Orangerie, Cour d'honneur)",
-        "Mini cérémonie intime mise en scène",
-        "Stylisme floral de base pour le shooting",
-        "120 photos retouchées + sélection noir & blanc",
-        "Mini vidéo teaser (30–60 s)"
+        "Cérémonie d’elopement en extérieur sous l’arche de pierre",
+        "Accès exclusif aux jardins et intérieurs historiques",
+        "Séance First Look dans les jardins ou la cour du Manoir",
+        "3h de couverture photo & vidéo avec film monté",
+        "Officiant de cérémonie anglophone",
+        "Toast au champagne",
+        "Déjeuner gastronomique romantique pour deux",
+        "Décoration florale",
+        "Coordination sur place le jour J"
       ],
       highlighted: true
     },
     {
-      id: "luxury",
-      title: "Dream Shooting Luxe",
-      price: "À partir de 5 500 €",
-      description: "Journée élopement créative avec vidéo et accessoires premium",
+      id: "pack3",
+      title: "Pack 3 — Overnight in Love : a countryside elopement",
+      price: "À partir de 7 950 €",
+      description: "L’expérience idéale pour vivre votre elopement comme une véritable escapade.",
       imageId: "package-luxury",
       features: [
-        "Couverture photo sur la journée (jusqu'à 8 heures)",
-        "3 à 5 lieux du domaine + changement de tenues",
-        "Stylisme avancé & accessoires (voiles, lanternes)",
-        "Galerie complète retouchée (200+ photos)",
-        "Vidéo highlight (3–5 min) – option drone si autorisé",
-        "Album photo premium 30×30 cm"
+        "Cérémonie d’elopement romantique au Manoir",
+        "Accès exclusif aux jardins et intérieurs historiques",
+        "Séance First Look dans le domaine",
+        "3h de couverture photo & vidéo avec film monté",
+        "Officiant de cérémonie anglophone",
+        "Toast au champagne",
+        "Déjeuner gastronomique pour deux",
+        "1 nuit en suite privée au Manoir de Vacheresses",
+        "Brunch gourmand le lendemain",
+        "Départ tardif et moments de calme sur le domaine"
+      ],
+      highlighted: false
+    },
+    {
+      id: "pack4",
+      title: "Pack 4 — Elopement Raffiné jusqu’à 20 invités",
+      price: "À partir de 16 000 €",
+      description: "L’équilibre parfait entre intimité et célébration.",
+      imageId: "parc-ombre",
+      features: [
+        "Elopement avec jusqu’à 20 invités",
+        "Hébergement sur place (1 nuit)",
+        "Boissons d’accueil",
+        "Dîner de répétition (intérieur ou extérieur)",
+        "Cérémonie avec officiant anglophone",
+        "Déjeuner de mariage complet",
+        "Petit-déjeuner continental",
+        "Fleurs : bouquet, boutonnière et centres de table",
+        "Coordination le jour du mariage",
+        "Taxes et frais de service inclus"
       ],
       highlighted: false
     }
@@ -102,17 +130,78 @@ function ElopementContent() {
     return `/configurator-elopement?${params.toString()}`;
   };
 
+  const [selectedPackageId, setSelectedPackageId] = useState<string | null>(null);
+  const [isProgramOpen, setIsProgramOpen] = useState(false);
   const handlePackageClick = (packageId: string) => {
+    setSelectedPackageId(packageId);
     if (!dates) {
       setIsDialogOpen(true);
     } else {
-      router.push(buildPackageUrl(packageId));
+      // Instead of redirecting immediately, show the program
+      setIsProgramOpen(true);
+      setTimeout(() => {
+        document.getElementById('program-section')?.scrollIntoView({ behavior: 'smooth' });
+      }, 100);
     }
   };
 
   const handleDateSelected = (date: Date) => {
     setDates({ from: date, to: date });
     setIsDialogOpen(false);
+    if (selectedPackageId) {
+       // Show program instead of redirecting
+       setIsProgramOpen(true);
+       setTimeout(() => {
+        document.getElementById('program-section')?.scrollIntoView({ behavior: 'smooth' });
+      }, 100);
+    }
+  };
+
+  const programs: Record<string, string[]> = {
+    pack1: [
+      "10h00 – Arrivée à la gare de Maintenon en Rolls-Royce",
+      "10h30 – Accueil au Manoir & préparatifs (coiffure et maquillage)",
+      "11h30 – First Look dans la bibliothèque du Manoir",
+      "12h00 – Cérémonie d’elopement romantique dans le salon du Manoir",
+      "12h30 – Toast au champagne près de la cheminée",
+      "Séance photo dans le parc",
+      "13h30 – Déjeuner romantique à la française dans la cour",
+      "15h00 – Départ du Manoir de Vacheresses"
+    ],
+    pack2: [
+      "10h00 – Arrivée à la gare de Maintenon en Rolls-Royce",
+      "10h30 – Accueil au Manoir & préparatifs (coiffure et maquillage)",
+      "11h30 – First Look dans la cour principale et les intérieurs historiques",
+      "12h00 – Cérémonie sous l’arche de pierre",
+      "12h30 – Toast au champagne",
+      "Séance photo dans le parc",
+      "13h30 – Déjeuner romantique dans la cour",
+      "15h00 – Départ du Manoir de Vacheresses"
+    ],
+    pack3: [
+      "11h00 – Arrivée au Manoir de Vacheresses",
+      "11h30 – Welcome drink & déjeuner léger",
+      "12h00 – Préparatifs des mariés (coiffure & maquillage)",
+      "13h00 – First Look et séance photo dans le salon du Manoir",
+      "14h00 – Cérémonie de mariage dans le verger",
+      "14h30 – Toast au champagne",
+      "15h00 – Séance photo de couple dans le parc",
+      "16h00 – Dîner avec chef privé dans la cour d’honneur",
+      "Soirée & nuit – Nuitée dans la guesthouse du Potager",
+      "Brunch gourmand le lendemain & départ tardif"
+    ],
+    pack4: [
+      "Jour d’arrivée",
+      "17h00 – Accueil des mariés et des invités & welcome drink",
+      "19h00 – Dîner de répétition (intérieur ou extérieur, jusqu’à 20 invités)",
+      "Jour du mariage",
+      "09h30 – Petit-déjeuner",
+      "10h30 – Préparatifs des mariés",
+      "12h30 – First Look et séance photo dans le salon du Manoir",
+      "14h00 – Cérémonie de mariage dans le verger",
+      "15h00 – Déjeuner de mariage dans la cour d’honneur ou la salle de réception",
+      "17h30 – Départ des invités et des mariés"
+    ]
   };
 
   return (
@@ -170,44 +259,16 @@ function ElopementContent() {
             </div>
           </div>
 
-          {/* Gallery Section */}
-          <div className="mb-16">
-            <h2 className="text-3xl font-headline font-bold text-center mb-4">
-              <EditableText path="elopement.gallery1.title" value="Moments Inoubliables" />
-            </h2>
-            <p className="text-muted-foreground text-center mb-8 max-w-2xl mx-auto">
-              <EditableText path="elopement.gallery1.subtitle" value="Découvrez la magie de nos mariages intimes à travers ces images" />
-            </p>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              {[
-                "/espace_1.jpg", "/espace_2_(1).jpg", "/espace_4.jpg", 
-                "/Parc_1.jpg", "/Parc_2.jpg", 
-                "/preau_verger_1.jpg", "/preau_verger_2.jpg",
-                "/vacheresses_17.jpg"
-              ].map((img, i) => (
-                <div key={i} className="relative aspect-square rounded-xl overflow-hidden group">
-                  <CardImage
-                    src={overridePath(img)}
-                    alt={`Mariage intime ${i + 1}`}
-                    fill
-                    className="object-cover transition-transform duration-500 group-hover:scale-110"
-                  />
-                </div>
-              ))}
-            </div>
-          </div>
-
-
           {/* Packages Section */}
           <div className="mb-16">
             <h2 className="text-3xl font-headline font-bold text-center mb-4">
               <EditableText path="elopement.packages.title" value="Nos Forfaits Élopement" />
             </h2>
             <p className="text-muted-foreground text-center mb-12 max-w-2xl mx-auto">
-              <EditableText path="elopement.packages.subtitle" value="Choisissez parmi nos forfaits soigneusement conçus pour créer des souvenirs inoubliables" />
+              <EditableText path="elopement.packages.subtitle" value="Une expérience intime au cœur de la campagne française, près de Paris" />
             </p>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
               {elopementPackages.map((pkg, index) => {
                 const image = getImageById(pkg.imageId);
                 return (
@@ -263,23 +324,79 @@ function ElopementContent() {
                         ))}
                       </ul>
                     </CardContent>
-                    <CardFooter>
-                      <Button
-                        onClick={() => handlePackageClick(pkg.id)}
-                        className="w-full"
-                        variant={pkg.highlighted ? 'default' : 'outline'}
-                        // Button is enabled by default, will work on client-side
-                      >
-                        {dates ? (
-                          <EditableText path="elopement.packages.button_select" value="Sélectionner" />
+                  <CardFooter>
+                    <Button
+                      onClick={() => handlePackageClick(pkg.id)}
+                      className="w-full"
+                      variant={pkg.highlighted ? 'default' : 'outline'}
+                      // Button is enabled by default, will work on client-side
+                    >
+                      {dates ? (
+                          <EditableText path="elopement.packages.button_select" value="Voir le programme" />
                         ) : (
                           <EditableText path="elopement.packages.button_choice" value="Choisir une date" />
                         )}
-                      </Button>
-                    </CardFooter>
-                  </Card>
-                );
-              })}
+                    </Button>
+                  </CardFooter>
+                </Card>
+              );
+            })}
+          </div>
+        </div>
+
+        {isProgramOpen && selectedPackageId && (
+          <div className="mb-16" id="program-section">
+            <div className="bg-card rounded-xl shadow-lg p-8 border border-primary/10">
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-3xl font-headline font-bold">Programme</h2>
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <Calendar className="h-4 w-4" />
+                  {dates?.from ? new Date(dates.from).toLocaleDateString('fr-FR') : "Date non sélectionnée"}
+                </div>
+              </div>
+              <ul className="space-y-3">
+                {programs[selectedPackageId].map((item, idx) => (
+                  <li key={idx} className="flex items-start">
+                    <Check className="h-5 w-5 text-primary mr-2 flex-shrink-0 mt-0.5" />
+                    <span className="text-muted-foreground">{item}</span>
+                  </li>
+                ))}
+              </ul>
+              <div className="mt-8 flex flex-col sm:flex-row gap-4">
+                <Button onClick={() => router.push(buildPackageUrl(selectedPackageId))} className="gap-2">
+                  Continuer
+                </Button>
+                <Button variant="outline" onClick={() => setIsProgramOpen(false)}>
+                  Fermer
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        <div className="mb-16">
+          <h2 className="text-3xl font-headline font-bold text-center mb-4">
+            <EditableText path="elopement.gallery1.title" value="Moments Inoubliables" />
+          </h2>
+          <p className="text-muted-foreground text-center mb-8 max-w-2xl mx-auto">
+              <EditableText path="elopement.gallery1.subtitle" value="Découvrez la magie de nos mariages intimes à travers ces images" />
+            </p>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {[
+                "/espace_1.jpg", "/espace_2_(1).jpg", "/espace_4.jpg", 
+                "/Parc_1.jpg", "/Parc_2.jpg", 
+                "/preau_verger_1.jpg", "/preau_verger_2.jpg",
+                "/vacheresses_17.jpg"
+              ].map((img, i) => (
+                <div key={i} className="relative aspect-square rounded-xl overflow-hidden group">
+                  <CardImage
+                    src={overridePath(img)}
+                    alt={`Mariage intime ${i + 1}`}
+                    fill
+                    className="object-cover transition-transform duration-500 group-hover:scale-110"
+                  />
+                </div>
+              ))}
             </div>
           </div>
 
@@ -331,8 +448,6 @@ function ElopementContent() {
 
 export default function ElopementPackagesPage() {
   return (
-    <BookingProvider>
-      <ElopementContent />
-    </BookingProvider>
+    <ElopementContent />
   );
 }

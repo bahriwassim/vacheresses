@@ -3,12 +3,13 @@
 
 import React, { createContext, useContext, useState, useEffect, useMemo } from 'react';
 import { translations, Translation, Locale } from '@/lib/translations';
-import { loadTextOverrides, subscribeTextOverrides } from '@/lib/supabase';
+import { loadTextOverrides, subscribeTextOverrides, loadMediaOverridesByPath } from '@/lib/supabase';
 
 interface LocaleContextType {
   locale: Locale;
   setLocale: (locale: Locale) => void;
   t: Translation;
+  refreshOverrides: () => Promise<void>;
 }
 
 const LocaleContext = createContext<LocaleContextType | undefined>(undefined);
@@ -16,6 +17,25 @@ const LocaleContext = createContext<LocaleContextType | undefined>(undefined);
 export const LocaleProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [locale, setLocaleState] = useState<Locale>('en');
   const [overrides, setOverrides] = useState<any>(null);
+
+  const refreshOverrides = async () => {
+    // Load text overrides
+    const remoteText = await loadTextOverrides(locale);
+    if (remoteText) {
+      try {
+        const raw = localStorage.getItem('textOverrides');
+        const cur = raw ? JSON.parse(raw) : {};
+        cur[locale] = remoteText;
+        localStorage.setItem('textOverrides', JSON.stringify(cur));
+        setOverrides(cur);
+        window.dispatchEvent(new Event('textOverridesUpdated'));
+      } catch {}
+    }
+
+    // Load media overrides
+    await loadMediaOverridesByPath();
+    window.dispatchEvent(new Event('mediaOverridesUpdated'));
+  };
 
   useEffect(() => {
     const storedLocale = localStorage.getItem('locale') as Locale | null;
@@ -48,29 +68,10 @@ export const LocaleProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   useEffect(() => {
     let unsubscribe: (() => void) | null = null;
     const run = async () => {
-      const remote = await loadTextOverrides(locale);
-      if (remote) {
-        try {
-          const raw = localStorage.getItem('textOverrides');
-          const cur = raw ? JSON.parse(raw) : {};
-          cur[locale] = remote;
-          localStorage.setItem('textOverrides', JSON.stringify(cur));
-          setOverrides(cur);
-          window.dispatchEvent(new Event('textOverridesUpdated'));
-        } catch {}
-      }
+      await refreshOverrides();
+      
       unsubscribe = subscribeTextOverrides(locale, async () => {
-        const updated = await loadTextOverrides(locale);
-        if (updated) {
-          try {
-            const raw = localStorage.getItem('textOverrides');
-            const cur = raw ? JSON.parse(raw) : {};
-            cur[locale] = updated;
-            localStorage.setItem('textOverrides', JSON.stringify(cur));
-            setOverrides(cur);
-            window.dispatchEvent(new Event('textOverridesUpdated'));
-          } catch {}
-        }
+        await refreshOverrides();
       });
     };
     run();
@@ -78,6 +79,7 @@ export const LocaleProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       if (unsubscribe) unsubscribe();
     };
   }, [locale]);
+
   useEffect(() => {
     const handler = () => {
       try {
@@ -120,7 +122,7 @@ export const LocaleProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   }, [locale, overrides]);
 
   return (
-    <LocaleContext.Provider value={{ locale, setLocale, t }}>
+    <LocaleContext.Provider value={{ locale, setLocale, t, refreshOverrides }}>
       {children}
     </LocaleContext.Provider>
   );

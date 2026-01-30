@@ -47,12 +47,12 @@ export function Footer() {
                 <span className="text-2xl font-bold font-headline">Vacheresses</span>
             </Link>
           </div>
-          <p className="text-sm text-muted-foreground">Manoir de Vacheresses</p>
-          <p className="text-sm text-muted-foreground">Rue du Manoir</p>
-          <p className="text-sm text-muted-foreground">28210 Nogent-Le-Roi</p>
+          <p className="text-sm text-muted-foreground"><EditableText path="footer.name" value={t.footer.name} /></p>
+          <p className="text-sm text-muted-foreground"><EditableText path="footer.address_1" value={t.footer.address_1} /></p>
+          <p className="text-sm text-muted-foreground"><EditableText path="footer.address_2" value={t.footer.address_2} /></p>
           <div className="mt-4 space-y-2">
-            <p className="text-sm text-muted-foreground">+33 06 11 84 20 21</p>
-            <p className="text-sm text-muted-foreground">contact@manoirdevacheresses.com</p>
+            <p className="text-sm text-muted-foreground"><EditableText path="footer.phone" value={t.footer.phone} /></p>
+            <p className="text-sm text-muted-foreground"><EditableText path="footer.email" value={t.footer.email} /></p>
           </div>
            <div className="flex items-center gap-4 mt-4">
                <SocialLink href="https://www.facebook.com/profile.php?id=100063530055187" aria-label="Facebook">

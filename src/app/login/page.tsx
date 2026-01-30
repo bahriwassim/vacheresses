@@ -1,8 +1,8 @@
 
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect, Suspense } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -16,10 +16,10 @@ import { authService } from "@/lib/supabase";
 import { AlertCircle } from "lucide-react";
 import { EditableText } from "@/components/ui/editable-text";
 
-export default function LoginPage() {
+function LoginForm() {
   const router = useRouter();
-  const search = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
-  const next = search?.get('next') || null;
+  const searchParams = useSearchParams();
+  const next = searchParams.get('next');
   const { toast } = useToast();
   const { t } = useLocale();
   const [isLoading, setIsLoading] = useState(false);
@@ -29,6 +29,27 @@ export default function LoginPage() {
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
+  const [redirecting, setRedirecting] = useState(true);
+
+  useEffect(() => {
+    const run = async () => {
+      try {
+        const cu = await authService.getCurrentUser();
+        const role = cu?.profile?.role;
+        if (role) {
+          if (role === 'admin' || role === 'super_admin') {
+            router.replace(next || '/admin');
+            return;
+          } else {
+            router.replace(next || '/dashboard');
+            return;
+          }
+        }
+      } catch {}
+      setRedirecting(false);
+    };
+    run();
+  }, [next, router]);
 
   const handleLogin = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -37,13 +58,11 @@ export default function LoginPage() {
 
     try {
       const { user, profile } = await authService.signIn(email, password);
-
-      if (!profile) {
-        throw new Error("Profil utilisateur non trouvé.");
-      }
       
-      // Stocker le profil dans localStorage pour accès rapide
-      localStorage.setItem('user', JSON.stringify(profile));
+      // Stocker le profil (fallback metadata si entrée users absente)
+      if (profile) {
+        localStorage.setItem('user', JSON.stringify(profile));
+      }
 
       if (profile?.role === "admin" || profile?.role === "super_admin") {
         toast({
@@ -70,6 +89,9 @@ export default function LoginPage() {
     }
   };
 
+  if (redirecting) {
+    return null;
+  }
   const handleSignUp = async (event: React.FormEvent) => {
     event.preventDefault();
     setError(null);
@@ -188,9 +210,11 @@ export default function LoginPage() {
                     <EditableText path="login.login_button" value={t.login?.login_button || "Se connecter"} />
                   )}
                 </Button>
-                <p className="text-xs text-muted-foreground text-center">
-                  Super Admin: contact@startindev.com / password
-                </p>
+                {process.env.NODE_ENV === 'development' && (
+                  <p className="text-xs text-muted-foreground text-center">
+                    Dev Hint: admin / password (check setup script)
+                  </p>
+                )}
               </CardFooter>
              </form>
             </TabsContent>
@@ -268,6 +292,14 @@ export default function LoginPage() {
         </Tabs>
       </Card>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Chargement...</div>}>
+      <LoginForm />
+    </Suspense>
   );
 }
 

@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Menu, Moon, Sun, Globe } from "lucide-react";
 import { useState, useEffect } from "react";
+import { useTheme } from "@/components/theme-provider";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,7 +15,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useLocale } from "@/hooks/use-locale";
-import { translations } from "@/lib/translations";
 import { EditableText } from "@/components/ui/editable-text";
 
 const navLinks = [
@@ -27,38 +27,12 @@ const navLinks = [
   { href: "/faq", label: "faq" },
 ];
 
-function useTheme() {
-  const [theme, setThemeState] = useState('dark');
-
-  useEffect(() => {
-    const storedTheme = localStorage.getItem('theme') || 'dark';
-    setThemeState(storedTheme);
-    if (storedTheme === 'dark') {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-  }, []);
-
-  const setTheme = (newTheme: 'dark' | 'light') => {
-    setThemeState(newTheme);
-    localStorage.setItem('theme', newTheme);
-    if (newTheme === 'dark') {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-  };
-
-  return { theme, setTheme };
-}
-
 export function Header() {
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const [lastScrollY, setLastScrollY] = useState(0);
   const [headerHidden, setHeaderHidden] = useState(false);
   const { theme, setTheme } = useTheme();
-  const { locale, setLocale, t } = useLocale();
+  const { setLocale, t } = useLocale();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -127,7 +101,7 @@ export function Header() {
             <span className="sr-only">Toggle theme</span>
           </Button>
           <Button asChild>
-            <Link href="/login">
+            <Link href={typeof window !== 'undefined' && localStorage.getItem('user') ? (JSON.parse(localStorage.getItem('user')!).role === 'client' ? '/dashboard' : '/admin') : '/login'}>
               <EditableText path="header.portal" value={t.header.portal} />
             </Link>
           </Button>

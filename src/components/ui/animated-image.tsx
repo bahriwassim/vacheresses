@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { uploadAndOverrideMedia } from "@/lib/supabase";
+import { uploadAndOverrideMedia, authService } from "@/lib/supabase";
 
 interface AnimatedImageProps {
   src: string;
@@ -49,15 +49,38 @@ export function AnimatedImage({
   const [file, setFile] = useState<File | null>(null);
   const [isUploading, setIsUploading] = useState(false);
   const [currentSrc, setCurrentSrc] = useState<string>(src);
-  const [userRole] = useState<string | null>(() => {
-    try {
-      const raw = typeof window !== "undefined" ? localStorage.getItem("user") : null;
-      const u = raw ? JSON.parse(raw) : null;
-      return u?.role || null;
-    } catch {
-      return null;
-    }
-  });
+  const [userRole, setUserRole] = useState<string | null>(null);
+
+  useEffect(() => {
+    // Initial check
+    const checkRole = async () => {
+      try {
+        const raw = typeof window !== "undefined" ? localStorage.getItem("user") : null;
+        if (raw) {
+          const u = JSON.parse(raw);
+          if (u?.role) setUserRole(u.role);
+        }
+        
+        const { profile } = await authService.getCurrentUser();
+        if (profile?.role) {
+          setUserRole(profile.role);
+        }
+      } catch (e) {
+        // Silent fail
+      }
+    };
+    
+    checkRole();
+    
+    // Listen for auth changes
+    const { data: { subscription } } = authService.onAuthStateChange((event, session) => {
+        checkRole();
+    });
+
+    return () => {
+        subscription.unsubscribe();
+    };
+  }, []);
 
   const aspectRatioClasses = {
     square: "aspect-square",
@@ -84,18 +107,60 @@ export function AnimatedImage({
   const isAdmin = userRole === "super_admin";
   const key = overrideKey || (typeof src === "string" && src.startsWith("/") ? src : null);
 
-  function getOverriddenSrc(original: string): string {
+  function getOverriddenSrc(original: string, k?: string | null): string {
     try {
-      const raw = typeof window !== "undefined" ? localStorage.getItem("imageOverridesByPath") : null;
-      const map = raw ? JSON.parse(raw) as Record<string, string> : null;
-      if (map && original && map[original]) return map[original];
+      // Prioritize checking for a global override in the overrides map
+      const rawOverrides = typeof window !== "undefined" ? localStorage.getItem("mediaOverrides") : null;
+      if (rawOverrides && k) {
+        const overrides = JSON.parse(rawOverrides);
+        if (overrides[k]) return overrides[k];
+      }
+
+      const rawPath = typeof window !== "undefined" ? localStorage.getItem("imageOverridesByPath") : null;
+      const rawId = typeof window !== "undefined" ? localStorage.getItem("imageOverridesById") : null;
+      const mapPath = rawPath ? JSON.parse(rawPath) as Record<string, string> : null;
+      const mapId = rawId ? JSON.parse(rawId) as Record<string, string> : null;
+      if (k && mapId && mapId[k]) return mapId[k];
+      if (mapPath && original && mapPath[original]) return mapPath[original];
     } catch {}
     return original;
   }
 
   useEffect(() => {
-    setCurrentSrc(getOverriddenSrc(src));
-  }, [src]);
+    setCurrentSrc(getOverriddenSrc(src, key));
+  }, [src, key]);
+
+  useEffect(() => {
+    const handler = () => {
+      setCurrentSrc(getOverriddenSrc(src, key));
+    };
+    window.addEventListener('mediaOverridesUpdated', handler);
+    return () => window.removeEventListener('mediaOverridesUpdated', handler);
+  }, [src, key]);
+
+  // Handle successful upload to update current state immediately
+  const handleUploadSuccess = (newUrl: string) => {
+    setCurrentSrc(newUrl);
+    // Also update localStorage to reflect the change across components
+    try {
+      const rawOverrides = localStorage.getItem("mediaOverrides") || "{}";
+      const overrides = JSON.parse(rawOverrides);
+      if (key) {
+        overrides[key] = newUrl;
+        localStorage.setItem("mediaOverrides", JSON.stringify(overrides));
+      }
+      
+      const rawPath = localStorage.getItem('imageOverridesByPath') || "{}";
+      const mapPath = JSON.parse(rawPath);
+      if (key) mapPath[key] = newUrl;
+      localStorage.setItem('imageOverridesByPath', JSON.stringify(mapPath));
+      localStorage.setItem('imageOverridesById', JSON.stringify(mapPath));
+      
+      window.dispatchEvent(new Event('mediaOverridesUpdated'));
+    } catch (e) {
+      console.error("Error updating local media overrides:", e);
+    }
+  };
 
   return (
     <div
@@ -153,7 +218,6 @@ export function AnimatedImage({
         <div
           className="absolute inset-0 bg-black/60 flex items-center justify-center p-4 z-30"
           onClick={(e) => {
-            e.preventDefault();
             e.stopPropagation();
           }}
         >
@@ -168,8 +232,12 @@ export function AnimatedImage({
                   try {
                     setIsUploading(true);
                     const url = await uploadAndOverrideMedia(key, "image", file);
-                    setCurrentSrc(url);
+                    handleUploadSuccess(url);
                     setIsEditing(false);
+                    alert("Image mise à jour avec succès !");
+                  } catch (err: any) {
+                    console.error("Upload error:", err);
+                    alert("Erreur lors de l'envoi de l'image : " + (err.message || "Erreur inconnue"));
                   } finally {
                     setIsUploading(false);
                   }
@@ -204,7 +272,6 @@ interface GalleryImageProps extends Omit<AnimatedImageProps, 'animation' | 'hove
 
 export function GalleryImage({
   index,
-  totalImages,
   ...props
 }: GalleryImageProps) {
   const delay = index * 100; // Délai progressif pour l'animation

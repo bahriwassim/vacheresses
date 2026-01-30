@@ -1,8 +1,7 @@
 'use client';
 
-import { useEffect, useState, useCallback, useMemo } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { Calendar } from '@/components/ui/calendar';
-import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
@@ -13,9 +12,6 @@ import {
   DialogOverlay,
 } from '@/components/ui/dialog';
 import { useLocale } from '@/hooks/use-locale';
-import { format } from 'date-fns';
-import { fr } from 'date-fns/locale';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 interface DatePickerDialogProps {
   open: boolean;
@@ -28,7 +24,7 @@ function monthStart(d: Date): Date {
 }
 
 export function DatePickerDialog({ open, onOpenChange, onDateSelected }: DatePickerDialogProps) {
-  const { t, locale } = useLocale();
+  const { t } = useLocale();
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
   const todayStart = useMemo(() => monthStart(new Date()), []);
   const [currentMonth, setCurrentMonth] = useState(todayStart);
@@ -46,16 +42,6 @@ export function DatePickerDialog({ open, onOpenChange, onDateSelected }: DatePic
       onOpenChange(false);
     }
   };
-
-  const prevMonth = useCallback(() => {
-    setCurrentMonth((prev) => new Date(prev.getFullYear(), prev.getMonth() - 1, 1));
-  }, []);
-
-  const nextMonth = useCallback(() => {
-    setCurrentMonth((prev) => new Date(prev.getFullYear(), prev.getMonth() + 1, 1));
-  }, []);
-
-  const isPrevDisabled = currentMonth.getTime() <= todayStart.getTime();
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>

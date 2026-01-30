@@ -9,16 +9,11 @@ import { Card, CardContent } from "@/components/ui/card";
 import { useEffect, useState } from "react";
 import { loadMediaOverridesByPath } from "@/lib/supabase";
 
-const images = [
-  "/Parc_3.jpg",
-  "/Parc_5.jpg",
-  "/VacheressesHistoire.jpg",
-  "/manoir1950.jpg",
-];
-
 export default function PotagerPage() {
   const { t } = useLocale();
   const poi = t.domain.poi.potager;
+  const images = ["/potager_4.jpg", "/potager_3.jpg", "/preau_verger_4.jpg"];
+
   const overridePath = (path: string) => {
     try {
       const raw = typeof window !== 'undefined' ? localStorage.getItem('imageOverridesByPath') : null;
@@ -28,7 +23,7 @@ export default function PotagerPage() {
       return path;
     }
   };
-  const [refresh, setRefresh] = useState(0);
+  const [, setRefresh] = useState(0);
   useEffect(() => {
     (async () => {
       const res = await loadMediaOverridesByPath();

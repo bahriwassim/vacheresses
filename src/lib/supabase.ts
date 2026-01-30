@@ -16,6 +16,13 @@ const mediaBucket = process.env.NEXT_PUBLIC_SUPABASE_MEDIA_BUCKET || 'site-media
 // --- AUTHENTICATION SERVICE ---
 
 export const authService = {
+  // Normalisation des rôles
+  normalizeRole(role: any): 'client' | 'admin' | 'super_admin' {
+    const r = String(role || '').toLowerCase().replace(/[\s-]+/g, '_');
+    if (r === 'super_admin') return 'super_admin';
+    if (r === 'admin') return 'admin';
+    return 'client';
+  },
   // Inscription
   async signUp(email: string, password: string, name: string, phone?: string) {
     if (!supabase) throw new Error("Supabase non configuré");
@@ -59,10 +66,35 @@ export const authService = {
         
       // Stocker le profil dans le localStorage pour l'accès rapide (legacy support)
       if (profile) {
-        localStorage.setItem('user', JSON.stringify(profile));
+        const prof = { ...profile, role: authService.normalizeRole((profile as any)?.role) } as UserProfile;
+        localStorage.setItem('user', JSON.stringify(prof));
+        return { user: data.user, session: data.session, profile: prof };
+      } else {
+        // Fallback serveur: récupérer le profil par email via service_role
+        try {
+          const emailToUse = data.user.email || email;
+          const res = await fetch(`/api/auth/profile?email=${encodeURIComponent(emailToUse)}`, { method: 'GET' });
+          const json = await res.json();
+          if (res.ok && json?.ok && json?.data) {
+            const prof = { ...(json.data as any), role: authService.normalizeRole((json.data as any)?.role) } as UserProfile;
+            localStorage.setItem('user', JSON.stringify(prof));
+            return { user: data.user, session: data.session, profile: prof };
+          }
+        } catch {}
+        // Fallback final: construire un profil à partir des métadonnées d'auth
+        const meta = (data.user as any)?.user_metadata || {};
+        const constructed = {
+          id: data.user.id,
+          email: data.user.email || email,
+          name: meta.name || (data.user.email ? String(data.user.email).split('@')[0] : 'Utilisateur'),
+          phone: meta.phone || undefined,
+          role: authService.normalizeRole((meta.role as any)),
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        } as UserProfile;
+        localStorage.setItem('user', JSON.stringify(constructed));
+        return { user: data.user, session: data.session, profile: constructed };
       }
-      
-      return { user: data.user, session: data.session, profile };
     }
 
     return { user: data.user, session: data.session, profile: null };
@@ -85,13 +117,42 @@ export const authService = {
       return { user: null, profile: null };
     }
 
-    const { data: profile } = await supabase
-      .from('users')
-      .select('*')
-      .eq('id', user.id)
-      .single();
+    // Try to get profile from metadata first (fastest and no RLS dependency)
+    const meta = (user as any)?.user_metadata || {};
+    const constructed = {
+      id: user.id,
+      email: user.email || '',
+      name: meta.name || (user.email ? String(user.email).split('@')[0] : 'Utilisateur'),
+      phone: meta.phone || undefined,
+      role: authService.normalizeRole(meta.role),
+      created_at: user.created_at,
+      updated_at: user.updated_at || user.created_at,
+    } as UserProfile;
 
-    return { user, profile };
+    // Try to fetch from DB for freshest data, but don't fail if 403
+    let profile: any = null;
+    try {
+      const { data, error } = await supabase
+        .from('users')
+        .select('*')
+        .eq('id', user.id)
+        .single();
+      
+      if (!error && data) {
+        profile = { ...data, role: authService.normalizeRole((data as any)?.role) };
+      }
+    } catch (e) {
+      // Ignore 403/network errors for profile fetch
+    }
+
+    const finalProfile = profile || constructed;
+    
+    // Update local cache
+    try {
+      localStorage.setItem('user', JSON.stringify(finalProfile));
+    } catch {}
+
+    return { user, profile: finalProfile };
   },
   
   // Mettre à jour le profil utilisateur
@@ -114,6 +175,12 @@ export const authService = {
     }
 
     return data;
+  },
+
+  // Écouter les changements d'authentification
+  onAuthStateChange(callback: (event: any, session: any) => void) {
+    if (!supabase) return { data: { subscription: { unsubscribe: () => {} } } };
+    return supabase.auth.onAuthStateChange(callback);
   },
 };
 
@@ -158,18 +225,30 @@ function setNestedValue(obj: any, path: string[], val: any) {
 }
 
 export async function loadTextOverrides(locale: string) {
-  if (!supabase) return null;
-  const { data, error } = await supabase
-    .from('content_overrides')
-    .select('path, locale, content')
-    .eq('locale', locale);
-  if (error) return null;
-  if (!data || !Array.isArray(data)) return null;
-  const root: any = {};
-  for (const row of data as any[]) {
-    setNestedValue(root, String(row.path).split('.'), String(row.content));
+  // Try client-side Supabase; fallback to server API
+  if (supabase) {
+    try {
+      const { data, error } = await supabase
+        .from('content_overrides')
+        .select('path, locale, content')
+        .eq('locale', locale);
+      if (!error && data && Array.isArray(data)) {
+        const root: any = {};
+        for (const row of data as any[]) {
+          setNestedValue(root, String(row.path).split('.'), String(row.content));
+        }
+        return root;
+      }
+    } catch {}
   }
-  return root;
+  try {
+    const res = await fetch(`/api/overrides/text?locale=${encodeURIComponent(locale)}`, { method: 'GET' });
+    const json = await res.json();
+    if (res.ok && json?.ok && json?.data) {
+      return json.data;
+    }
+  } catch {}
+  return null;
 }
 
 export async function saveTextOverride(path: string, locale: string, content: string) {
@@ -184,9 +263,18 @@ export async function saveTextOverride(path: string, locale: string, content: st
     try {
       const { error } = await supabase
         .from('content_overrides')
-        .upsert({ path, locale, content, created_by });
-      if (!error) remoteSaved = true;
-    } catch {}
+        .upsert(
+          { path, locale, content, created_by }, 
+          { onConflict: 'path,locale' }
+        );
+      if (error) {
+        console.error("Supabase text override error:", error);
+      } else {
+        remoteSaved = true;
+      }
+    } catch (e) {
+      console.error("Unexpected error saving text override:", e);
+    }
   }
   if (!remoteSaved) {
     try {
@@ -243,12 +331,28 @@ export function getLocalOverride(locale: string, path: string): string | null {
 }
 
 export async function loadMediaOverridesByPath() {
-  if (!supabase) return null;
-  const { data, error } = await supabase
-    .from('media_overrides')
-    .select('path, url, media_type');
-  if (error) return null;
-  if (!data || !Array.isArray(data)) return null;
+  // Try client-side Supabase; fallback to server API
+  let data: any[] | null = null;
+  if (supabase) {
+    try {
+      const res = await supabase
+        .from('media_overrides')
+        .select('path, url, media_type');
+      if (!res.error && res.data && Array.isArray(res.data)) {
+        data = res.data as any[];
+      }
+    } catch {}
+  }
+  if (!data) {
+    try {
+      const res = await fetch('/api/overrides/media', { method: 'GET' });
+      const json = await res.json();
+      if (res.ok && json?.ok && Array.isArray(json?.data)) {
+        data = json.data as any[];
+      }
+    } catch {}
+  }
+  if (!data) return null;
   const imageMap: Record<string, string> = {};
   let videoId: string | null = null;
   for (const row of data as any[]) {
@@ -290,7 +394,10 @@ export async function setMediaOverride(path: string, mediaType: 'image' | 'video
   } catch {}
   await supabase
     .from('media_overrides')
-    .upsert({ path, media_type: mediaType, url, created_by });
+    .upsert(
+      { path, media_type: mediaType, url, created_by },
+      { onConflict: 'path' }
+    );
   if (mediaType === 'image') {
     try {
       const raw = localStorage.getItem('imageOverridesByPath');

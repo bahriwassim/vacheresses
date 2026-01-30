@@ -9,6 +9,8 @@ import { getGallery } from "@/lib/gallery-maps";
 import { CardImage } from "@/components/ui/animated-image";
 import { useEffect, useState } from "react";
 import { loadMediaOverridesByPath } from "@/lib/supabase";
+import { EditableText } from "@/components/ui/editable-text";
+import { EditableMedia } from "@/components/ui/editable-media";
 
 export default function DomainSpacePage() {
   const { t } = useLocale();
@@ -25,13 +27,6 @@ export default function DomainSpacePage() {
       return path;
     }
   };
-  const [refresh, setRefresh] = useState(0);
-  useEffect(() => {
-    (async () => {
-      await loadMediaOverridesByPath();
-      setRefresh(x => x + 1);
-    })();
-  }, []);
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -43,11 +38,11 @@ export default function DomainSpacePage() {
               Le Domaine
             </p>
             <h1 className="text-4xl md:text-5xl font-headline font-bold mt-2">
-              {poi?.title || slug}
+              <EditableText path={`domain.poi.${slug}.title`} value={poi?.title || slug} />
             </h1>
             {poi && (
               <p className="mt-4 text-lg text-muted-foreground max-w-3xl mx-auto whitespace-pre-line">
-                {poi.content}
+                <EditableText path={`domain.poi.${slug}.content`} value={poi.content} multiline />
               </p>
             )}
           </div>
@@ -58,11 +53,37 @@ export default function DomainSpacePage() {
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                {images.map((src, i) => (
+                {images.slice(0, 4).map((src, i) => (
                   <div key={i} className="relative aspect-square rounded-xl overflow-hidden">
                     <CardImage src={overridePath(src)} alt={`${poi?.title || slug} ${i + 1}`} fill className="object-cover" />
                   </div>
                 ))}
+                <div className="relative aspect-square rounded-xl overflow-hidden">
+                  <EditableMedia
+                    type="video"
+                    path={`domain.poi.${slug}.videoId`}
+                    value=""
+                    className="w-full h-full"
+                    render={(videoId) => (
+                      videoId
+                        ? (
+                          <iframe
+                            src={`https://www.youtube.com/embed/${videoId}?autoplay=0&mute=0&controls=1&modestbranding=1`}
+                            title="Mini vidéo de l'espace"
+                            className="absolute inset-0 w-full h-full"
+                            frameBorder="0"
+                            allow="autoplay; encrypted-media"
+                            allowFullScreen
+                          />
+                        )
+                        : (
+                          <div className="absolute inset-0 bg-muted flex items-center justify-center">
+                            <span className="text-muted-foreground">Mini vidéo</span>
+                          </div>
+                        )
+                    )}
+                  />
+                </div>
               </div>
             </CardContent>
           </Card>

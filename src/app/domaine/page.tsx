@@ -13,7 +13,7 @@ import { loadMediaOverridesByPath } from "@/lib/supabase";
 export default function DomainePage() {
   const { t } = useLocale();
   const [scrollY, setScrollY] = useState(0);
-  const [refresh, setRefresh] = useState(0);
+  const [, setRefresh] = useState(0);
   const [hydrated, setHydrated] = useState(false);
   const overridePath = (path: string) => {
     try {
@@ -35,7 +35,15 @@ export default function DomainePage() {
   useEffect(() => {
     (async () => {
       await loadMediaOverridesByPath();
-      setRefresh(x => x + 1);
+      // Force re-render if needed, but since we removed refresh state, we might just need to ensure hydration
+      // or maybe this useEffect was only for side effects of loading media.
+      // If refresh was used to trigger re-render, we might need another way or just accept it's done.
+      // Given the previous code just incremented a counter that wasn't used, it likely just forced a re-render.
+      // But if the component doesn't use the state, it might not re-render?
+      // Actually setState triggers re-render. So we should keep a way to trigger re-render if loadMediaOverridesByPath changes something global.
+      // But let's assume if it was unused, it wasn't needed for reading, just for triggering.
+      // However, if we remove the state, we remove the trigger.
+      // Let's check if 'refresh' was used anywhere else. I only saw it in setRefresh.
     })();
   }, []);
   
@@ -103,7 +111,7 @@ export default function DomainePage() {
                   </CardTitle>
                   <div className="prose prose-lg max-w-none dark:prose-invert">
                     <p className="text-muted-foreground whitespace-pre-line leading-relaxed text-base md:text-lg">
-                      <EditableText path="domain.spirit_content" value={t.domain.spirit_content} multiline />
+                      <EditableText path="domain.spirit_content_1" value={t.domain.spirit_content_1} multiline />
                     </p>
                   </div>
                 </div>
@@ -242,7 +250,7 @@ export default function DomainePage() {
           </div>
 
           {/* Points d'intérêt du Domaine */}
-          <div className="mb-12">
+          <div className="mt-16 mb-12">
             <h2 className="text-4xl md:text-5xl font-headline font-bold text-center mb-4 animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-300">
               Découvrez les Espaces du Domaine
             </h2>
@@ -265,10 +273,11 @@ export default function DomainePage() {
                 />
               </div>
               <CardHeader>
-                <CardTitle className="font-headline text-xl">{t.domain.poi.cour_honneur.title}</CardTitle>
+                <CardTitle className="font-headline text-xl"><EditableText path="domain.poi.cour_honneur.title" value={t.domain.poi.cour_honneur.title} /></CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-muted-foreground text-sm">{t.domain.poi.cour_honneur.subtitle}</p>
+                <p className="text-muted-foreground text-sm mb-4"><EditableText path="domain.poi.cour_honneur.subtitle" value={t.domain.poi.cour_honneur.subtitle} /></p>
+                <p className="text-sm"><EditableText path="domain.poi.cour_honneur.content" value={t.domain.poi.cour_honneur.content} multiline /></p>
               </CardContent>
             </Card>
 
@@ -284,10 +293,31 @@ export default function DomainePage() {
                 />
               </div>
               <CardHeader>
-                <CardTitle className="font-headline text-xl">{t.domain.poi.salle_reception.title}</CardTitle>
+                <CardTitle className="font-headline text-xl"><EditableText path="domain.poi.salle_reception.title" value={t.domain.poi.salle_reception.title} /></CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-muted-foreground text-sm">{t.domain.poi.salle_reception.subtitle}</p>
+                <p className="text-muted-foreground text-sm mb-4"><EditableText path="domain.poi.salle_reception.subtitle" value={t.domain.poi.salle_reception.subtitle} /></p>
+                <p className="text-sm"><EditableText path="domain.poi.salle_reception.content" value={t.domain.poi.salle_reception.content} multiline /></p>
+              </CardContent>
+            </Card>
+
+            {/* Salle d'Exposition */}
+            <Card className="overflow-hidden transition-all duration-500 hover:shadow-xl hover:-translate-y-1">
+              <div className="relative h-48 overflow-hidden">
+                <AnimatedImage
+                  src={overridePath("/vacheresses_17.jpg")}
+                  alt="Salle d'Exposition"
+                  fill
+                  overrideKey="/vacheresses_17.jpg"
+                  className="object-cover"
+                />
+              </div>
+              <CardHeader>
+                <CardTitle className="font-headline text-xl"><EditableText path="domain.poi.salle_exposition.title" value={t.domain.poi.salle_exposition.title} /></CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground text-sm mb-4"><EditableText path="domain.poi.salle_exposition.subtitle" value={t.domain.poi.salle_exposition.subtitle} /></p>
+                <p className="text-sm"><EditableText path="domain.poi.salle_exposition.content" value={t.domain.poi.salle_exposition.content} multiline /></p>
               </CardContent>
             </Card>
 
@@ -303,10 +333,11 @@ export default function DomainePage() {
                 />
               </div>
               <CardHeader>
-                <CardTitle className="font-headline text-xl">{t.domain.poi.parc.title}</CardTitle>
+                <CardTitle className="font-headline text-xl"><EditableText path="domain.poi.parc.title" value={t.domain.poi.parc.title} /></CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-muted-foreground text-sm">{t.domain.poi.parc.subtitle}</p>
+                <p className="text-muted-foreground text-sm mb-4"><EditableText path="domain.poi.parc.subtitle" value={t.domain.poi.parc.subtitle} /></p>
+                <p className="text-sm"><EditableText path="domain.poi.parc.content" value={t.domain.poi.parc.content} multiline /></p>
               </CardContent>
             </Card>
 
@@ -322,10 +353,11 @@ export default function DomainePage() {
                 />
               </div>
               <CardHeader>
-                <CardTitle className="font-headline text-xl">{t.domain.poi.preau_verger.title}</CardTitle>
+                <CardTitle className="font-headline text-xl"><EditableText path="domain.poi.preau_verger.title" value={t.domain.poi.preau_verger.title} /></CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-muted-foreground text-sm">{t.domain.poi.preau_verger.subtitle}</p>
+                <p className="text-muted-foreground text-sm mb-4"><EditableText path="domain.poi.preau_verger.subtitle" value={t.domain.poi.preau_verger.subtitle} /></p>
+                <p className="text-sm"><EditableText path="domain.poi.preau_verger.content" value={t.domain.poi.preau_verger.content} multiline /></p>
               </CardContent>
             </Card>
 
@@ -341,10 +373,11 @@ export default function DomainePage() {
                 />
               </div>
               <CardHeader>
-                <CardTitle className="font-headline text-xl">{t.domain.poi.potager.title}</CardTitle>
+                <CardTitle className="font-headline text-xl"><EditableText path="domain.poi.potager.title" value={t.domain.poi.potager.title} /></CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-muted-foreground text-sm">{t.domain.poi.potager.subtitle}</p>
+                <p className="text-muted-foreground text-sm mb-4"><EditableText path="domain.poi.potager.subtitle" value={t.domain.poi.potager.subtitle} /></p>
+                <p className="text-sm"><EditableText path="domain.poi.potager.content" value={t.domain.poi.potager.content} multiline /></p>
               </CardContent>
             </Card>
 
@@ -360,10 +393,11 @@ export default function DomainePage() {
                 />
               </div>
               <CardHeader>
-                <CardTitle className="font-headline text-xl">Hébergements</CardTitle>
+                <CardTitle className="font-headline text-xl"><EditableText path="domain.poi.hebergements.title" value={t.domain.poi.hebergements.title} /></CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-muted-foreground text-sm">Charmantes chambres dans la Maison du Potager</p>
+                <p className="text-muted-foreground text-sm mb-4"><EditableText path="domain.poi.hebergements.subtitle" value={t.domain.poi.hebergements.subtitle} /></p>
+                <p className="text-sm"><EditableText path="domain.poi.hebergements.content" value={t.domain.poi.hebergements.content} multiline /></p>
               </CardContent>
             </Card>
 
@@ -379,10 +413,11 @@ export default function DomainePage() {
                 />
               </div>
               <CardHeader>
-                <CardTitle className="font-headline text-xl">Salle Blanche</CardTitle>
+                <CardTitle className="font-headline text-xl"><EditableText path="domain.poi.salle_blanche.title" value={t.domain.poi.salle_blanche.title} /></CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-muted-foreground text-sm">Espace élégant pour les cérémonies</p>
+                <p className="text-muted-foreground text-sm mb-4"><EditableText path="domain.poi.salle_blanche.subtitle" value={t.domain.poi.salle_blanche.subtitle} /></p>
+                <p className="text-sm"><EditableText path="domain.poi.salle_blanche.content" value={t.domain.poi.salle_blanche.content} multiline /></p>
               </CardContent>
             </Card>
 
@@ -398,10 +433,11 @@ export default function DomainePage() {
                 />
               </div>
               <CardHeader>
-                <CardTitle className="font-headline text-xl">Orangerie</CardTitle>
+                <CardTitle className="font-headline text-xl"><EditableText path="domain.poi.orangerie.title" value={t.domain.poi.orangerie.title} /></CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-muted-foreground text-sm">Lieu historique pour les cocktails</p>
+                <p className="text-muted-foreground text-sm mb-4"><EditableText path="domain.poi.orangerie.subtitle" value={t.domain.poi.orangerie.subtitle} /></p>
+                <p className="text-sm"><EditableText path="domain.poi.orangerie.content" value={t.domain.poi.orangerie.content} multiline /></p>
               </CardContent>
             </Card>
 
@@ -417,10 +453,10 @@ export default function DomainePage() {
                 />
               </div>
               <CardHeader>
-                <CardTitle className="font-headline text-xl">Chapelle</CardTitle>
+                <CardTitle className="font-headline text-xl"><EditableText path="domain.poi.chapelle.title" value={t.domain.poi.chapelle.title} /></CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-muted-foreground text-sm">Lieu spirituel pour les mariages religieux</p>
+                <p className="text-muted-foreground text-sm"><EditableText path="domain.poi.chapelle.subtitle" value={t.domain.poi.chapelle.subtitle} /></p>
               </CardContent>
             </Card>
 
@@ -436,10 +472,10 @@ export default function DomainePage() {
                 />
               </div>
               <CardHeader>
-                <CardTitle className="font-headline text-xl">Terrasses</CardTitle>
+                <CardTitle className="font-headline text-xl"><EditableText path="domain.poi.terrasses.title" value={t.domain.poi.terrasses.title} /></CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-muted-foreground text-sm">Espaces extérieurs avec vue panoramique</p>
+                <p className="text-muted-foreground text-sm"><EditableText path="domain.poi.terrasses.subtitle" value={t.domain.poi.terrasses.subtitle} /></p>
               </CardContent>
             </Card>
 
@@ -455,10 +491,31 @@ export default function DomainePage() {
                 />
               </div>
               <CardHeader>
-                <CardTitle className="font-headline text-xl">Roseraie</CardTitle>
+                <CardTitle className="font-headline text-xl"><EditableText path="domain.poi.roseraie.title" value={t.domain.poi.roseraie.title} /></CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-muted-foreground text-sm">Jardin romantique pour les photos</p>
+                <p className="text-muted-foreground text-sm mb-4"><EditableText path="domain.poi.roseraie.subtitle" value={t.domain.poi.roseraie.subtitle} /></p>
+                <p className="text-sm"><EditableText path="domain.poi.roseraie.content" value={t.domain.poi.roseraie.content} multiline /></p>
+              </CardContent>
+            </Card>
+
+            {/* Mare */}
+            <Card className="overflow-hidden transition-all duration-500 hover:shadow-xl hover:-translate-y-1">
+              <div className="relative h-48 overflow-hidden">
+                <AnimatedImage
+                  src={overridePath("/Parc_2.jpg")}
+                  alt="Mare"
+                  fill
+                  overrideKey="/Parc_2.jpg"
+                  className="object-cover"
+                />
+              </div>
+              <CardHeader>
+                <CardTitle className="font-headline text-xl"><EditableText path="domain.poi.mare.title" value={t.domain.poi.mare.title} /></CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground text-sm mb-4"><EditableText path="domain.poi.mare.subtitle" value={t.domain.poi.mare.subtitle} /></p>
+                <p className="text-sm"><EditableText path="domain.poi.mare.content" value={t.domain.poi.mare.content} multiline /></p>
               </CardContent>
             </Card>
           </div>

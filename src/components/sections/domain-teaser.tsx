@@ -28,10 +28,10 @@ export function DomainTeaser() {
 
               <div className="max-w-4xl mx-auto space-y-6 animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-200">
                 <p className="text-lg md:text-xl text-muted-foreground leading-relaxed">
-                  <EditableText path="domain.spirit_content" value={t.domain.spirit_content.split('\n\n')[0]} multiline />
+                  <EditableText path="domain.spirit_content_1" value={t.domain.spirit_content_1} multiline />
                 </p>
                 <p className="text-base md:text-lg text-muted-foreground leading-relaxed">
-                  <EditableText path="domain.spirit_content" value={t.domain.spirit_content.split('\n\n')[1]} multiline />
+                  <EditableText path="domain.spirit_content_2" value={t.domain.spirit_content_2} multiline />
                 </p>
               </div>
 

@@ -8,7 +8,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { MapPin, X, Users, Maximize2, Bed, Wifi, Trees, Landmark } from "lucide-react";
 import Link from "next/link";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { EditableText } from "@/components/ui/editable-text";
 import { loadMediaOverridesByPath } from "@/lib/supabase";
 
@@ -26,7 +26,7 @@ export function InteractiveMap() {
   const { t } = useLocale();
   const [activeHotspotId, setActiveHotspotId] = useState<string | null>(null);
   const [selectedImage, setSelectedImage] = useState(0);
-  const [refresh, setRefresh] = useState(0);
+  const [, setRefresh] = useState(0);
   const overridePath = (path: string) => {
     try {
       const raw = typeof window !== 'undefined' ? localStorage.getItem('imageOverridesByPath') : null;
@@ -43,155 +43,125 @@ export function InteractiveMap() {
     })();
   }, []);
 
-  const hotspots: HotspotData[] = [
-    // Accommodations
+  const hotspots: HotspotData[] = useMemo(() => [
     {
-      id: "heures_du_jour",
-      name: t.stay.rooms.heures_du_jour.name,
-      description: t.stay.rooms.heures_du_jour.type,
-      x: 35,
-      y: 45,
-      link: "/sejourner/heures_du_jour",
+      id: "parking_invites",
+      name: t.domain.poi.parking_invites.title,
+      description: t.domain.poi.parking_invites.subtitle,
+      x: 32,
+      y: 5,
+      link: "/contact",
+      type: 'poi',
+    },
+    {
+      id: "maison_potager",
+      name: "La maison du potager",
+      description: "Hébergement de charme près du potager",
+      x: 28,
+      y: 12,
+      link: "/sejourner",
       type: 'accommodation',
     },
     {
-      id: "ruines_antiques",
-      name: t.stay.rooms.ruines_antiques.name,
-      description: t.stay.rooms.ruines_antiques.type,
-      x: 48,
-      y: 52,
-      link: "/sejourner/ruines_antiques",
-      type: 'accommodation',
+      id: "potager",
+      name: t.domain.poi.potager.title,
+      description: t.domain.poi.potager.subtitle,
+      x: 19,
+      y: 28,
+      link: "/domaine",
+      type: 'poi',
     },
     {
-      id: "jardins_tivoli",
-      name: t.stay.rooms.jardins_tivoli.name,
-      description: t.stay.rooms.jardins_tivoli.type,
-      x: 52,
-      y: 48,
-      link: "/sejourner/jardins_tivoli",
-      type: 'accommodation',
+      id: "preau",
+      name: t.domain.poi.preau.title,
+      description: t.domain.poi.preau.subtitle,
+      x: 17,
+      y: 42,
+      link: "/domaine",
+      type: 'space',
     },
     {
-      id: "petit_trianon",
-      name: t.stay.rooms.petit_trianon.name,
-      description: t.stay.rooms.petit_trianon.type,
-      x: 65,
-      y: 50,
-      link: "/sejourner/petit_trianon",
-      type: 'accommodation',
+      id: "verger",
+      name: t.domain.poi.verger.title,
+      description: t.domain.poi.verger.subtitle,
+      x: 15,
+      y: 68,
+      link: "/domaine",
+      type: 'poi',
+    },
+    {
+      id: "orangerie",
+      name: t.domain.poi.orangerie.title,
+      description: t.domain.poi.orangerie.subtitle,
+      x: 46,
+      y: 17,
+      link: "/domaine",
+      type: 'space',
     },
     {
       id: "la_loge",
       name: t.stay.rooms.la_loge.name,
       description: t.stay.rooms.la_loge.type,
-      x: 42,
-      y: 60,
+      x: 41,
+      y: 26,
       link: "/sejourner/la_loge",
       type: 'accommodation',
     },
-    // Points of Interest
     {
       id: "cour_honneur",
       name: t.domain.poi.cour_honneur.title,
       description: t.domain.poi.cour_honneur.subtitle,
-      x: 50,
-      y: 65,
-      link: "/domaine/cour-honneur",
+      x: 52,
+      y: 42,
+      link: "/domaine",
+      type: 'poi',
+    },
+    {
+      id: "manoir",
+      name: t.domain.poi.manoir.title,
+      description: t.domain.poi.manoir.subtitle,
+      x: 54,
+      y: 80,
+      link: "/domaine",
+      type: 'poi',
+    },
+    {
+      id: "parking_prestataires",
+      name: t.domain.poi.parking_prestataires.title,
+      description: t.domain.poi.parking_prestataires.subtitle,
+      x: 68,
+      y: 14,
+      link: "/contact",
       type: 'poi',
     },
     {
       id: "salle_reception",
       name: t.domain.poi.salle_reception.title,
       description: t.domain.poi.salle_reception.subtitle,
-      x: 45,
-      y: 55,
-      link: "/domaine/salle-de-reception",
+      x: 70,
+      y: 32,
+      link: "/domaine",
+      type: 'space',
+    },
+    {
+      id: "pigeonnier",
+      name: t.domain.poi.pigeonnier.title,
+      description: t.domain.poi.pigeonnier.subtitle,
+      x: 90,
+      y: 27,
+      link: "/domaine",
       type: 'poi',
     },
     {
       id: "parc",
       name: t.domain.poi.parc.title,
       description: t.domain.poi.parc.subtitle,
-      x: 75,
-      y: 60,
-      link: "/domaine/parc",
+      x: 90,
+      y: 88,
+      link: "/domaine",
       type: 'poi',
     },
-    {
-      id: "preau_verger",
-      name: t.domain.poi.preau_verger.title,
-      description: t.domain.poi.preau_verger.subtitle,
-      x: 60,
-      y: 25,
-      link: "/domaine/preau-verger",
-      type: 'poi',
-    },
-    {
-      id: "potager",
-      name: t.domain.poi.potager.title,
-      description: t.domain.poi.potager.subtitle,
-      x: 58,
-      y: 38,
-      link: "/domaine/potager",
-      type: 'poi',
-    },
-    // Spaces (Espaces du domaine)
-    {
-      id: "salle_blanche",
-      name: t.domain.poi.salle_blanche.title,
-      description: t.domain.poi.salle_blanche.subtitle,
-      x: 40,
-      y: 35,
-      link: "/domaine/salle_blanche",
-      type: 'space',
-    },
-    {
-      id: "orangerie",
-      name: t.domain.poi.orangerie.title,
-      description: t.domain.poi.orangerie.subtitle,
-      x: 55,
-      y: 40,
-      link: "/domaine/orangerie",
-      type: 'space',
-    },
-    {
-      id: "chapelle",
-      name: t.domain.poi.chapelle.title,
-      description: t.domain.poi.chapelle.subtitle,
-      x: 68,
-      y: 42,
-      link: "/domaine/chapelle",
-      type: 'space',
-    },
-    {
-      id: "terrasses",
-      name: t.domain.poi.terrasses.title,
-      description: t.domain.poi.terrasses.subtitle,
-      x: 72,
-      y: 30,
-      link: "/domaine/terrasses",
-      type: 'space',
-    },
-    {
-      id: "roseraie",
-      name: t.domain.poi.roseraie.title,
-      description: t.domain.poi.roseraie.subtitle,
-      x: 34,
-      y: 50,
-      link: "/domaine/roseraie",
-      type: 'space',
-    },
-    {
-      id: "mare",
-      name: t.domain.poi.mare.title,
-      description: t.domain.poi.mare.subtitle,
-      x: 25,
-      y: 60,
-      link: "/domaine/mare",
-      type: 'space',
-    },
-  ];
+  ], [t]);
 
   const activeHotspot = useMemo(() => {
     if (!activeHotspotId) return null;
@@ -219,7 +189,7 @@ export function InteractiveMap() {
     cour_honneur: ["/vacheresses_13.jpg", "/vacheresses_17.jpg", "/vacheresses_20.jpg"],
     salle_reception: ["/salle_reception_6.jpg", "/salle_reception_7.jpg", "/salle_reception_8.jpg"],
     parc: ["/Parc_1.jpg", "/Parc_2.jpg", "/Parc_3.jpg"],
-    preau_verger: ["/preau_verger_1.jpg", "/preau_verger_2.jpg", "/preau_verger_3.jpg"],
+    preau: ["/preau_verger_1.jpg", "/preau_verger_2.jpg", "/preau_verger_3.jpg"],
     // New estate spaces
     salle_blanche: ["/salle_reception_6.jpg", "/salle_reception_7.jpg", "/salle_reception_8.jpg"],
     orangerie: ["/espace_8.jpg", "/espace_9.jpg", "/espace_15.jpg"],
@@ -227,6 +197,13 @@ export function InteractiveMap() {
     terrasses: ["/Parc_1.jpg", "/Parc_2.jpg", "/Parc_3.jpg"],
     roseraie: ["/Parc_3.jpg", "/preau_verger_3.jpg", "/preau_verger_4.jpg"],
     mare: ["/espace_1.jpg", "/espace_2_(1).jpg", "/espace_4.jpg"],
+    // Custom points from map
+    pigeonnier: ["/vacheresses_17.jpg", "/vacheresses_20.jpg", "/vacheresses_13.jpg"],
+    manoir: ["/vacheresses_13.jpg", "/vacheresses_14.jpg", "/vacheresses_7.jpg"],
+    maison_potager: ["/potager_4.jpg", "/potager_3.jpg", "/preau_verger_4.jpg"],
+    parking_prestataires: ["/vacheresses_20.jpg", "/vacheresses_17.jpg", "/Parc_1.jpg"],
+    parking_invites: ["/vacheresses_20.jpg", "/Parc_2.jpg", "/Parc_3.jpg"],
+    verger: ["/preau_verger_5.jpg", "/Parc_3.jpg", "/Parc_2.jpg"],
   };
   
   const activeRoomDetails = activeHotspot && activeHotspot.type === 'accommodation'
@@ -263,8 +240,8 @@ export function InteractiveMap() {
             <div className="relative w-full group">
               <div className="relative w-full aspect-[16/10]">
                 <Image
-                  src={overridePath("/vacheresses_17.jpg")}
-                  alt="Vue aérienne du Manoir de Vacheresses"
+                  src={overridePath("/interactive.jpeg")}
+                  alt="Vue aérienne interactive du Manoir de Vacheresses"
                   fill
                   className="object-cover"
                   priority
@@ -309,6 +286,9 @@ export function InteractiveMap() {
                       </>
                     )}
                   </button>
+                  <div className="absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap px-2 py-1 rounded-md bg-black/60 text-white text-xs opacity-0 group-hover/hotspot:opacity-100 transition-opacity">
+                    {hotspot.name}
+                  </div>
                 </div>
               ))}
             </div>

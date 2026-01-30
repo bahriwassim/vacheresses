@@ -59,6 +59,9 @@ export type Translation = {
     quote_1: string;
     quote_2: string;
     quote_3: string;
+    quote_4: string;
+    quote_5: string;
+    quote_6: string;
   };
   access: {
     title: string;
@@ -101,6 +104,11 @@ export type Translation = {
     included_6: string;
     caterer_title: string;
     caterer_desc: string;
+    imposed_title: string;
+    imposed_dj_title: string;
+    imposed_dj_desc: string;
+    imposed_caterer_title: string;
+    imposed_caterer_desc: string;
     optional_title: string;
     optional_subtitle: string;
     option_rolls_title: string;
@@ -162,8 +170,13 @@ export type Translation = {
     missing_info_desc: string;
   };
   footer: {
-      copyright: string;
-      legal: string;
+    copyright: string;
+    legal: string;
+    name: string;
+    address_1: string;
+    address_2: string;
+    phone: string;
+    email: string;
   };
   legal: {
     title: string;
@@ -249,11 +262,29 @@ export type Translation = {
     subtitle: string;
     readMore: string;
     backToBlog: string;
-    pressTitle?: string;
-    pressSubtitle?: string;
-    pressButton?: string;
-    momentsTitle?: string;
-    momentsSubtitle?: string;
+    pressTitle: string;
+    pressSubtitle: string;
+    pressButton: string;
+    momentsTitle: string;
+    momentsSubtitle: string;
+  };
+  press: {
+    article_1_pub: string;
+    article_1_date: string;
+    article_1_title: string;
+    article_1_excerpt: string;
+    article_2_pub: string;
+    article_2_date: string;
+    article_2_title: string;
+    article_2_excerpt: string;
+    article_3_pub: string;
+    article_3_date: string;
+    article_3_title: string;
+    article_3_excerpt: string;
+    article_4_pub: string;
+    article_4_date: string;
+    article_4_title: string;
+    article_4_excerpt: string;
   };
   dashboard: {
     title: string;
@@ -367,6 +398,7 @@ export type Translation = {
       col_client: string;
       col_document: string;
       col_status: string;
+      col_sent: string;
       col_actions: string;
       doc_main: string;
       status_awaiting: string;
@@ -471,12 +503,34 @@ export type Translation = {
       hairdryer: string;
       linens: string;
     };
+    partners: {
+      title: string;
+      description: string;
+      partner1: {
+        name: string;
+        type: string;
+        description: string;
+      };
+      partner2: {
+        name: string;
+        type: string;
+        description: string;
+      };
+      partner3: {
+        name: string;
+        type: string;
+        description: string;
+      };
+      help_title: string;
+      help_description: string;
+    };
   };
   domain: {
     title: string;
     subtitle: string;
     spirit_title: string;
-    spirit_content: string;
+    spirit_content_1: string;
+    spirit_content_2: string;
     history_title: string;
     discover_more: string;
     age_or_title: string;
@@ -513,7 +567,37 @@ export type Translation = {
         subtitle: string;
         content: string;
       },
+      preau: {
+        title: string;
+        subtitle: string;
+        content: string;
+      },
       potager: {
+        title: string;
+        subtitle: string;
+        content: string;
+      },
+      pigeonnier: {
+        title: string;
+        subtitle: string;
+        content: string;
+      },
+      manoir: {
+        title: string;
+        subtitle: string;
+        content: string;
+      },
+      verger: {
+        title: string;
+        subtitle: string;
+        content: string;
+      },
+      parking_invites: {
+        title: string;
+        subtitle: string;
+        content: string;
+      },
+      parking_prestataires: {
         title: string;
         subtitle: string;
         content: string;
@@ -547,8 +631,34 @@ export type Translation = {
         title: string;
         subtitle: string;
         content: string;
+      },
+      hebergements: {
+        title: string;
+        subtitle: string;
+        content: string;
       }
-    }
+    };
+    partners: {
+      title: string;
+      description: string;
+      partner1: {
+        name: string;
+        type: string;
+        description: string;
+      };
+      partner2: {
+        name: string;
+        type: string;
+        description: string;
+      };
+      partner3: {
+        name: string;
+        type: string;
+        description: string;
+      };
+      help_title: string;
+      help_description: string;
+    };
   };
   interactiveMap: {
       title: string;
@@ -563,6 +673,30 @@ export type Translation = {
   contact: {
     title: string;
     subtitle: string;
+    info_title: string;
+    info_subtitle: string;
+    address_label: string;
+    address_value: string;
+    phone_label: string;
+    phone_value: string;
+    email_label: string;
+    email_value: string;
+    hours_label: string;
+    hours_value: string;
+    whatsapp_title: string;
+    whatsapp_subtitle: string;
+    whatsapp_button: string;
+    form_title: string;
+    form_subtitle: string;
+    success_title: string;
+    success_message: string;
+    name_label: string;
+    form_email_label: string;
+    form_phone_label: string;
+    subject_label: string;
+    message_label: string;
+    submit_button: string;
+    sending_button: string;
   };
   dateSelector: {
     title: string;
@@ -658,6 +792,9 @@ export const translations: Record<Locale, Translation> = {
         quote_1: "Our wedding at Vacheresses was a fairytale. The team went above and beyond to make our day perfect. The venue is even more beautiful in person!",
         quote_2: "We couldn't have asked for a more stunning backdrop for our special day. Every detail was handled with care, and our guests are still talking about it.",
         quote_3: "The entire process was seamless, from planning to the day itself. The food was exquisite, the staff was incredible, and the venue was simply breathtaking.",
+        quote_4: "From the first visit, we knew it was the perfect place. The atmosphere and attention to detail made everything unforgettable.",
+        quote_5: "The team handled everything with professionalism and kindness. We were able to fully enjoy our day without any stress.",
+        quote_6: "A timeless setting, exceptional service, and memories that will last forever. We highly recommend Vacheresses.",
     },
     access: {
       title: "Easy to Access",
@@ -741,7 +878,7 @@ export const translations: Record<Locale, Translation> = {
       ],
     },
     services: {
-        title: "Our Services",
+        title: "Services",
         subtitle: "Discover the services included in the privatization of the estate and our optional offers to enhance your wedding.",
         included_title: "Privatization of the Estate",
         included_1: "Wedding hall with office (100 people), exhibition room (20 to 30 children), main courtyard, wooded park, orchard and its covered area (130 people for the cocktail or the secular ceremony), medieval vegetable garden.",
@@ -752,6 +889,11 @@ export const translations: Record<Locale, Translation> = {
         included_6: "Private parking.",
         caterer_title: "Caterer",
         caterer_desc: "We have selected a list of caterers with extensive experience in the wedding world to best meet your expectations. List available on request.",
+        imposed_title: "Mandatory Services (Not Included)",
+        imposed_dj_title: "DJ",
+        imposed_dj_desc: "Sole provider: Evidanse Paris",
+        imposed_caterer_title: "Caterers",
+        imposed_caterer_desc: "List of mandatory caterers:",
         optional_title: "Optional Services",
         optional_subtitle: "Enhance your day with our exclusive à la carte services.",
         option_rolls_title: "Rolls-Royce with Chauffeur",
@@ -815,6 +957,11 @@ export const translations: Record<Locale, Translation> = {
     footer: {
       copyright: "© {year} Domaine des Vacheresses. All rights reserved.",
       legal: "Legal Notice",
+      name: "Manoir de Vacheresses",
+      address_1: "rue du Manoir",
+      address_2: "28210 Nogent-Le-Roi",
+      phone: "+33 6 11 84 20 21",
+      email: "contact@vacheresses.com",
     },
     legal: {
         title: 'Legal Notice',
@@ -905,6 +1052,24 @@ export const translations: Record<Locale, Translation> = {
       pressButton: "View press articles",
       momentsTitle: "Unforgettable Moments",
       momentsSubtitle: "Discover the magic of our weddings through these images",
+    },
+    press: {
+      article_1_pub: "Vogue Weddings",
+      article_1_date: "June 15, 2024",
+      article_1_title: "A Fairytale Wedding at Manoir de Vacheresses",
+      article_1_excerpt: "Discover how this couple celebrated their union at one of France’s most beautiful estates.",
+      article_2_pub: "Elle Decoration",
+      article_2_date: "March 3, 2024",
+      article_2_title: "Top 10 Wedding Venues in Île-de-France",
+      article_2_excerpt: "Manoir de Vacheresses ranks among the most sought-after destinations for elegant weddings.",
+      article_3_pub: "Bridal Magazine",
+      article_3_date: "January 22, 2024",
+      article_3_title: "Destination Wedding: Pure French Charm",
+      article_3_excerpt: "Why international couples choose Manoir de Vacheresses for their unions.",
+      article_4_pub: "Marie Claire",
+      article_4_date: "November 8, 2023",
+      article_4_title: "Intimate Weddings: A Growing Trend",
+      article_4_excerpt: "How Manoir de Vacheresses reinvents intimate weddings with elegance.",
     },
     dashboard: {
       title: "Alex & Jordan's Wedding",
@@ -1018,6 +1183,7 @@ export const translations: Record<Locale, Translation> = {
             col_client: "Client",
             col_document: "Document",
             col_status: "Status",
+            col_sent: "Sent",
             col_actions: "Actions",
             doc_main: "Main Venue Agreement",
             status_awaiting: "Awaiting Signature",
@@ -1122,12 +1288,34 @@ export const translations: Record<Locale, Translation> = {
         hairdryer: "Hair dryer",
         linens: "Sheets and towels provided",
       },
+      partners: {
+        title: "Partner Accommodations",
+        description: "We collaborate with nearby accommodations to offer more options for our guests. We can facilitate bookings for these partner establishments.",
+        partner1: {
+          name: "Hôtel Mercure Maintenon",
+          type: "4 Stars • Accor Group",
+          description: "Partner establishment near Vacheresses."
+        },
+        partner2: {
+          name: "Break & Brut",
+          type: "Local Partner",
+          description: "Partner establishment near Vacheresses."
+        },
+        partner3: {
+          name: "Le Colombier de Hanches",
+          type: "Boutique Hotel",
+          description: "Partner establishment near Vacheresses."
+        },
+        help_title: "Need help with bookings?",
+        help_description: "We can assist you in organizing external bookings as facilitators."
+      }
     },
     domain: {
       title: "The Estate",
       subtitle: "MANOIR DE VACHERESSES",
       spirit_title: "THE SPIRIT",
-      spirit_content: "Passionate about art, history and old stones, Frédérique and Philippe succumbed to the authenticity and architecture of the building which reminded the owner of childhood memories and his English origins.\n\nSince 2017, they have undertaken renovation work and opened this family home to create new emotions and share values that are dear to them: conviviality, generosity, elegance, the French art of living...\n\nToday, the opening of the Vegetable Garden Guesthouse and the Small House in the main courtyard will allow you to escape from the city to rediscover the simple pleasures of country life, the birdsong, the charm of old stones and the beauty of rare species...",
+      spirit_content_1: "Passionate about art, history and old stones, Frédérique and Philippe succumbed to the authenticity and architecture of the building which reminded the owner of childhood memories and his English origins.\n\nSince 2017, they have undertaken renovation work and opened this family home to create new emotions and share values that are dear to them: conviviality, generosity, elegance, the French art of living...",
+      spirit_content_2: "Today, the opening of the Vegetable Garden Guesthouse and the Small House in the main courtyard will allow you to escape from the city to rediscover the simple pleasures of country life, the birdsong, the charm of old stones and the beauty of rare species...",
       history_title: "THE HISTORY",
       discover_more: "Discover More",
       age_or_title: "The Golden Age of the Lords",
@@ -1164,10 +1352,40 @@ export const translations: Record<Locale, Translation> = {
             subtitle: "Chic country charm",
             content: "You will pass through the freestone arch, an exclusive setting to organize your secular ceremony. It is also one of the favorite places for photographers for group photos with family or friends… In the shade of apple and hazelnut trees, your guests can circulate and discover the culinary animations during your wine of honor. An old hayloft, the préau becomes a confidential and intimate place for a secular ceremony or a cocktail in case of capricious weather. In the evening, the light from its chandeliers gives it a chic bohemian style, very appreciated by the guests…"
         },
+        preau: {
+            title: "The Préau",
+            subtitle: "Chic country charm",
+            content: "An old hayloft, the préau becomes a confidential and intimate place for a secular ceremony or a cocktail in case of capricious weather. In the evening, the light from its chandeliers gives it a chic bohemian style, very appreciated by the guests…"
+        },
         potager: {
             title: "The Medieval Vegetable Garden",
             subtitle: "An enchanting journey",
             content: "Inspired by a drawing by Joseph Hémard, an illustrious owner in the 1920s, we have reconstituted a medieval-inspired vegetable garden according to the principles of permaculture. A truly enchanting place, you will discover or rediscover the wonders of nature: palmette fruit trees, aromatic, medicinal, decorative herbs…"
+        },
+        pigeonnier: {
+            title: "The Pigeonnier",
+            subtitle: "Historic Dovecote",
+            content: "Discover the historic pigeonnier that once supplied the court of Versailles with small pigeons under the de Noailles family. A remarkable witness to the estate's noble past."
+        },
+        manoir: {
+            title: "The Manor",
+            subtitle: "Historic Residence",
+            content: "The main building of the estate, dating back to 1393, combines historic authenticity with elegant French art de vivre. A true family home full of character."
+        },
+        verger: {
+            title: "The Orchard",
+            subtitle: "Traditional Orchard",
+            content: "In the shade of apple and hazelnut trees, the orchard offers a peaceful setting for outdoor moments and group photos."
+        },
+        parking_invites: {
+            title: "Guest Parking",
+            subtitle: "Dedicated Parking Area",
+            content: "A spacious parking area dedicated to your guests for easy access to the estate upon arrival."
+        },
+        parking_prestataires: {
+            title: "Vendor Parking",
+            subtitle: "Professional Parking Area",
+            content: "A dedicated space for wedding vendors and service providers to ensure smooth logistics for your event."
         },
         salle_blanche: {
             title: "Salle Blanche",
@@ -1198,7 +1416,33 @@ export const translations: Record<Locale, Translation> = {
             title: "Pond",
             subtitle: "Picturesque water feature for ceremonies",
             content: "A serene pond setting that creates a magical atmosphere for ceremonies and photos."
+        },
+        hebergements: {
+            title: "Accommodations",
+            subtitle: "Charming rooms in the Vegetable Garden House",
+            content: "Stay in our beautifully appointed rooms located in the historic Vegetable Garden House."
         }
+      },
+      partners: {
+        title: "Partner Accommodations",
+        description: "We collaborate with nearby accommodations to offer more options for our guests. We can facilitate reservations for these partner establishments.",
+        partner1: {
+          name: "Hotel Mercure Maintenon",
+          type: "4 stars • Accor Group",
+          description: "Partner establishment near Vacheresses."
+        },
+        partner2: {
+          name: "Break & Brut",
+          type: "Local Partner",
+          description: "Partner establishment near Vacheresses."
+        },
+        partner3: {
+          name: "Le Colombier de Hanches",
+          type: "Boutique Hotel",
+          description: "Partner establishment near Vacheresses."
+        },
+        help_title: "Need help with reservations?",
+        help_description: "We can assist you in organizing external reservations as facilitators."
       }
     },
     interactiveMap: {
@@ -1214,6 +1458,30 @@ export const translations: Record<Locale, Translation> = {
     contact: {
       title: "Contact Us",
       subtitle: "We are here to answer all your questions",
+      info_title: "Information",
+      info_subtitle: "How to reach us",
+      address_label: "Address",
+      address_value: "Manoir de Vacheresses<br />28210 Nogent-Le-Roi<br />France",
+      phone_label: "Phone",
+      phone_value: "+33 6 11 84 20 21",
+      email_label: "Email",
+      email_value: "contact@vacheresses.com",
+      hours_label: "Hours",
+      hours_value: "Monday - Friday: 9am - 6pm<br />Weekend: By appointment",
+      whatsapp_title: "WhatsApp",
+      whatsapp_subtitle: "Fast response",
+      whatsapp_button: "Open WhatsApp",
+      form_title: "Send us a message",
+      form_subtitle: "Fill out the form below and we will get back to you as soon as possible",
+      success_title: "✓ Message sent successfully!",
+      success_message: "We will get back to you as soon as possible.",
+      name_label: "Full Name *",
+      form_email_label: "Email *",
+      form_phone_label: "Phone",
+      subject_label: "Subject *",
+      message_label: "Message *",
+      submit_button: "Send Message",
+      sending_button: "Sending..."
     },
     dateSelector: {
       title: "Choose your event date",
@@ -1307,6 +1575,9 @@ export const translations: Record<Locale, Translation> = {
         quote_1: "Notre mariage aux Vacheresses était un conte de fées. L'équipe s'est surpassée pour rendre notre journée parfaite. Le lieu est encore plus beau en personne !",
         quote_2: "Nous n'aurions pas pu rêver d'un plus beau décor pour notre journée spéciale. Chaque détail a été traité avec soin, et nos invités en parlent encore.",
         quote_3: "L'ensemble du processus s'est déroulé sans accroc, de la planification au jour même. La nourriture était exquise, le personnel incroyable et le lieu tout simplement à couper le souffle.",
+        quote_4: "Dès la première visite, nous avons su que c'était l'endroit parfait. L'atmosphère et l'attention portée aux détails ont rendu tout inoubliable.",
+        quote_5: "L'équipe a tout géré avec professionnalisme et bienveillance. Nous avons pu profiter pleinement de notre journée sans aucun stress.",
+        quote_6: "Un cadre intemporel, un service exceptionnel et des souvenirs qui resteront à jamais. Nous recommandons vivement Vacheresses.",
     },
     access: {
       title: "Facile d'accès",
@@ -1401,6 +1672,11 @@ export const translations: Record<Locale, Translation> = {
         included_6: "Parking privé.",
         caterer_title: "Traiteur",
         caterer_desc: "Nous avons sélectionné une liste de traiteurs ayant une forte expérience dans l’univers du mariage afin de satisfaire au mieux vos attentes. Liste disponible sur demande.",
+        imposed_title: "Prestations non incluses mais imposées",
+        imposed_dj_title: "Animation DJ",
+        imposed_dj_desc: "1 prestataire : Evidanse Paris",
+        imposed_caterer_title: "Traiteurs",
+        imposed_caterer_desc: "Liste des traiteurs imposés :",
         optional_title: "Services en option",
         optional_subtitle: "Sublimez votre journée avec nos prestations exclusives à la carte.",
         option_rolls_title: "Rolls-Royce avec chauffeur",
@@ -1464,6 +1740,11 @@ export const translations: Record<Locale, Translation> = {
     footer: {
       copyright: "© {year} Domaine des Vacheresses. Tous droits réservés.",
       legal: "Mentions légales",
+      name: "Manoir de Vacheresses",
+      address_1: "Rue du Manoir",
+      address_2: "28210 Nogent-Le-Roi",
+      phone: "+33 06 11 84 20 21",
+      email: "contact@manoirdevacheresses.com",
     },
     legal: {
         title: "Mentions légales",
@@ -1554,6 +1835,24 @@ export const translations: Record<Locale, Translation> = {
       pressButton: "Voir les articles de presse",
       momentsTitle: "Moments Inoubliables",
       momentsSubtitle: "Découvrez la magie de nos mariages à travers ces images",
+    },
+    press: {
+      article_1_pub: "Vogue Mariages",
+      article_1_date: "15 Juin 2024",
+      article_1_title: "Un mariage de conte de fées au Manoir de Vacheresses",
+      article_1_excerpt: "Découvrez comment ce couple a célébré leur union dans l'un des plus beaux domaines de France.",
+      article_2_pub: "Elle Decoration",
+      article_2_date: "3 Mars 2024",
+      article_2_title: "Les 10 plus beaux lieux de mariage en Île-de-France",
+      article_2_excerpt: "Le Manoir de Vacheresses figure parmi les destinations les plus prisées pour les mariages élégants.",
+      article_3_pub: "Bridal Magazine",
+      article_3_date: "22 Janvier 2024",
+      article_3_title: "Destination Wedding: Le charme français à l'état pur",
+      article_3_excerpt: "Pourquoi les couples internationaux choisissent le Manoir de Vacheresses pour leurs unions.",
+      article_4_pub: "Marie Claire",
+      article_4_date: "8 Novembre 2023",
+      article_4_title: "Mariages Intimes: Une tendance en pleine expansion",
+      article_4_excerpt: "Comment le Manoir de Vacheresses réinvente le mariage intimiste avec élégance.",
     },
     dashboard: {
       title: "Mariage de Alex & Chloé",
@@ -1667,6 +1966,7 @@ export const translations: Record<Locale, Translation> = {
             col_client: "Client",
             col_document: "Document",
             col_status: "Statut",
+            col_sent: "Envoyé le",
             col_actions: "Actions",
             doc_main: "Contrat principal du lieu",
             status_awaiting: "En attente de signature",
@@ -1771,12 +2071,34 @@ export const translations: Record<Locale, Translation> = {
         hairdryer: "Sèche-cheveux",
         linens: "Draps et linges de toilette fournis",
       },
+      partners: {
+        title: "Hébergements Partenaires",
+        description: "Nous collaborons avec des hébergements à proximité pour offrir plus d'options à nos invités. Nous pouvons faciliter les réservations pour ces établissements partenaires.",
+        partner1: {
+          name: "Hôtel Mercure Maintenon",
+          type: "4 étoiles • Groupe Accor",
+          description: "Établissement partenaire à proximité de Vacheresses."
+        },
+        partner2: {
+          name: "Break & Brut",
+          type: "Partenaire local",
+          description: "Établissement partenaire à proximité de Vacheresses."
+        },
+        partner3: {
+          name: "Le Colombier de Hanches",
+          type: "Boutique Hôtel",
+          description: "Établissement partenaire à proximité de Vacheresses."
+        },
+        help_title: "Besoin d'aide pour les réservations ?",
+        help_description: "Nous pouvons vous accompagner dans l'organisation des réservations externes en tant que facilitateurs."
+      }
     },
     domain: {
       title: "Le Domaine",
       subtitle: "MANOIR DE VACHERESSES",
       spirit_title: "L'ESPRIT",
-      spirit_content: "Passionnés d'art, d'histoire et de vieilles pierres, Frédérique et Philippe ont succombé à l'authenticité et à l'architecture du bâti qui rappelait au propriétaire des souvenirs d'enfance et ses origines anglaises.\n\nDepuis 2017, ils ont entrepris des travaux de rénovation et ouvrent cette demeure de famille pour faire naître de nouvelles émotions et partager des valeurs qui leur sont chères : convivialité, générosité, élégance, art de vivre à la française…\n\nAujourd'hui, l'ouverture de la Guesthouse du Potager et de la Petite Maison de la cour d'honneur vous permettront de vous éclipser de la ville pour retrouver les plaisirs simples de la vie à la campagne, le chant des oiseaux, le charme des vieilles pierres et la beauté des essences rares…",
+      spirit_content_1: "Passionnés d'art, d'histoire et de vieilles pierres, Frédérique et Philippe ont succombé à l'authenticité et à l'architecture du bâti qui rappelait au propriétaire des souvenirs d'enfance et ses origines anglaises.\n\nDepuis 2017, ils ont entrepris des travaux de rénovation et ouvrent cette demeure de famille pour faire naître de nouvelles émotions et partager des valeurs qui leur sont chères : convivialité, générosité, élégance, art de vivre à la française…",
+      spirit_content_2: "Aujourd'hui, l'ouverture de la Guesthouse du Potager et de la Petite Maison de la cour d'honneur vous permettront de vous éclipser de la ville pour retrouver les plaisirs simples de la vie à la campagne, le chant des oiseaux, le charme des vieilles pierres et la beauté des essences rares…",
       history_title: "L'HISTOIRE",
       discover_more: "Découvrir l'histoire",
       age_or_title: "L'Âge d'or des seigneurs",
@@ -1813,10 +2135,40 @@ export const translations: Record<Locale, Translation> = {
           subtitle: "Charme champêtre chic",
           content: "Vous passerez l’arche en pierre de taille, cadre exclusif pour organiser votre cérémonie laïque. C’est aussi l’un des endroits préférés des photographes pour les photos de groupe en famille ou entre amis…\n\nA l’ombre des pommiers et noisetiers, vos convives pourront circuler et découvrir les animations culinaires pendant votre vin d’honneur.\nAncien grenier à foin, le préau devient un lieu confidentiel et intime pour une cérémonie laïque ou un cocktail en cas de temps capricieux.\n\nEn soirée, la lumière de ses lustres lui confère un style bohême chic, très apprécié des invités…"
         },
+        preau: {
+          title: "Le Préau",
+          subtitle: "Charme champêtre chic",
+          content: "Ancien grenier à foin, le préau devient un lieu confidentiel et intime pour une cérémonie laïque ou un cocktail en cas de temps capricieux.\n\nEn soirée, la lumière de ses lustres lui confère un style bohême chic, très apprécié des invités…"
+        },
         potager: {
           title: "Le Potager médiéval",
           subtitle: "Un voyage enchanteur",
           content: "Inspiré d’un dessin de Joseph Hémard, illustre propriétaire dans les années 20, nous avons reconstitué un potager d’inspiration médiévale selon les principes de la permaculture.\n\nVéritable lieu enchanteur, vous découvrirez ou redécouvrirez les merveilles de la nature : arbres fruitiers à palmette, herbes aromatiques, médicinales, décoratives…"
+        },
+        pigeonnier: {
+          title: "Le Pigeonnier",
+          subtitle: "Colombier historique",
+          content: "Découvrez le pigeonnier historique qui alimentait la cour de Versailles en petits pigeons sous les de Noailles. Un témoin remarquable du passé noble du domaine."
+        },
+        manoir: {
+          title: "Le Manoir",
+          subtitle: "Demeure historique",
+          content: "Bâtiment principal du domaine dont les premières fondations remontent à 1393, le manoir allie authenticité historique et élégance de l'art de vivre à la française."
+        },
+        verger: {
+          title: "Le Verger",
+          subtitle: "Verger traditionnel",
+          content: "À l'ombre des pommiers et noisetiers, le verger offre un cadre paisible pour les moments en extérieur et les photos de groupe."
+        },
+        parking_invites: {
+          title: "Parking Invités",
+          subtitle: "Espace de stationnement dédié",
+          content: "Un vaste espace de stationnement réservé à vos invités pour un accès facile au domaine dès leur arrivée."
+        },
+        parking_prestataires: {
+          title: "Parking Prestataires",
+          subtitle: "Espace logistique professionnel",
+          content: "Un espace dédié aux prestataires et professionnels du mariage pour assurer une logistique fluide lors de votre événement."
         },
         salle_blanche: {
           title: "Salle Blanche",
@@ -1847,8 +2199,34 @@ export const translations: Record<Locale, Translation> = {
           title: "Mare",
           subtitle: "Point d'eau pittoresque pour les cérémonies",
           content: "Un cadre serein avec une mare qui crée une atmosphère magique pour les cérémonies et les photos."
+        },
+        hebergements: {
+          title: "Hébergements",
+          subtitle: "Charmantes chambres dans la Maison du Potager",
+          content: "Séjournez dans nos chambres magnifiquement aménagées situées dans l'historique Maison du Potager."
         }
-      }
+      },
+      partners: {
+        title: "Hébergements Partenaires",
+        description: "Nous collaborons avec des hébergements à proximité pour offrir plus d'options à nos invités. Nous pouvons faciliter les réservations pour ces établissements partenaires.",
+        partner1: {
+          name: "Hôtel Mercure Maintenon",
+          type: "4 étoiles • Groupe Accor",
+          description: "Établissement partenaire à proximité de Vacheresses."
+        },
+        partner2: {
+          name: "Break & Brut",
+          type: "Partenaire local",
+          description: "Établissement partenaire à proximité de Vacheresses."
+        },
+        partner3: {
+          name: "Le Colombier de Hanches",
+          type: "Boutique Hôtel",
+          description: "Établissement partenaire à proximité de Vacheresses."
+        },
+        help_title: "Besoin d'aide pour les réservations ?",
+        help_description: "Nous pouvons vous accompagner dans l'organisation des réservations externes en tant que facilitateurs."
+      },
     },
     interactiveMap: {
       title: "Explorez le Domaine",
@@ -1863,6 +2241,30 @@ export const translations: Record<Locale, Translation> = {
     contact: {
       title: "Contactez-nous",
       subtitle: "Nous sommes à votre écoute pour répondre à toutes vos questions",
+      info_title: "Informations",
+      info_subtitle: "Comment nous joindre",
+      address_label: "Adresse",
+      address_value: "Manoir de Vacheresses<br />28210 Nogent-Le-Roi<br />France",
+      phone_label: "Téléphone",
+      phone_value: "+33 6 11 84 20 21",
+      email_label: "Email",
+      email_value: "contact@vacheresses.com",
+      hours_label: "Horaires",
+      hours_value: "Lundi - Vendredi : 9h - 18h<br />Weekend : Sur rendez-vous",
+      whatsapp_title: "WhatsApp",
+      whatsapp_subtitle: "Réponse rapide",
+      whatsapp_button: "Ouvrir WhatsApp",
+      form_title: "Envoyez-nous un message",
+      form_subtitle: "Remplissez le formulaire ci-dessous et nous vous répondrons dans les plus brefs délais",
+      success_title: "✓ Message envoyé avec succès !",
+      success_message: "Nous vous répondrons dans les plus brefs délais.",
+      name_label: "Nom complet *",
+      form_email_label: "Email *",
+      form_phone_label: "Téléphone",
+      subject_label: "Sujet *",
+      message_label: "Message *",
+      submit_button: "Envoyer le message",
+      sending_button: "Envoi en cours..."
     },
     dateSelector: {
       title: "Choisissez la date de votre événement",

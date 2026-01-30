@@ -1,6 +1,4 @@
 
-"use client";
-
 import type { Metadata } from 'next';
 import { Toaster } from "@/components/ui/toaster"
 import './globals.css';
@@ -8,13 +6,12 @@ import { LocaleProvider } from '@/hooks/use-locale';
 import { WhatsAppButton } from '@/components/ui/whatsapp-button';
 import { CookieConsent } from '@/components/cookie-consent';
 import { ThemeProvider } from '@/components/theme-provider';
+import { BookingProvider } from '@/contexts/booking-context';
 
-// This is a client component, so metadata should be exported from a server component if needed, 
-// or defined in a generateMetadata function in a parent layout or page.
-// export const metadata: Metadata = {
-//   title: 'Vacheresses Wedding Dream',
-//   description: 'Your dream wedding starts at Domaine des Vacheresses.',
-// };
+export const metadata: Metadata = {
+  title: 'Vacheresses Wedding Dream',
+  description: 'Your dream wedding starts at Domaine des Vacheresses.',
+};
 
 export default function RootLayout({
   children,
@@ -34,7 +31,9 @@ export default function RootLayout({
         </head>
         <body className="font-body antialiased">
           <ThemeProvider>
-            {children}
+            <BookingProvider>
+              {children}
+            </BookingProvider>
             <Toaster />
             <WhatsAppButton />
             <CookieConsent />

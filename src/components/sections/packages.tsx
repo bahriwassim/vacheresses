@@ -1,12 +1,11 @@
 
 "use client";
 
-import { getPackageImages, getImageById } from "@/lib/vacheresses-images";
+import { getImageById } from "@/lib/vacheresses-images";
 import { CardImage } from "@/components/ui/animated-image";
-import Link from "next/link";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Check, Calendar as CalendarIcon } from "lucide-react";
+import { Check } from "lucide-react";
 import { useLocale } from "@/hooks/use-locale";
 import { useBooking } from "@/contexts/booking-context";
 import { DatePickerDialog } from "./date-picker-dialog";

@@ -20,12 +20,13 @@ import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { CardImage } from '@/components/ui/animated-image';
+import { EditableText } from '@/components/ui/editable-text';
 import { useEffect, useState } from 'react';
 import { loadMediaOverridesByPath } from '@/lib/supabase';
 
 export default function Home() {
   const { t, locale } = useLocale();
-  const [refresh, setRefresh] = useState(0);
+  const [, setRefresh] = useState(0);
   useEffect(() => {
     (async () => {
       await loadMediaOverridesByPath();
@@ -77,52 +78,81 @@ export default function Home() {
     { id: 'press-marieclaire', name: 'Marie Claire', src: 'https://picsum.photos/seed/marieclaire/200/200' },
   ];
   return (
-    <BookingProvider>
-      <div className="flex flex-col min-h-screen bg-background">
-        <Header />
-        <main className="flex-1">
-          <Hero />
-          <DomainTeaser />
-          <ProprietorsSection />
-          <VideoSection />
-          <InteractiveMap />
-          <Packages />
-          <VisualTour />
-          <section id="press" className="py-12 md:py-20">
-            <div className="container max-w-7xl px-4">
-              <div className="text-center mb-8 animate-in fade-in slide-in-from-bottom-8 duration-1000">
-                <h2 className="text-3xl md:text-4xl font-headline font-bold">
-                  {t.blog.pressTitle}
-                </h2>
-                <p className="mt-2 text-lg text-muted-foreground max-w-3xl mx-auto">
-                  {t.blog.pressSubtitle}
-                </p>
-              </div>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-6xl mx-auto">
-                {pressLogos.map((logo) => (
-                  <Link key={logo.id} href="/blog/press" className="group">
-                    <div className="relative aspect-square rounded-xl border bg-card hover:border-primary/40 transition-all duration-300 hover:shadow-md overflow-hidden">
-                      <CardImage
-                        src={logo.src}
-                        alt={logo.name}
-                        fill
-                        aspectRatio="square"
-                        overrideKey={logo.id}
-                        className="object-contain p-4"
-                      />
-                    </div>
-                  </Link>
-                ))}
-              </div>
+    <div className="flex flex-col min-h-screen bg-background">
+      <Header />
+      <main className="flex-1">
+        <Hero />
+        <DomainTeaser />
+        <ProprietorsSection />
+        <VideoSection />
+        <InteractiveMap />
+        <Packages />
+        <VisualTour />
+        <section id="press" className="py-12 md:py-20">
+          <div className="container max-w-7xl px-4">
+            <div className="text-center mb-8 animate-in fade-in slide-in-from-bottom-8 duration-1000">
+              <h2 className="text-3xl md:text-4xl font-headline font-bold">
+                <EditableText path="blog.pressTitle" value={t.blog.pressTitle} />
+              </h2>
+              <p className="mt-2 text-lg text-muted-foreground max-w-3xl mx-auto">
+                <EditableText path="blog.pressSubtitle" value={t.blog.pressSubtitle} />
+              </p>
             </div>
-          </section>
-          <Testimonials />
-          <InstagramFeed />
-          <Access />
-        </main>
-        <Footer />
-        <ScrollToTop />
-      </div>
-    </BookingProvider>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-6xl mx-auto mb-16">
+              {pressLogos.map((logo) => (
+                <Link key={logo.id} href="/blog/press" className="group">
+                  <div className="relative aspect-square rounded-xl border bg-card hover:border-primary/40 transition-all duration-300 hover:shadow-md overflow-hidden">
+                    <CardImage
+                      src={logo.src}
+                      alt={logo.name}
+                      fill
+                      aspectRatio="square"
+                      overrideKey={logo.id}
+                      className="object-contain p-4"
+                    />
+                  </div>
+                </Link>
+              ))}
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
+               {[1, 2, 3, 4].map((i) => {
+                  const imgMap: Record<number, string> = { 1: '/vacheresses_7.jpg', 2: '/vacheresses_20.jpg', 3: '/espace_1.jpg', 4: '/potager_4.jpg' };
+                  return (
+                  <Card key={i} className="overflow-hidden flex flex-col h-full">
+                    <div className="relative h-48 w-full">
+                       <CardImage 
+                         src={imgMap[i]} 
+                         alt={`Article ${i}`} 
+                         fill 
+                         className="object-cover" 
+                         overrideKey={`press_article_${i}`}
+                       />
+                    </div>
+                    <CardContent className="flex-1 p-6 flex flex-col">
+                      <div className="flex justify-between items-center mb-3 text-xs text-muted-foreground uppercase tracking-wider">
+                        <EditableText path={`press.article_${i}_pub`} value={(t.press as any)[`article_${i}_pub`]} />
+                        <EditableText path={`press.article_${i}_date`} value={(t.press as any)[`article_${i}_date`]} />
+                      </div>
+                      <h3 className="text-lg font-bold mb-3 leading-tight line-clamp-2">
+                         <EditableText path={`press.article_${i}_title`} value={(t.press as any)[`article_${i}_title`]} />
+                      </h3>
+                      <p className="text-sm text-muted-foreground line-clamp-4 flex-1">
+                         <EditableText path={`press.article_${i}_excerpt`} value={(t.press as any)[`article_${i}_excerpt`]} multiline />
+                      </p>
+                    </CardContent>
+                  </Card>
+                  );
+               })}
+            </div>
+          </div>
+        </section>
+        <Testimonials />
+        <InstagramFeed />
+        <Access />
+      </main>
+      <Footer />
+      <ScrollToTop />
+    </div>
   );
 }

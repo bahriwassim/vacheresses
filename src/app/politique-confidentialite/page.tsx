@@ -30,7 +30,7 @@ export default function PolitiqueConfidentialitePage() {
                   <li>La navigation sur le site (cookies)</li>
                 </ul>
                 <p>
-                  Les données collectées peuvent inclure : nom, prénom, email, numéro de téléphone, adresse, date de l'événement.
+                  Les données collectées peuvent inclure : nom, prénom, email, numéro de téléphone, adresse, date de l&apos;événement.
                 </p>
               </CardContent>
             </Card>
@@ -59,7 +59,7 @@ export default function PolitiqueConfidentialitePage() {
               </CardHeader>
               <CardContent className="prose dark:prose-invert max-w-none">
                 <p>
-                  Vos données personnelles sont conservées pendant la durée nécessaire à l'accomplissement des finalités mentionnées ci-dessus :
+                  Vos données personnelles sont conservées pendant la durée nécessaire à l&apos;accomplissement des finalités mentionnées ci-dessus :
                 </p>
                 <ul>
                   <li>Données de contact : 3 ans après le dernier contact</li>
@@ -80,7 +80,7 @@ export default function PolitiqueConfidentialitePage() {
                 </p>
                 <ul>
                   <li>Nos prestataires techniques (hébergement, emails)</li>
-                  <li>Les autorités compétentes si la loi l'exige</li>
+                  <li>Les autorités compétentes si la loi l&apos;exige</li>
                 </ul>
               </CardContent>
             </Card>
@@ -94,10 +94,10 @@ export default function PolitiqueConfidentialitePage() {
                   Conformément au RGPD, vous disposez des droits suivants :
                 </p>
                 <ul>
-                  <li><strong>Droit d'accès</strong> : obtenir une copie de vos données</li>
+                  <li><strong>Droit d&apos;accès</strong> : obtenir une copie de vos données</li>
                   <li><strong>Droit de rectification</strong> : corriger vos données inexactes</li>
-                  <li><strong>Droit à l'effacement</strong> : demander la suppression de vos données</li>
-                  <li><strong>Droit d'opposition</strong> : vous opposer au traitement de vos données</li>
+                  <li><strong>Droit à l&apos;effacement</strong> : demander la suppression de vos données</li>
+                  <li><strong>Droit d&apos;opposition</strong> : vous opposer au traitement de vos données</li>
                   <li><strong>Droit à la portabilité</strong> : récupérer vos données dans un format structuré</li>
                   <li><strong>Droit de limitation</strong> : limiter le traitement de vos données</li>
                 </ul>
@@ -133,7 +133,7 @@ export default function PolitiqueConfidentialitePage() {
               <CardContent className="prose dark:prose-invert max-w-none">
                 <p>
                   Nous mettons en œuvre des mesures techniques et organisationnelles appropriées pour protéger vos données personnelles contre la destruction,
-                  la perte, l'altération, la divulgation non autorisée ou l'accès non autorisé.
+                  la perte, l&apos;altération, la divulgation non autorisée ou l&apos;accès non autorisé.
                 </p>
               </CardContent>
             </Card>

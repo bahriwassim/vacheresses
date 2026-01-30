@@ -11,7 +11,6 @@ import { useLocale } from "@/hooks/use-locale";
 import { Separator } from "@/components/ui/separator";
 import { useState, useEffect } from "react";
 import { AnimatedImage } from "@/components/ui/animated-image";
-import Link from "next/link";
 import { useLocale as useLocaleHook } from "@/hooks/use-locale";
 import { EditableText } from "@/components/ui/editable-text";
 import { loadMediaOverridesByPath } from "@/lib/supabase";
@@ -267,7 +266,9 @@ export default function SejournerPage() {
             <Users className="h-4 w-4 text-primary" />
             <span>{room.capacity}</span>
           </div>
-          <p className="text-sm text-muted-foreground mt-4 line-clamp-3">{room.description}</p>
+          <p className="text-sm text-muted-foreground mt-4 line-clamp-3">
+            <EditableText path={`stay.rooms.${room.id}.description`} value={room.description} />
+          </p>
         </CardContent>
         <CardFooter className="flex flex-col gap-2">
           <Dialog>
@@ -443,7 +444,7 @@ export default function SejournerPage() {
             <Card className="shadow-2xl overflow-hidden">
                 <div className="grid md:grid-cols-2 gap-0">
                     <div className="p-8 md:p-12 flex flex-col justify-center">
-                        <p className="text-lg text-muted-foreground leading-relaxed mb-8">{laLoge?.description}</p>
+                        <p className="text-lg text-muted-foreground leading-relaxed mb-8"><EditableText path="stay.rooms.la_loge.description" value={laLoge?.description || ""} multiline /></p>
                         {laLoge && renderRoomCard(laLoge)}
                     </div>
                     <div className="grid grid-cols-2 gap-2 p-4">
@@ -465,10 +466,11 @@ export default function SejournerPage() {
           <section id="partenaires" className="mt-20">
             <Separator className="my-16" />
             <div className="text-center mb-12">
-              <h2 className="text-4xl font-headline font-bold mb-4">Hébergements Partenaires</h2>
+              <h2 className="text-4xl font-headline font-bold mb-4">
+                <EditableText path="stay.partners.title" value={t.stay.partners.title} />
+              </h2>
               <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-                Nous collaborons avec des hébergements à proximité pour offrir plus d'options à nos invités. 
-                Nous pouvons faciliter les réservations pour ces établissements partenaires.
+                <EditableText path="stay.partners.description" value={t.stay.partners.description} multiline />
               </p>
             </div>
             
@@ -478,7 +480,7 @@ export default function SejournerPage() {
                 <div className="relative h-48 overflow-hidden">
                   <AnimatedImage 
                     src={overridePath("/espace_1.jpg")} 
-                    alt="Hôtel Partenaire 1" 
+                    alt="Hôtel Mercure Maintenon" 
                     fill 
                     overrideKey="/espace_1.jpg"
                     className="object-cover"
@@ -486,25 +488,21 @@ export default function SejournerPage() {
                   />
                 </div>
                 <CardHeader>
-                  <CardTitle className="font-headline">Hôtel du Centre</CardTitle>
-                  <CardDescription>À 5 minutes en voiture</CardDescription>
+                  <CardTitle className="font-headline">
+                    <EditableText path="stay.partners.partner1.name" value={t.stay.partners.partner1.name} />
+                  </CardTitle>
+                  <CardDescription>
+                    <EditableText path="stay.partners.partner1.type" value={t.stay.partners.partner1.type} />
+                  </CardDescription>
                 </CardHeader>
                 <CardContent className="flex-1">
                   <p className="text-muted-foreground text-sm mb-4">
-                    Hôtel 3 étoiles avec piscine et spa. Chambres confortables et restaurant gastronomique.
+                    <EditableText path="stay.partners.partner1.description" value={t.stay.partners.partner1.description} />
                   </p>
-                  <div className="flex items-center text-sm text-muted-foreground mb-2">
-                    <BedDouble className="h-4 w-4 mr-2 text-primary" />
-                    <span>30 chambres</span>
-                  </div>
-                  <div className="flex items-center text-sm text-muted-foreground">
-                    <Users className="h-4 w-4 mr-2 text-primary" />
-                    <span>Capacité jusqu'à 60 personnes</span>
-                  </div>
                 </CardContent>
                 <CardFooter>
                   <Button asChild variant="outline" className="w-full">
-                    <a href="https://www.booking.com" target="_blank" rel="noopener noreferrer">
+                    <a href="https://all.accor.com/hotel/C284/index.fr.shtml" target="_blank" rel="noopener noreferrer">
                       Voir le site
                     </a>
                   </Button>
@@ -516,7 +514,7 @@ export default function SejournerPage() {
                 <div className="relative h-48 overflow-hidden">
                   <AnimatedImage 
                     src={overridePath("/espace_4.jpg")} 
-                    alt="Chambres d'Hôtes Partenaire" 
+                    alt="Break & Brut" 
                     fill 
                     overrideKey="/espace_4.jpg"
                     className="object-cover"
@@ -524,25 +522,21 @@ export default function SejournerPage() {
                   />
                 </div>
                 <CardHeader>
-                  <CardTitle className="font-headline">Chambres d'Hôtes Les Glycines</CardTitle>
-                  <CardDescription>À 3 minutes en voiture</CardDescription>
+                  <CardTitle className="font-headline">
+                    <EditableText path="stay.partners.partner2.name" value={t.stay.partners.partner2.name} />
+                  </CardTitle>
+                  <CardDescription>
+                    <EditableText path="stay.partners.partner2.type" value={t.stay.partners.partner2.type} />
+                  </CardDescription>
                 </CardHeader>
                 <CardContent className="flex-1">
                   <p className="text-muted-foreground text-sm mb-4">
-                    Charmantes chambres d'hôtes dans un cadre bucolique. Petit-déjeuner inclus.
+                    <EditableText path="stay.partners.partner2.description" value={t.stay.partners.partner2.description} />
                   </p>
-                  <div className="flex items-center text-sm text-muted-foreground mb-2">
-                    <BedDouble className="h-4 w-4 mr-2 text-primary" />
-                    <span>8 chambres</span>
-                  </div>
-                  <div className="flex items-center text-sm text-muted-foreground">
-                    <Users className="h-4 w-4 mr-2 text-primary" />
-                    <span>Capacité jusqu'à 16 personnes</span>
-                  </div>
                 </CardContent>
                 <CardFooter>
                   <Button asChild variant="outline" className="w-full">
-                    <a href="https://www.booking.com" target="_blank" rel="noopener noreferrer">
+                    <a href="https://www.breakandbrut.com" target="_blank" rel="noopener noreferrer">
                       Voir le site
                     </a>
                   </Button>
@@ -554,7 +548,7 @@ export default function SejournerPage() {
                 <div className="relative h-48 overflow-hidden">
                   <AnimatedImage 
                     src={overridePath("/espace_5.jpg")} 
-                    alt="Gîte Partenaire" 
+                    alt="Le Colombier de Hanches" 
                     fill 
                     overrideKey="/espace_5.jpg"
                     className="object-cover"
@@ -562,25 +556,21 @@ export default function SejournerPage() {
                   />
                 </div>
                 <CardHeader>
-                  <CardTitle className="font-headline">Gîte de Campagne La Grange</CardTitle>
-                  <CardDescription>À 7 minutes en voiture</CardDescription>
+                  <CardTitle className="font-headline">
+                    <EditableText path="stay.partners.partner3.name" value={t.stay.partners.partner3.name} />
+                  </CardTitle>
+                  <CardDescription>
+                    <EditableText path="stay.partners.partner3.type" value={t.stay.partners.partner3.type} />
+                  </CardDescription>
                 </CardHeader>
                 <CardContent className="flex-1">
                   <p className="text-muted-foreground text-sm mb-4">
-                    Gîte entier pouvant accueillir jusqu'à 12 personnes. Idéal pour les familles.
+                    <EditableText path="stay.partners.partner3.description" value={t.stay.partners.partner3.description} />
                   </p>
-                  <div className="flex items-center text-sm text-muted-foreground mb-2">
-                    <Home className="h-4 w-4 mr-2 text-primary" />
-                    <span>300 m² de surface</span>
-                  </div>
-                  <div className="flex items-center text-sm text-muted-foreground">
-                    <Users className="h-4 w-4 mr-2 text-primary" />
-                    <span>Capacité jusqu'à 12 personnes</span>
-                  </div>
                 </CardContent>
                 <CardFooter>
                   <Button asChild variant="outline" className="w-full">
-                    <a href="https://www.booking.com" target="_blank" rel="noopener noreferrer">
+                    <a href="https://www.lecolombier-de-hanches.com" target="_blank" rel="noopener noreferrer">
                       Voir le site
                     </a>
                   </Button>
@@ -590,9 +580,11 @@ export default function SejournerPage() {
 
             <Card className="mt-12 bg-primary/5 border-primary/20">
               <CardContent className="p-8 text-center">
-                <h3 className="text-2xl font-headline font-bold mb-4">Besoin d'aide pour les réservations ?</h3>
+                <h3 className="text-2xl font-headline font-bold mb-4">
+                  <EditableText path="stay.partners.help_title" value={t.stay.partners.help_title} />
+                </h3>
                 <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
-                  Nous pouvons vous accompagner dans l'organisation des réservations externes en tant que facilitateurs.
+                  <EditableText path="stay.partners.help_description" value={t.stay.partners.help_description} multiline />
                 </p>
               </CardContent>
             </Card>

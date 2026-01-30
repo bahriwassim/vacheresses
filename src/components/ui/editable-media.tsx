@@ -1,10 +1,10 @@
  "use client";
  
- import { useMemo, useState } from "react";
+ import { useMemo, useState, useEffect } from "react";
  import { Button } from "@/components/ui/button";
  import { Input } from "@/components/ui/input";
  import { useLocale } from "@/hooks/use-locale";
- import { saveTextOverride, getLocalOverride } from "@/lib/supabase";
+ import { saveTextOverride, getLocalOverride, authService } from "@/lib/supabase";
  import { Pencil, Check, X } from "lucide-react";
  import { cn } from "@/lib/utils";
  
@@ -17,20 +17,45 @@
  };
  
  export function EditableMedia({ type, path, value, className, render }: EditableMediaProps) {
-   const { locale } = useLocale();
-   const [editing, setEditing] = useState(false);
-   const [draft, setDraft] = useState<string>(value);
-   const userRole = useMemo(() => {
-     try {
-       const raw = localStorage.getItem("user");
-       if (!raw) return null;
-       const u = JSON.parse(raw);
-       return u?.role || null;
-     } catch {
-       return null;
-     }
-   }, []);
-  const isAdmin = userRole === "super_admin";
+  const { locale } = useLocale();
+  const [editing, setEditing] = useState(false);
+  const [draft, setDraft] = useState<string>(value);
+  const [userRole, setUserRole] = useState<string | null>(null);
+
+  useEffect(() => {
+    // Initial check
+    const checkRole = () => {
+      try {
+        const raw = localStorage.getItem("user");
+        if (!raw) {
+           setUserRole(null);
+           return;
+        }
+        const u = JSON.parse(raw);
+        // ONLY allow super_admin
+        if (u?.role === 'super_admin') {
+          setUserRole('super_admin');
+        } else {
+          setUserRole(null);
+        }
+      } catch {
+        setUserRole(null);
+      }
+    };
+    
+    checkRole();
+    
+    // Listen for auth changes
+    const { data: { subscription } } = authService.onAuthStateChange((event, session) => {
+        checkRole();
+    });
+
+    return () => {
+        subscription.unsubscribe();
+    };
+  }, []);
+
+ const isAdmin = userRole === "super_admin";
  
    const overridden = useMemo(() => {
      const ov = getLocalOverride(locale, path);

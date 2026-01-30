@@ -29,7 +29,7 @@ export default function SalleDeReceptionPage() {
       return path;
     }
   };
-  const [refresh, setRefresh] = useState(0);
+  const [, setRefresh] = useState(0);
   useEffect(() => {
     (async () => {
       await loadMediaOverridesByPath();
