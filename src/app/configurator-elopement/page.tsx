@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import { ChevronLeft, Clock, Calendar, MapPin } from "lucide-react";
+import { ChevronLeft, Clock, Calendar, MapPin, Check } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -23,69 +23,67 @@ import { useToast } from "@/hooks/use-toast";
 
 const getElopementPackages = (t: Translation) => [
   {
-    id: "pack1",
-    name: "Pack 1 — Secret Elopement in the Garden",
-    basePrice: 4950,
+    id: "formule1",
+    name: "Élopement Formule 1 (1 Journée)",
+    basePrice: 5300, // Fixed costs: 2600 + 1500 + 700 + 500
+    variablePricePerPerson: 130, // Repas/boisson
+    maxGuests: 10,
+    isWeekdayOnly: true,
     program: [
-      "10h00 – Arrivée à la gare de Maintenon en Rolls-Royce",
-      "10h30 – Accueil au Manoir & préparatifs (coiffure et maquillage)",
-      "11h30 – First Look dans la bibliothèque du Manoir",
-      "12h00 – Cérémonie d’elopement romantique dans le salon du Manoir",
-      "12h30 – Toast au champagne près de la cheminée",
-      "Séance photo dans le parc",
-      "13h30 – Déjeuner romantique à la française dans la cour",
-      "15h00 – Départ du Manoir de Vacheresses"
+      "Matin – Arrivée au Manoir",
+      "Matin – Préparatifs (maquillage & coiffure)",
+      "Midi – First Look",
+      "Après-midi – Échange de vœux avec célébrant",
+      "Après-midi – Toast au champagne",
+      "Après-midi – Session photo (parc, salon, ext.)",
+      "Soir – Repas intérieur ou extérieur avec chef privé",
+      "Fin de journée – Départ"
     ]
   },
   {
-    id: "pack2",
-    name: "Pack 2 — Elopement Secret (1 Journée)",
-    basePrice: 5950,
+    id: "formule2",
+    name: "Élopement Formule 2 (Avec Nuitée)",
+    basePrice: 5700, // Fixed costs: 3000 + 1500 + 700 + 500
+    variablePricePerPerson: 290, // Repas (130) + Nuitée (160)
+    maxGuests: 10,
+    isWeekdayOnly: true,
     program: [
-      "10h00 – Arrivée à la gare de Maintenon en Rolls-Royce",
-      "10h30 – Accueil au Manoir & préparatifs (coiffure et maquillage)",
-      "11h30 – First Look dans la cour principale et les intérieurs historiques",
-      "12h00 – Cérémonie sous l’arche de pierre",
-      "12h30 – Toast au champagne",
-      "Séance photo dans le parc",
-      "13h30 – Déjeuner romantique dans la cour",
-      "15h00 – Départ du Manoir de Vacheresses"
+      "13h00 – Arrivée au Manoir",
+      "13h30 – Préparatifs (maquillage & coiffure)",
+      "14h30 – First Look",
+      "15h00 – Échange de vœux avec célébrant",
+      "15h30 – Toast au champagne",
+      "Après-midi – Session photo (parc, salon, ext.)",
+      "Soir – Repas intérieur ou extérieur avec chef privé",
+      "Nuit – Nuitée au domaine",
+      "Lendemain – Petit déjeuner / Brunch & Départ"
     ]
   },
   {
-    id: "pack3",
-    name: "Pack 3 — Overnight in Love : a countryside elopement",
-    basePrice: 7950,
+    id: "formule_hiver",
+    name: "Élopement Formule Hiver (2 Personnes)",
+    basePrice: 4000, // Fixed costs: 1500 + 1500 + 700 + 300
+    variablePricePerPerson: 150, // Repas
+    maxGuests: 2,
+    isWinterOnly: true,
     program: [
-      "11h00 – Arrivée au Manoir de Vacheresses",
-      "11h30 – Welcome drink & déjeuner léger",
-      "12h00 – Préparatifs des mariés (coiffure & maquillage)",
-      "13h00 – First Look et séance photo dans le salon du Manoir",
-      "14h00 – Cérémonie de mariage dans le verger",
-      "14h30 – Toast au champagne",
-      "15h00 – Séance photo de couple dans le parc",
-      "16h00 – Dîner avec chef privé dans la cour d’honneur",
-      "Soirée & nuit – Nuitée dans la guesthouse du Potager",
-      "Brunch gourmand le lendemain & départ tardif"
-    ]
-  },
-  {
-    id: "pack4",
-    name: "Pack 4 — Elopement Raffiné jusqu’à 20 invités",
-    basePrice: 16000,
-    program: [
-      "Jour d’arrivée",
-      "17h00 – Accueil des mariés et des invités & welcome drink",
-      "19h00 – Dîner de répétition (intérieur ou extérieur, jusqu’à 20 invités)",
-      "Jour du mariage",
-      "09h30 – Petit-déjeuner",
-      "10h30 – Préparatifs des mariés",
-      "12h30 – First Look et séance photo dans le salon du Manoir",
-      "14h00 – Cérémonie de mariage dans le verger",
-      "15h00 – Déjeuner de mariage dans la cour d’honneur ou la salle de réception",
-      "17h30 – Départ des invités et des mariés"
+      "Matin – Arrivée au Manoir",
+      "Matin – Préparatifs (maquillage & coiffure)",
+      "Midi – First Look",
+      "Après-midi – Échange de vœux dans le salon du Manoir",
+      "Après-midi – Toast au champagne",
+      "Après-midi – Session photo (parc, salon, ext.)",
+      "Soir – Repas dans la salle à manger du Manoir avec chef privé",
+      "Fin de journée – Départ"
     ]
   }
+];
+
+const ELOPEMENT_OPTIONS = [
+  { id: "videaste", name: "Vidéaste", price: 1600 },
+  { id: "coiffure", name: "Coiffure & maquillage mariée", price: 500 },
+  { id: "musique", name: "Musicien cérémonie", price: 300 },
+  { id: "rolls", name: "Location Rolls Royce ou Jaguar", price: 250 },
 ];
 
 // Programmes par pack (remplace Optional Add-ons)
@@ -104,9 +102,13 @@ function ConfiguratorElopementContent() {
 
   const [selectedPackage, setSelectedPackage] = useState<any>(null);
   const [date, setDate] = useState<string>("");
+  const [guestCount, setGuestCount] = useState<number>(2);
+  const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
   const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [currentUser, setCurrentUser] = useState<any>(null);
+
+  const packages = useMemo(() => getElopementPackages(t), [t]);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -117,7 +119,6 @@ function ConfiguratorElopementContent() {
   }, []);
 
   useEffect(() => {
-    const packages = getElopementPackages(t);
     const packageId = searchParams.get("package");
     if (packageId) {
       const foundPackage = packages.find((p) => p.id === packageId);
@@ -130,25 +131,58 @@ function ConfiguratorElopementContent() {
       setDate(String(urlDateParam).split("T")[0]);
     } else if (!date && dates?.from) {
       setDate(dates.from.toISOString().split("T")[0]);
-    } else if (!date) {
-      const d = new Date();
-      d.setMonth(d.getMonth() + 1);
-      setDate(d.toISOString().split("T")[0]);
     }
-  }, [searchParams, t, dates, date]);
+  }, [searchParams, packages, dates, date]);
 
   const handleDateChange = (newDate: Date) => {
+    const day = newDate.getDay();
+    const isWeekend = day === 0 || day === 6;
+    
+    if (selectedPackage?.isWeekdayOnly && isWeekend) {
+      toast({
+        title: "Date non disponible",
+        description: "Cette formule est uniquement disponible en semaine (du lundi au vendredi).",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    const month = newDate.getMonth(); // 0-11
+    const isWinter = month >= 10 || month <= 2; // Nov (10) to March (2)
+    if (selectedPackage?.isWinterOnly && !isWinter) {
+      toast({
+        title: "Date non disponible",
+        description: "Cette formule est uniquement disponible en hiver (de novembre à mars).",
+        variant: "destructive"
+      });
+      return;
+    }
+
     setDate(newDate.toISOString().split("T")[0]);
     setDates({ from: newDate, to: newDate });
     setIsDatePickerOpen(false);
   };
 
-  const packages = useMemo(() => getElopementPackages(t), [t]);
-  const programs = useMemo(() => getProgramsByPackage(selectedPackage?.id || ""), [selectedPackage?.id]);
+  const toggleOption = (optionId: string) => {
+    setSelectedOptions(prev => 
+      prev.includes(optionId) 
+        ? prev.filter(id => id !== optionId) 
+        : [...prev, optionId]
+    );
+  };
 
-  const addonCost = 0; // Les add-ons sont retirés, programmes inclus
+  const optionsTotal = useMemo(() => {
+    return selectedOptions.reduce((acc, optId) => {
+      const opt = ELOPEMENT_OPTIONS.find(o => o.id === optId);
+      return acc + (opt?.price || 0);
+    }, 0);
+  }, [selectedOptions]);
 
-  const totalEstimate = selectedPackage ? selectedPackage.basePrice + addonCost : 0;
+  const totalEstimate = useMemo(() => {
+    if (!selectedPackage) return 0;
+    const variableCosts = guestCount * (selectedPackage.variablePricePerPerson || 0);
+    return selectedPackage.basePrice + variableCosts + optionsTotal;
+  }, [selectedPackage, guestCount, optionsTotal]);
 
   const handleElopementBooking = async () => {
     if (!selectedPackage) return;
@@ -156,7 +190,9 @@ function ConfiguratorElopementContent() {
     if (!currentUser) {
         const state = {
             packageId: selectedPackage.id,
-            date
+            date,
+            guestCount,
+            selectedOptions
         };
         localStorage.setItem('pendingElopement', JSON.stringify(state));
         router.push('/login?next=/configurator-elopement');
@@ -165,12 +201,16 @@ function ConfiguratorElopementContent() {
 
     setIsSubmitting(true);
     try {
-      const notes = `Élopement: ${selectedPackage.name}.`;
+      const selectedOptsNames = selectedOptions
+        .map(id => ELOPEMENT_OPTIONS.find(o => o.id === id)?.name)
+        .join(', ');
+
+      const notes = `Élopement: ${selectedPackage.name}. Invités: ${guestCount}. Options: ${selectedOptsNames || 'Aucune'}.`;
       const payload = {
         user_id: currentUser.id,
         package_id: null,
         event_date: date,
-        guest_count: 2,
+        guest_count: guestCount,
         status: "inquiry",
         total_amount: totalEstimate,
         notes,
@@ -202,6 +242,8 @@ function ConfiguratorElopementContent() {
     }
   };
 
+  const programs = useMemo(() => getProgramsByPackage(selectedPackage?.id || ""), [selectedPackage?.id]);
+
   if (!selectedPackage) {
     return (
       <div className="flex flex-col min-h-screen">
@@ -232,28 +274,28 @@ function ConfiguratorElopementContent() {
 
           <div className="grid lg:grid-cols-3 gap-8">
             {/* Left Column - Package Details */}
-            <div className="lg:col-span-2 space-y-6">
+            <div className="lg:col-span-2 space-y-6 order-1">
               {/* Package Header */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-2xl md:text-3xl">{selectedPackage.name}</CardTitle>
-                  <CardDescription>
+              <Card className="shadow-md">
+                <CardHeader className="p-4 md:p-6">
+                  <CardTitle className="text-2xl md:text-3xl font-headline">{selectedPackage.name}</CardTitle>
+                  <CardDescription className="flex items-baseline gap-2 mt-1">
                     <span className="text-2xl font-bold text-primary">{selectedPackage.basePrice.toLocaleString()} €</span>
-                    <span className="text-muted-foreground ml-2">à partir de</span>
+                    <span className="text-xs text-muted-foreground">à partir de</span>
                   </CardDescription>
                 </CardHeader>
-                <CardContent>
-                  <div className="grid md:grid-cols-3 gap-4 text-sm">
-                    <div className="flex items-center gap-2">
-                      <Clock className="h-4 w-4 text-primary" />
+                <CardContent className="p-4 md:p-6 pt-0">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-4 text-xs md:text-sm">
+                    <div className="flex items-center gap-2 bg-secondary/30 p-2 rounded-lg">
+                      <Clock className="h-4 w-4 text-primary shrink-0" />
                       <span>3h de shooting</span>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <Calendar className="h-4 w-4 text-primary" />
+                    <div className="flex items-center gap-2 bg-secondary/30 p-2 rounded-lg">
+                      <Calendar className="h-4 w-4 text-primary shrink-0" />
                       <span>Date flexible</span>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <MapPin className="h-4 w-4 text-primary" />
+                    <div className="flex items-center gap-2 bg-secondary/30 p-2 rounded-lg">
+                      <MapPin className="h-4 w-4 text-primary shrink-0" />
                       <span>Manoir de Vacheresses</span>
                     </div>
                   </div>
@@ -261,129 +303,169 @@ function ConfiguratorElopementContent() {
               </Card>
 
               {/* Program */}
-              <Card>
-                <CardHeader>
-                  <CardTitle>Programme</CardTitle>
+              <Card className="shadow-md">
+                <CardHeader className="p-4 md:p-6">
+                  <CardTitle className="text-xl md:text-2xl font-headline">Programme & Options</CardTitle>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="space-y-6 md:space-y-8 p-4 md:p-6 pt-0">
                   <div className="space-y-4">
-                    <h3 className="text-lg font-medium">Programme</h3>
-                    <ul className="space-y-2">
+                    <h3 className="text-base md:text-lg font-medium flex items-center gap-2">
+                      <Clock className="h-4 w-4 md:h-5 md:w-5 text-primary" />
+                      Programme de la journée
+                    </h3>
+                    <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2 md:gap-3">
                       {programs.map((step, idx) => (
-                        <li key={idx} className="flex items-start">
-                          <span className="inline-block w-2 h-2 bg-primary rounded-full mt-2 mr-3 flex-shrink-0" />
-                          <span className="text-muted-foreground">{step}</span>
+                        <li key={idx} className="flex items-start bg-secondary/20 p-2 md:p-3 rounded-lg border border-primary/5">
+                          <span className="inline-block w-1.5 h-1.5 bg-primary rounded-full mt-1.5 mr-2 md:mr-3 flex-shrink-0" />
+                          <span className="text-xs md:text-sm text-muted-foreground">{step}</span>
                         </li>
                       ))}
                     </ul>
+                  </div>
+
+                  <Separator />
+
+                  <div className="space-y-4">
+                    <h3 className="text-base md:text-lg font-medium">Options disponibles</h3>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
+                      {ELOPEMENT_OPTIONS.map((option) => (
+                        <div 
+                          key={option.id}
+                          onClick={() => toggleOption(option.id)}
+                          className={`cursor-pointer border rounded-xl p-3 md:p-4 transition-all duration-300 flex justify-between items-center ${
+                            selectedOptions.includes(option.id) 
+                              ? 'border-primary bg-primary/5 shadow-md' 
+                              : 'hover:border-primary/50'
+                          }`}
+                        >
+                          <div className="flex flex-col">
+                            <span className="font-medium text-sm md:text-base">{option.name}</span>
+                            <span className="text-xs md:text-sm text-muted-foreground">{option.price} €</span>
+                          </div>
+                          <div className={`w-5 h-5 md:w-6 md:h-6 rounded-full border flex items-center justify-center ${
+                            selectedOptions.includes(option.id) ? 'bg-primary border-primary text-white' : 'border-muted-foreground'
+                          }`}>
+                            {selectedOptions.includes(option.id) && <Check className="w-3 h-3 md:w-4 md:h-4" />}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 </CardContent>
               </Card>
             </div>
 
             {/* Right Column - Booking Form */}
-            <div className="lg:col-span-1">
-              <Card className="sticky top-4">
-                <CardHeader>
-                  <CardTitle>Réserver ce pack</CardTitle>
-                  <CardDescription>
+            <div className="lg:col-span-1 order-2">
+              <Card className="lg:sticky lg:top-24 shadow-lg border-primary/10">
+                <CardHeader className="p-4 md:p-6">
+                  <CardTitle className="text-xl font-headline">Réserver ce pack</CardTitle>
+                  <CardDescription className="text-xs">
                     Remplissez le formulaire pour réserver votre élopement
                   </CardDescription>
                 </CardHeader>
-                <CardContent className="space-y-4">
+                <CardContent className="space-y-4 p-4 md:p-6 pt-0">
                   <div className="space-y-2">
-                    <Label>Date d'élopement</Label>
+                    <Label className="text-sm">Date d'élopement</Label>
                     <div className="flex items-center gap-2">
                       <input
                         type="date"
                         value={date}
                         min={new Date().toISOString().split('T')[0]}
                         onChange={(e) => setDate(e.target.value)}
-                        className="p-2 border rounded-md w-full"
+                        className="p-2 border rounded-md w-full text-sm"
                       />
                       <Button
                         type="button"
                         variant="outline"
+                        size="sm"
                         onClick={() => setIsDatePickerOpen(true)}
-                        className="shrink-0"
+                        className="shrink-0 text-xs"
                       >
                         Changer
                       </Button>
                     </div>
                   </div>
 
-                  <div className="space-y-2">
-                    <Label>Nom complet</Label>
-                    <Input
-                      type="text"
-                      placeholder="Votre nom complet"
-                      className="w-full"
-                    />
+                  <div className="grid grid-cols-1 gap-4">
+                    <div className="space-y-2">
+                      <Label className="text-sm">Nom complet</Label>
+                      <Input
+                        type="text"
+                        placeholder="Votre nom complet"
+                        className="w-full text-sm"
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label className="text-sm">Email</Label>
+                      <Input
+                        type="email"
+                        placeholder="votre@email.com"
+                        className="w-full text-sm"
+                      />
+                    </div>
                   </div>
 
                   <div className="space-y-2">
-                    <Label>Email</Label>
-                    <Input
-                      type="email"
-                      placeholder="votre@email.com"
-                      className="w-full"
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label>Téléphone</Label>
-                    <Input
-                      type="tel"
-                      placeholder="+33 6 12 34 56 78"
-                      className="w-full"
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label>Nombre d'invités</Label>
-                    <Select defaultValue="2">
-                      <SelectTrigger>
+                    <Label className="text-sm">Nombre d'invités</Label>
+                    <Select 
+                      value={guestCount.toString()} 
+                      onValueChange={(val) => setGuestCount(parseInt(val))}
+                    >
+                      <SelectTrigger className="text-sm">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="2">2 (couple)</SelectItem>
-                        <SelectItem value="4">4</SelectItem>
-                        <SelectItem value="6">6</SelectItem>
-                        <SelectItem value="8">8</SelectItem>
-                        <SelectItem value="10">10</SelectItem>
-                        <SelectItem value="12">12</SelectItem>
-                        <SelectItem value="15">15</SelectItem>
-                        <SelectItem value="20">20</SelectItem>
+                        {Array.from({ length: selectedPackage.maxGuests - 1 }, (_, i) => i + 2).map((num) => (
+                          <SelectItem key={num} value={num.toString()}>
+                            {num} personnes
+                          </SelectItem>
+                        ))}
                       </SelectContent>
                     </Select>
+                    <p className="text-[10px] text-muted-foreground italic">
+                      +{selectedPackage.variablePricePerPerson}€ / personne (repas & boissons)
+                    </p>
                   </div>
 
                   <div className="space-y-2">
-                    <Label>Notes supplémentaires</Label>
+                    <Label className="text-sm">Notes supplémentaires</Label>
                     <Textarea
                       placeholder="Des détails supplémentaires sur votre élopement..."
-                      className="min-h-[100px]"
+                      className="min-h-[80px] text-sm"
                     />
                   </div>
 
                   <Separator />
 
-                  <div className="space-y-2">
-                    <div className="flex justify-between text-sm">
-                      <span>{selectedPackage.name}</span>
-                      <span>{selectedPackage.basePrice.toLocaleString()} €</span>
+                  <div className="space-y-2 bg-secondary/10 p-3 rounded-lg">
+                    <div className="flex justify-between text-[11px] md:text-xs">
+                      <span className="text-muted-foreground">Coûts fixes ({selectedPackage.name})</span>
+                      <span className="font-medium">{selectedPackage.basePrice.toLocaleString()} €</span>
                     </div>
-                    <div className="flex justify-between font-semibold text-lg">
-                      <span>Total</span>
+                    <div className="flex justify-between text-[11px] md:text-xs">
+                      <span className="text-muted-foreground">Coûts variables ({guestCount} pers.)</span>
+                      <span className="font-medium">{(guestCount * selectedPackage.variablePricePerPerson).toLocaleString()} €</span>
+                    </div>
+                    {selectedOptions.length > 0 && (
+                      <div className="flex justify-between text-[11px] md:text-xs text-primary">
+                        <span>Options sélectionnées</span>
+                        <span className="font-medium">{optionsTotal.toLocaleString()} €</span>
+                      </div>
+                    )}
+                    <Separator className="my-1" />
+                    <div className="flex justify-between font-bold text-base md:text-lg text-primary pt-1">
+                      <span>Total Estimé</span>
                       <span>{totalEstimate.toLocaleString()} €</span>
                     </div>
                   </div>
 
-                  <Button className="w-full" size="lg" onClick={handleElopementBooking} disabled={isSubmitting}>
+                  <Button className="w-full shadow-md" size="lg" onClick={handleElopementBooking} disabled={isSubmitting}>
                     {isSubmitting ? "Envoi..." : "Réserver maintenant"}
                   </Button>
 
-                  <p className="text-xs text-muted-foreground text-center">
+                  <p className="text-[10px] text-muted-foreground text-center italic px-2">
                     Aucun paiement requis maintenant. Nous vous contacterons pour confirmer les détails.
                   </p>
                 </CardContent>

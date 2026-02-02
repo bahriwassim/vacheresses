@@ -45,81 +45,102 @@ function ElopementContent() {
 
   const elopementPackages = [
     {
-      id: "pack1",
-      title: "Pack 1 — Secret Elopement in the Garden",
-      price: "À partir de 4 950 €",
-      description: "Une expérience chaleureuse et élégante, idéale pour la saison hivernale.",
+      id: "formule1",
+      title: "Élopement Formule 1 (1 Journée)",
+      price: "5 560 €",
+      description: "Une journée magique en semaine jusqu'à 10 personnes.",
       imageId: "package-classic",
       features: [
-        "Cérémonie d’elopement intimiste en intérieur",
-        "Séance First Look dans la bibliothèque du Manoir",
-        "3h de couverture photo & vidéo avec film monté",
-        "Officiant de cérémonie anglophone",
-        "Toast au champagne près de la cheminée",
-        "Déjeuner romantique à la française préparé par notre chef privé",
-        "Accès aux salons historiques du Manoir"
+        "Welcome drink",
+        "Arrivée matin : maquillage & coiffure",
+        "First Look",
+        "Échange de vœux avec célébrant",
+        "Champagne",
+        "Session photo (parc, salon, ext.)",
+        "Repas intérieur ou extérieur (chef privé)",
+        "Départ en fin de journée"
       ],
-      highlighted: false
+      highlighted: false,
+      costs: {
+        fixed: {
+          location: 2800,
+          photographe: 1500,
+          officiant: 700,
+          deco_florale: 500
+        },
+        variable: {
+          repas: 130
+        }
+      }
     },
     {
-      id: "pack2",
-      title: "Pack 2 — Elopement Secret (1 Journée)",
-      price: "À partir de 5 950 €",
-      description: "Parfait pour une célébration romantique et symbolique en plein air.",
+      id: "formule2",
+      title: "Élopement Formule 2 (Avec Nuitée)",
+      price: "6 280 €",
+      description: "L'expérience complète avec nuitée et brunch pour 2 personnes.",
       imageId: "package-premium",
       features: [
-        "Cérémonie d’elopement en extérieur sous l’arche de pierre",
-        "Accès exclusif aux jardins et intérieurs historiques",
-        "Séance First Look dans les jardins ou la cour du Manoir",
-        "3h de couverture photo & vidéo avec film monté",
-        "Officiant de cérémonie anglophone",
-        "Toast au champagne",
-        "Déjeuner gastronomique romantique pour deux",
-        "Décoration florale",
-        "Coordination sur place le jour J"
+        "Accès complet domaine, piscine & tennis",
+        "Arrivée vers 13h : maquillage & coiffure",
+        "First Look",
+        "Échange de vœux avec célébrant",
+        "Champagne",
+        "Session photo (parc, salon, ext.)",
+        "Repas intérieur ou extérieur (chef privé)",
+        "Nuitée + Petit déjeuner / Brunch",
+        "Départ le lendemain"
       ],
-      highlighted: true
+      highlighted: true,
+      costs: {
+        fixed: {
+          location: 3000,
+          photographe: 1500,
+          officiant: 700,
+          deco_florale: 500
+        },
+        variable: {
+          repas: 130,
+          nuitee: 160
+        }
+      }
     },
     {
-      id: "pack3",
-      title: "Pack 3 — Overnight in Love : a countryside elopement",
-      price: "À partir de 7 950 €",
-      description: "L’expérience idéale pour vivre votre elopement comme une véritable escapade.",
+      id: "formule_hiver",
+      title: "Élopement Formule Hiver (2 Personnes)",
+      price: "4 300 €",
+      description: "Un cocon romantique de novembre à mars.",
       imageId: "package-luxury",
       features: [
-        "Cérémonie d’elopement romantique au Manoir",
-        "Accès exclusif aux jardins et intérieurs historiques",
-        "Séance First Look dans le domaine",
-        "3h de couverture photo & vidéo avec film monté",
-        "Officiant de cérémonie anglophone",
-        "Toast au champagne",
-        "Déjeuner gastronomique pour deux",
-        "1 nuit en suite privée au Manoir de Vacheresses",
-        "Brunch gourmand le lendemain",
-        "Départ tardif et moments de calme sur le domaine"
+        "Uniquement en hiver (novembre à mars)",
+        "Welcome drink",
+        "Arrivée matin : maquillage & coiffure",
+        "First Look",
+        "Échange de vœux dans le salon du Manoir",
+        "Champagne",
+        "Session photo (parc, salon, ext.)",
+        "Repas intérieur salle à manger (chef privé)",
+        "Départ"
       ],
-      highlighted: false
-    },
-    {
-      id: "pack4",
-      title: "Pack 4 — Elopement Raffiné jusqu’à 20 invités",
-      price: "À partir de 16 000 €",
-      description: "L’équilibre parfait entre intimité et célébration.",
-      imageId: "parc-ombre",
-      features: [
-        "Elopement avec jusqu’à 20 invités",
-        "Hébergement sur place (1 nuit)",
-        "Boissons d’accueil",
-        "Dîner de répétition (intérieur ou extérieur)",
-        "Cérémonie avec officiant anglophone",
-        "Déjeuner de mariage complet",
-        "Petit-déjeuner continental",
-        "Fleurs : bouquet, boutonnière et centres de table",
-        "Coordination le jour du mariage",
-        "Taxes et frais de service inclus"
-      ],
-      highlighted: false
+      highlighted: false,
+      costs: {
+        fixed: {
+          location: 1500,
+          photographe: 1500,
+          officiant: 700,
+          deco_florale: 300
+        },
+        variable: {
+          repas: 150
+        }
+      }
     }
+  ];
+
+  const options = [
+    { name: "Vidéaste", price: 1600 },
+    { name: "Coiffure & maquillage mariée", price: 500 },
+    { name: "Musicien cérémonie", price: 300 },
+    { name: "Location Rolls Royce ou Jaguar", price: 250 }
   ];
 
   const buildPackageUrl = (packageId: string) => {
@@ -158,49 +179,36 @@ function ElopementContent() {
   };
 
   const programs: Record<string, string[]> = {
-    pack1: [
-      "10h00 – Arrivée à la gare de Maintenon en Rolls-Royce",
-      "10h30 – Accueil au Manoir & préparatifs (coiffure et maquillage)",
-      "11h30 – First Look dans la bibliothèque du Manoir",
-      "12h00 – Cérémonie d’elopement romantique dans le salon du Manoir",
-      "12h30 – Toast au champagne près de la cheminée",
-      "Séance photo dans le parc",
-      "13h30 – Déjeuner romantique à la française dans la cour",
-      "15h00 – Départ du Manoir de Vacheresses"
+    formule1: [
+      "Matin – Arrivée au Manoir",
+      "Matin – Préparatifs (maquillage & coiffure)",
+      "Midi – First Look",
+      "Après-midi – Échange de vœux avec célébrant",
+      "Après-midi – Toast au champagne",
+      "Après-midi – Session photo (parc, salon, ext.)",
+      "Soir – Repas intérieur ou extérieur avec chef privé",
+      "Fin de journée – Départ"
     ],
-    pack2: [
-      "10h00 – Arrivée à la gare de Maintenon en Rolls-Royce",
-      "10h30 – Accueil au Manoir & préparatifs (coiffure et maquillage)",
-      "11h30 – First Look dans la cour principale et les intérieurs historiques",
-      "12h00 – Cérémonie sous l’arche de pierre",
-      "12h30 – Toast au champagne",
-      "Séance photo dans le parc",
-      "13h30 – Déjeuner romantique dans la cour",
-      "15h00 – Départ du Manoir de Vacheresses"
+    formule2: [
+      "13h00 – Arrivée au Manoir",
+      "13h30 – Préparatifs (maquillage & coiffure)",
+      "14h30 – First Look",
+      "15h00 – Échange de vœux avec célébrant",
+      "15h30 – Toast au champagne",
+      "Après-midi – Session photo (parc, salon, ext.)",
+      "Soir – Repas intérieur ou extérieur avec chef privé",
+      "Nuit – Nuitée au domaine",
+      "Lendemain – Petit déjeuner / Brunch & Départ"
     ],
-    pack3: [
-      "11h00 – Arrivée au Manoir de Vacheresses",
-      "11h30 – Welcome drink & déjeuner léger",
-      "12h00 – Préparatifs des mariés (coiffure & maquillage)",
-      "13h00 – First Look et séance photo dans le salon du Manoir",
-      "14h00 – Cérémonie de mariage dans le verger",
-      "14h30 – Toast au champagne",
-      "15h00 – Séance photo de couple dans le parc",
-      "16h00 – Dîner avec chef privé dans la cour d’honneur",
-      "Soirée & nuit – Nuitée dans la guesthouse du Potager",
-      "Brunch gourmand le lendemain & départ tardif"
-    ],
-    pack4: [
-      "Jour d’arrivée",
-      "17h00 – Accueil des mariés et des invités & welcome drink",
-      "19h00 – Dîner de répétition (intérieur ou extérieur, jusqu’à 20 invités)",
-      "Jour du mariage",
-      "09h30 – Petit-déjeuner",
-      "10h30 – Préparatifs des mariés",
-      "12h30 – First Look et séance photo dans le salon du Manoir",
-      "14h00 – Cérémonie de mariage dans le verger",
-      "15h00 – Déjeuner de mariage dans la cour d’honneur ou la salle de réception",
-      "17h30 – Départ des invités et des mariés"
+    formule_hiver: [
+      "Matin – Arrivée au Manoir",
+      "Matin – Préparatifs (maquillage & coiffure)",
+      "Midi – First Look",
+      "Après-midi – Échange de vœux dans le salon du Manoir",
+      "Après-midi – Toast au champagne",
+      "Après-midi – Session photo (parc, salon, ext.)",
+      "Soir – Repas dans la salle à manger du Manoir avec chef privé",
+      "Fin de journée – Départ"
     ]
   };
 
@@ -268,15 +276,15 @@ function ElopementContent() {
               <EditableText path="elopement.packages.subtitle" value="Une expérience intime au cœur de la campagne française, près de Paris" />
             </p>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className="flex flex-wrap justify-center gap-6 md:gap-8">
               {elopementPackages.map((pkg, index) => {
                 const image = getImageById(pkg.imageId);
                 return (
                   <Card
                     key={pkg.id}
-                    className={`flex flex-col transition-all duration-500 hover-lift hover-glow animate-in fade-in slide-in-from-bottom-8 ${
+                    className={`flex flex-col w-full md:w-[calc(50%-1rem)] lg:w-[calc(25%-1.5rem)] min-w-[280px] max-w-[350px] transition-all duration-500 hover-lift hover-glow animate-in fade-in slide-in-from-bottom-8 ${
                       pkg.highlighted 
-                        ? 'border-primary shadow-lg scale-105 ring-2 ring-primary/20' 
+                        ? 'border-primary shadow-lg md:scale-105 ring-2 ring-primary/20' 
                         : 'hover:shadow-lg hover:border-primary/50'
                     }`}
                     style={{ animationDelay: `${index * 200}ms` }}
@@ -395,6 +403,18 @@ function ElopementContent() {
                     fill
                     className="object-cover transition-transform duration-500 group-hover:scale-110"
                   />
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="bg-primary/5 rounded-xl p-8 text-center mb-16">
+            <h2 className="text-3xl font-headline font-bold mb-8">Options Disponibles</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {options.map((option, idx) => (
+                <div key={idx} className="bg-card p-6 rounded-xl border border-primary/10 shadow-sm">
+                  <h3 className="font-semibold text-primary mb-2">{option.name}</h3>
+                  <p className="text-2xl font-bold">{option.price} €</p>
                 </div>
               ))}
             </div>

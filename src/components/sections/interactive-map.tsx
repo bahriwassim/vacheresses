@@ -48,8 +48,8 @@ export function InteractiveMap() {
       id: "parking_invites",
       name: t.domain.poi.parking_invites.title,
       description: t.domain.poi.parking_invites.subtitle,
-      x: 32,
-      y: 5,
+      x: 30,
+      y: 2,
       link: "/domaine/parking_invites",
       type: 'poi',
     },
@@ -237,8 +237,8 @@ export function InteractiveMap() {
 
         <Card className="overflow-hidden shadow-2xl animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-200">
           <CardContent className="p-0">
-            <div className="relative w-full group">
-              <div className="relative w-full aspect-[16/10]">
+            <div className="relative w-full overflow-x-auto scrollbar-hide">
+              <div className="relative min-w-[800px] md:min-w-0 w-full aspect-[16/10] group">
                 <Image
                   src={overridePath("/interactive.jpeg")}
                   alt="Vue aérienne interactive du Manoir de Vacheresses"
@@ -247,50 +247,57 @@ export function InteractiveMap() {
                   priority
                 />
                 <div className="absolute inset-0 bg-black/10" />
-              </div>
 
-              {hotspots.map((hotspot) => (
-                <div
-                  key={hotspot.id}
-                  className="absolute transform -translate-x-1/2 -translate-y-1/2 z-10"
-                  style={{ left: `${hotspot.x}%`, top: `${hotspot.y}%` }}
-                >
-                  <button
-                    onClick={() => openHotspotDialog(hotspot.id)}
-                    className="relative group/hotspot"
-                    aria-label={`Voir ${hotspot.name}`}
+                {hotspots.map((hotspot) => (
+                  <div
+                    key={hotspot.id}
+                    className="absolute transform -translate-x-1/2 -translate-y-1/2 z-10"
+                    style={{ left: `${hotspot.x}%`, top: `${hotspot.y}%` }}
                   >
-                    {hotspot.type === 'accommodation' ? (
-                      <>
-                        <span className="absolute inset-0 w-12 h-12 -ml-6 -mt-6 bg-primary/30 rounded-full animate-ping" />
-                        <span className="absolute inset-0 w-8 h-8 -ml-4 -mt-4 bg-primary/50 rounded-full animate-pulse" />
-                        <span className="relative flex items-center justify-center w-8 h-8 -ml-4 -mt-4 bg-primary text-primary-foreground rounded-full shadow-lg transition-all duration-300 group-hover/hotspot:scale-125 group-hover/hotspot:shadow-2xl">
-                          <Bed className="w-5 h-5" />
-                        </span>
-                      </>
-                    ) : hotspot.type === 'poi' ? (
-                      <>
-                         <span className="absolute inset-0 w-12 h-12 -ml-6 -mt-6 bg-accent/30 rounded-full animate-ping" />
-                        <span className="absolute inset-0 w-8 h-8 -ml-4 -mt-4 bg-accent/50 rounded-full animate-pulse" />
-                        <span className="relative flex items-center justify-center w-8 h-8 -ml-4 -mt-4 bg-accent text-accent-foreground rounded-full shadow-lg transition-all duration-300 group-hover/hotspot:scale-125 group-hover/hotspot:shadow-2xl">
-                          <Trees className="w-5 h-5" />
-                        </span>
-                      </>
-                    ) : (
-                      <>
-                        <span className="absolute inset-0 w-12 h-12 -ml-6 -mt-6 bg-secondary/30 rounded-full animate-ping" />
-                        <span className="absolute inset-0 w-8 h-8 -ml-4 -mt-4 bg-secondary/50 rounded-full animate-pulse" />
-                        <span className="relative flex items-center justify-center w-8 h-8 -ml-4 -mt-4 bg-secondary text-secondary-foreground rounded-full shadow-lg transition-all duration-300 group-hover/hotspot:scale-125 group-hover/hotspot:shadow-2xl">
-                          <Landmark className="w-5 h-5" />
-                        </span>
-                      </>
-                    )}
-                  </button>
-                  <div className="absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap px-2 py-1 rounded-md bg-black/60 text-white text-xs opacity-0 group-hover/hotspot:opacity-100 transition-opacity">
-                    {hotspot.name}
+                    <button
+                      onClick={() => openHotspotDialog(hotspot.id)}
+                      className="relative group/hotspot p-4" // Added padding for larger hit area
+                      aria-label={`Voir ${hotspot.name}`}
+                    >
+                      {hotspot.type === 'accommodation' ? (
+                        <>
+                          <span className="absolute inset-4 bg-primary/30 rounded-full animate-ping" />
+                          <span className="absolute inset-5 bg-primary/50 rounded-full animate-pulse" />
+                          <span className="relative flex items-center justify-center w-8 h-8 bg-primary text-primary-foreground rounded-full shadow-lg transition-all duration-300 group-hover/hotspot:scale-125 group-hover/hotspot:shadow-2xl">
+                            <Bed className="w-5 h-5" />
+                          </span>
+                        </>
+                      ) : hotspot.type === 'poi' ? (
+                        <>
+                           <span className="absolute inset-4 bg-accent/30 rounded-full animate-ping" />
+                          <span className="absolute inset-5 bg-accent/50 rounded-full animate-pulse" />
+                          <span className="relative flex items-center justify-center w-8 h-8 bg-accent text-accent-foreground rounded-full shadow-lg transition-all duration-300 group-hover/hotspot:scale-125 group-hover/hotspot:shadow-2xl">
+                            <Trees className="w-5 h-5" />
+                          </span>
+                        </>
+                      ) : (
+                        <>
+                          <span className="absolute inset-4 bg-secondary/30 rounded-full animate-ping" />
+                          <span className="absolute inset-5 bg-secondary/50 rounded-full animate-pulse" />
+                          <span className="relative flex items-center justify-center w-8 h-8 bg-secondary text-secondary-foreground rounded-full shadow-lg transition-all duration-300 group-hover/hotspot:scale-125 group-hover/hotspot:shadow-2xl">
+                            <Landmark className="w-5 h-5" />
+                          </span>
+                        </>
+                      )}
+                    </button>
+                    <div className="absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap px-2 py-1 rounded-md bg-black/60 text-white text-[10px] md:text-xs opacity-0 group-hover/hotspot:opacity-100 transition-opacity pointer-events-none">
+                      {hotspot.name}
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
+            </div>
+            
+            <div className="md:hidden text-center py-2 bg-muted/30 border-b">
+              <p className="text-[10px] text-muted-foreground italic flex items-center justify-center gap-2">
+                <Maximize2 className="w-3 h-3" />
+                Faites défiler pour explorer la carte
+              </p>
             </div>
 
             <div className="bg-muted/50 p-6">

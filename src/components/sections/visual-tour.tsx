@@ -61,14 +61,15 @@ export function VisualTour() {
         </div>
 
         {/* GRID IMAGES */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
           {images.map((image, index) => (
             <div
               key={image.id}
               className={cn(
-                index === 0 ? "col-span-2 row-span-2 md:col-span-2 md:row-span-2" : "",
-                index === 1 ? "col-span-2 md:col-span-1" : "",
-                index === 2 ? "col-span-2 md:col-span-1" : ""
+                "relative aspect-square sm:aspect-auto",
+                index === 0 ? "sm:col-span-2 sm:row-span-2" : "",
+                index === 1 ? "sm:col-span-2 md:col-span-1" : "",
+                index === 2 ? "sm:col-span-2 md:col-span-1" : ""
               )}
             >
               <Card

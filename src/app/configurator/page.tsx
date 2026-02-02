@@ -25,13 +25,14 @@ import { useToast } from "@/hooks/use-toast";
 import { createBooking } from "@/app/actions/booking";
 
 const getAddons = (t: Translation) => [
-  { id: "rolls", name: t.configurator.addon_rolls, price: 500, icon: Car },
-  { id: "lanterns", name: t.configurator.addon_lanterns, price: 300, icon: PartyPopper },
-  { id: "chairs", name: t.configurator.addon_chairs, price: 800, icon: Sofa },
-  { id: "bbq", name: t.configurator.addon_bbq, price: 1200, icon: Flame },
-  { id: "flowers", name: t.configurator.addon_flowers, price: 1500, icon: Flower },
-  { id: "balloon", name: t.configurator.addon_balloon, price: 2500, icon: Wind },
-  { id: "catering", name: "Traiteur gastronomique", price: 2000, icon: Flame },
+  { id: "videaste", name: "Vidéaste", price: 2500, icon: Car },
+  { id: "coiffure", name: "Coiffure & maquillage mariée", price: 1500, icon: Flower },
+  { id: "musique", name: "Musicien cérémonie", price: 600, icon: PartyPopper },
+  { id: "rolls", name: "Location Rolls Royce ou Jaguar", price: 250, icon: Car },
+  { id: "mongolfiere", name: "Montgolfière selon météo", price: 2000, icon: Wind },
+  { id: "fleurs", name: "Décoration Florale", price: 3000, icon: Flower },
+  { id: "photoboost", name: "Photo boost", price: 450, icon: Sofa },
+  { id: "jeux", name: "Pack de jeux en bois", price: 200, icon: PartyPopper },
 ];
 
 function ConfiguratorContent() {
@@ -63,7 +64,10 @@ function ConfiguratorContent() {
           id: p.id,
           name: locale === 'fr' ? p.name_fr : p.name_en,
           basePrice: p.base_price,
-          maxGuests: p.max_guests
+          basePriceHigh: p.package_id === 'formule1' ? 15500 : p.base_price,
+          basePriceLow: p.package_id === 'formule1' ? 13500 : p.base_price,
+          variablePricePerPerson: 203.125,
+          maxGuests: 100
         }));
         setPackages(formattedPackages);
         
@@ -91,12 +95,24 @@ function ConfiguratorContent() {
       } else {
         // Fallback hardcoded
         const fallback = [
-            { id: "classic", name: t.packages.classic_title, basePrice: 15000, maxGuests: 100 },
-            { id: "premium", name: t.packages.premium_title, basePrice: 25000, maxGuests: 200 },
-            { id: "luxury", name: t.packages.luxury_title, basePrice: 40000, maxGuests: 300 },
+            { 
+              id: "formule1", 
+              name: "Mariage Formule 1 (Week-end)", 
+              basePriceHigh: 15500, 
+              basePriceLow: 13500, 
+              variablePricePerPerson: 203.125,
+              maxGuests: 100 
+            },
+            { 
+              id: "formule2", 
+              name: "Mariage Formule 2 (Semaine)", 
+              basePrice: 11500, 
+              variablePricePerPerson: 203.125,
+              maxGuests: 100 
+            },
         ];
         setPackages(fallback);
-        setSelectedPackage(fallback[1]);
+        setSelectedPackage(fallback[0]);
       }
       setLoadingPackages(false);
     };
@@ -228,7 +244,22 @@ function ConfiguratorContent() {
     .filter((addon) => selectedAddons.includes(addon.id))
     .reduce((total, addon) => total + addon.price, 0);
 
-  const totalEstimate = (selectedPackage?.basePrice || 0) + addonCost;
+  const totalEstimate = useMemo(() => {
+    if (!selectedPackage) return 0;
+    
+    let base = selectedPackage.basePrice || 0;
+    
+    // Logic for Formula 1 seasons
+    if (selectedPackage.id === "formule1" && date) {
+      const d = new Date(date);
+      const month = d.getMonth(); // 0-11
+      const isHighSeason = month >= 5 && month <= 8; // June to Sept
+      base = isHighSeason ? selectedPackage.basePriceHigh : selectedPackage.basePriceLow;
+    }
+
+    const variable = guestCount * (selectedPackage.variablePricePerPerson || 0);
+    return base + variable + addonCost;
+  }, [selectedPackage, guestCount, addonCost, date]);
 
   const formatCurrency = (value: number) => {
     return value.toLocaleString(locale === 'fr' ? 'fr-FR' : 'en-US', { style: 'currency', currency: 'EUR' });
@@ -286,12 +317,12 @@ function ConfiguratorContent() {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <div className="lg:col-span-2">
+            <div className="lg:col-span-2 order-1">
               <Card className="shadow-lg">
                 <CardHeader>
                   <CardTitle className="font-headline">{t.configurator.customize_title}</CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-8">
+                <CardContent className="space-y-8 p-4 md:p-6">
                   <div className="space-y-4">
                     <Label htmlFor="package" className="text-lg font-medium">{t.configurator.package}</Label>
                      <Select
@@ -312,7 +343,7 @@ function ConfiguratorContent() {
                     </Select>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-2">
                         <Label htmlFor="date">Date estimée</Label>
                         <Input 
@@ -321,6 +352,7 @@ function ConfiguratorContent() {
                             value={date} 
                             onChange={(e) => setDate(e.target.value)}
                             min={new Date().toISOString().split('T')[0]}
+                            className="w-full"
                         />
                     </div>
                     <div className="space-y-4">
@@ -332,19 +364,19 @@ function ConfiguratorContent() {
                            value={[guestCount]} 
                            onValueChange={(vals) => setGuestCount(vals[0])} 
                            min={10} 
-                           max={130} 
-                           step={5} 
+                           max={100} 
+                           step={1} 
                         />
-                        <p className="text-xs text-muted-foreground">Maximum 130 personnes pour la réception.</p>
+                        <p className="text-[10px] md:text-xs text-muted-foreground">Maximum 100 personnes pour la réception.</p>
                     </div>
                   </div>
 
                   <div className="space-y-4">
                     <h3 className="text-lg font-medium">{t.configurator.addons}</h3>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
                       {addons.map((addon) => (
                         <div key={addon.id} 
-                             className="flex items-center space-x-3 rounded-md border p-4 hover:bg-accent/50 transition-colors cursor-pointer"
+                             className="flex items-center space-x-3 rounded-md border p-3 md:p-4 hover:bg-accent/50 transition-colors cursor-pointer"
                              onClick={() => handleAddonToggle(addon.id)}>
                           <Checkbox
                             id={addon.id}
@@ -352,11 +384,11 @@ function ConfiguratorContent() {
                             onCheckedChange={() => handleAddonToggle(addon.id)}
                           />
                            <div className="flex-1">
-                            <Label htmlFor={addon.id} className="flex items-center gap-2 font-normal cursor-pointer">
-                              <addon.icon className="h-5 w-5 text-primary"/>
+                            <Label htmlFor={addon.id} className="flex items-center gap-2 font-normal cursor-pointer text-sm md:text-base">
+                              <addon.icon className="h-4 w-4 md:h-5 md:w-5 text-primary"/>
                               {addon.name}
                             </Label>
-                            <p className="text-sm text-muted-foreground">+ {formatCurrency(addon.price)} ({t.services.on_request})</p>
+                            <p className="text-[10px] md:text-sm text-muted-foreground">+ {formatCurrency(addon.price)}</p>
                           </div>
                         </div>
                       ))}
@@ -366,28 +398,42 @@ function ConfiguratorContent() {
               </Card>
             </div>
 
-            <div className="lg:col-span-1">
-              <Card className="shadow-lg sticky top-24">
-                <CardHeader>
-                  <CardTitle className="font-headline">{t.configurator.budget_title}</CardTitle>
-                  <CardDescription>{t.configurator.budget_subtitle}</CardDescription>
+            <div className="lg:col-span-1 order-2 lg:order-2">
+              <Card className="shadow-lg lg:sticky lg:top-24 border-primary/20 bg-primary/5">
+                <CardHeader className="pb-2">
+                  <CardTitle className="font-headline text-xl">{t.configurator.budget_title}</CardTitle>
+                  <CardDescription className="text-xs">{t.configurator.budget_subtitle}</CardDescription>
                 </CardHeader>
-                <CardContent className="space-y-4">
-                    <div className="flex justify-between">
-                        <p>{t.configurator.base_package} ({selectedPackage?.name})</p>
-                        <p>{formatCurrency(selectedPackage?.basePrice || 0)}</p>
+                <CardContent className="space-y-3 md:space-y-4">
+                    <div className="flex justify-between text-xs md:text-sm">
+                        <p className="text-muted-foreground">{t.configurator.base_package}</p>
+                        <p className="font-medium">
+                          {formatCurrency(
+                            selectedPackage?.id === "formule1" && date
+                              ? (new Date(date).getMonth() >= 5 && new Date(date).getMonth() <= 8 ? selectedPackage.basePriceHigh : selectedPackage.basePriceLow)
+                              : (selectedPackage?.basePrice || 0)
+                          )}
+                        </p>
                     </div>
-                    <div className="flex justify-between">
-                        <p>{t.configurator.addons_total}</p>
-                        <p>{formatCurrency(addonCost)}</p>
+                    <div className="flex justify-between text-xs md:text-sm">
+                        <p className="text-muted-foreground">Traiteur ({guestCount} pers. à 112,50€)</p>
+                        <p className="font-medium">{formatCurrency(guestCount * 112.5)}</p>
+                    </div>
+                    <div className="flex justify-between text-xs md:text-sm">
+                        <p className="text-muted-foreground">Personnel de service (estimé)</p>
+                        <p className="font-medium">{formatCurrency(guestCount * 90.625)}</p>
+                    </div>
+                    <div className="flex justify-between text-xs md:text-sm">
+                        <p className="text-muted-foreground">{t.configurator.addons_total}</p>
+                        <p className="font-medium">{formatCurrency(addonCost)}</p>
                     </div>
                     <Separator />
-                    <div className="flex justify-between text-xl font-bold">
+                    <div className="flex justify-between text-lg md:text-xl font-bold text-primary">
                         <p>{t.configurator.total_estimate}</p>
                         <p>{formatCurrency(totalEstimate)}</p>
                     </div>
                     <Button 
-                        className="w-full mt-4" 
+                        className="w-full mt-2 shadow-lg hover:shadow-primary/20 transition-all" 
                         size="lg" 
                         onClick={handleBooking}
                         disabled={isSubmitting}
@@ -399,6 +445,9 @@ function ConfiguratorContent() {
                             : "Se connecter pour réserver"
                       }
                     </Button>
+                    <p className="text-[10px] text-center text-muted-foreground italic">
+                      Cette estimation ne constitue pas un devis définitif.
+                    </p>
                 </CardContent>
               </Card>
             </div>

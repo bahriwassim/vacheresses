@@ -15,26 +15,21 @@ import { EditableText } from "@/components/ui/editable-text";
 
 const packagesData = (t: any) => [
   {
-    id: "classic",
-    title: t.packages.classic_title,
-    description: t.packages.classic_desc,
+    id: "formule1",
+    title: t.packages.formule1_title,
+    description: t.packages.formule1_desc,
+    price: t.packages.formule1_price,
     imageId: "package-classic",
-    features: t.packages.classic_features,
+    features: t.packages.formule1_features,
   },
   {
-    id: "premium",
-    title: t.packages.premium_title,
-    description: t.packages.premium_desc,
+    id: "formule2",
+    title: t.packages.formule2_title,
+    description: t.packages.formule2_desc,
+    price: t.packages.formule2_price,
     imageId: "package-premium",
-    features: t.packages.premium_features,
+    features: t.packages.formule2_features,
     highlighted: true,
-  },
-  {
-    id: "luxury",
-    title: t.packages.luxury_title,
-    description: t.packages.luxury_desc,
-    imageId: "package-luxury",
-    features: t.packages.luxury_features,
   },
 ];
 
@@ -87,14 +82,14 @@ export function Packages() {
         </div>
 
      
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="flex flex-wrap justify-center gap-6 md:gap-8">
           {packages.map((pkg, index) => {
             const image = getImageById(pkg.imageId);
             return (
               <Card
                 key={pkg.id}
-                className={`flex flex-col transition-all duration-500 hover-lift hover-glow animate-in fade-in slide-in-from-bottom-8 ${
-                  pkg.highlighted ? 'border-primary shadow-lg scale-105 ring-2 ring-primary/20' : 'hover:shadow-lg hover:border-primary/50'
+                className={`flex flex-col w-full md:w-[calc(50%-1rem)] lg:w-[calc(33.33%-1.5rem)] min-w-[280px] max-w-[400px] transition-all duration-500 hover-lift hover-glow animate-in fade-in slide-in-from-bottom-8 ${
+                  pkg.highlighted ? 'border-primary shadow-lg md:scale-105 ring-2 ring-primary/20' : 'hover:shadow-lg hover:border-primary/50'
                 }`}
                 style={{ animationDelay: `${index * 200}ms` }}
               >
@@ -124,6 +119,9 @@ export function Packages() {
                   <CardDescription>
                     <EditableText path={`packages.${pkg.id}_desc`} value={pkg.description} />
                   </CardDescription>
+                  <div className="mt-2 text-2xl font-bold text-primary">
+                    <EditableText path={`packages.${pkg.id}_price`} value={pkg.price} />
+                  </div>
                 </CardHeader>
                 <CardContent className="flex-1">
                   <ul className="space-y-3">
