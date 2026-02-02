@@ -28,13 +28,13 @@
       try {
         const raw = localStorage.getItem("user");
         if (!raw) {
-           setUserRole(null);
-           return;
+          setUserRole(null);
+          return;
         }
         const u = JSON.parse(raw);
-        // ONLY allow super_admin
-        if (u?.role === 'super_admin') {
-          setUserRole('super_admin');
+        // allow admin or super_admin
+        if (u?.role === 'super_admin' || u?.role === 'admin') {
+          setUserRole(u.role);
         } else {
           setUserRole(null);
         }
@@ -55,7 +55,7 @@
     };
   }, []);
 
- const isAdmin = userRole === "super_admin";
+  const isAdmin = userRole === "super_admin" || userRole === "admin";
  
    const overridden = useMemo(() => {
      const ov = getLocalOverride(locale, path);

@@ -53,27 +53,26 @@ export function AnimatedImage({
 
   useEffect(() => {
     // Initial check
-    const checkRole = async () => {
+    const checkRole = () => {
       try {
         const raw = typeof window !== "undefined" ? localStorage.getItem("user") : null;
         if (raw) {
           const u = JSON.parse(raw);
-          if (u?.role) setUserRole(u.role);
-        }
-        
-        const { profile } = await authService.getCurrentUser();
-        if (profile?.role) {
-          setUserRole(profile.role);
+          if (u?.role === 'super_admin' || u?.role === 'admin') {
+            setUserRole(u.role);
+          } else {
+            setUserRole(null);
+          }
         }
       } catch (e) {
-        // Silent fail
+        setUserRole(null);
       }
     };
     
     checkRole();
     
     // Listen for auth changes
-    const { data: { subscription } } = authService.onAuthStateChange((event, session) => {
+    const { data: { subscription } } = authService.onAuthStateChange(() => {
         checkRole();
     });
 
@@ -104,7 +103,7 @@ export function AnimatedImage({
     none: "",
   };
 
-  const isAdmin = userRole === "super_admin";
+  const isAdmin = userRole === "super_admin" || userRole === "admin";
   const key = overrideKey || (typeof src === "string" && src.startsWith("/") ? src : null);
 
   function getOverriddenSrc(original: string, k?: string | null): string {

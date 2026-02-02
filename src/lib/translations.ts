@@ -1273,6 +1273,14 @@ export const translations: Record<Locale, Translation> = {
           surface: "32 m²",
           description: "Arranged like a cozy little nest, this Guesthouse can accommodate up to 6 people.",
         },
+        hebergements: {
+          name: "The Vegetable Garden House",
+          type: "Charming Guest House",
+          capacity: "15 people",
+          bedding: "5 personalized rooms",
+          surface: "35 m² (living area)",
+          description: "In one of the Manor's dependencies, in front of the medieval-inspired vegetable garden, between fruit trees and old plants, 5 rooms with a personalized and refined decor will allow you to enjoy nature and calm.",
+        },
       },
       equipment: {
         title: "Equipment",
@@ -2055,6 +2063,14 @@ export const translations: Record<Locale, Translation> = {
           bedding: "1 lit double Queen Size, 4 lits simples",
           surface: "32 m²",
           description: "Agencée comme un petit nid douillet, cette Guesthouse peut accueillir jusqu'à 6 personnes.",
+        },
+        hebergements: {
+          name: "La Maison du Potager",
+          type: "Maison d'hôtes de charme",
+          capacity: "15 personnes",
+          bedding: "5 chambres personnalisées",
+          surface: "35 m² (pièce de vie)",
+          description: "Dans l'une des dépendances du Manoir, devant le potager d'inspiration médiévale, entre arbres fruitiers et plantes anciennes, 5 chambres au décor personnalisé et raffiné vous permettront de profiter de la nature et du calme.",
         },
       },
       equipment: {

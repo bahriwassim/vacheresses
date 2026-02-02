@@ -50,7 +50,7 @@ export function InteractiveMap() {
       description: t.domain.poi.parking_invites.subtitle,
       x: 32,
       y: 5,
-      link: "/contact",
+      link: "/domaine/parking_invites",
       type: 'poi',
     },
     {
@@ -59,7 +59,7 @@ export function InteractiveMap() {
       description: "Hébergement de charme près du potager",
       x: 28,
       y: 12,
-      link: "/sejourner",
+      link: "/sejourner/hebergements",
       type: 'accommodation',
     },
     {
@@ -68,7 +68,7 @@ export function InteractiveMap() {
       description: t.domain.poi.potager.subtitle,
       x: 19,
       y: 28,
-      link: "/domaine",
+      link: "/domaine/potager",
       type: 'poi',
     },
     {
@@ -77,7 +77,7 @@ export function InteractiveMap() {
       description: t.domain.poi.preau.subtitle,
       x: 17,
       y: 42,
-      link: "/domaine",
+      link: "/domaine/preau",
       type: 'space',
     },
     {
@@ -86,7 +86,7 @@ export function InteractiveMap() {
       description: t.domain.poi.verger.subtitle,
       x: 15,
       y: 68,
-      link: "/domaine",
+      link: "/domaine/verger",
       type: 'poi',
     },
     {
@@ -95,7 +95,7 @@ export function InteractiveMap() {
       description: t.domain.poi.orangerie.subtitle,
       x: 46,
       y: 17,
-      link: "/domaine",
+      link: "/domaine/orangerie",
       type: 'space',
     },
     {
@@ -113,7 +113,7 @@ export function InteractiveMap() {
       description: t.domain.poi.cour_honneur.subtitle,
       x: 52,
       y: 42,
-      link: "/domaine",
+      link: "/domaine/cour_honneur",
       type: 'poi',
     },
     {
@@ -122,7 +122,7 @@ export function InteractiveMap() {
       description: t.domain.poi.manoir.subtitle,
       x: 54,
       y: 80,
-      link: "/domaine",
+      link: "/domaine/manoir",
       type: 'poi',
     },
     {
@@ -131,7 +131,7 @@ export function InteractiveMap() {
       description: t.domain.poi.parking_prestataires.subtitle,
       x: 68,
       y: 14,
-      link: "/contact",
+      link: "/domaine/parking_prestataires",
       type: 'poi',
     },
     {
@@ -140,7 +140,7 @@ export function InteractiveMap() {
       description: t.domain.poi.salle_reception.subtitle,
       x: 70,
       y: 32,
-      link: "/domaine",
+      link: "/domaine/salle_reception",
       type: 'space',
     },
     {
@@ -149,7 +149,7 @@ export function InteractiveMap() {
       description: t.domain.poi.pigeonnier.subtitle,
       x: 90,
       y: 27,
-      link: "/domaine",
+      link: "/domaine/pigeonnier",
       type: 'poi',
     },
     {
@@ -158,7 +158,7 @@ export function InteractiveMap() {
       description: t.domain.poi.parc.subtitle,
       x: 90,
       y: 88,
-      link: "/domaine",
+      link: "/domaine/parc",
       type: 'poi',
     },
   ], [t]);
@@ -265,7 +265,7 @@ export function InteractiveMap() {
                         <span className="absolute inset-0 w-12 h-12 -ml-6 -mt-6 bg-primary/30 rounded-full animate-ping" />
                         <span className="absolute inset-0 w-8 h-8 -ml-4 -mt-4 bg-primary/50 rounded-full animate-pulse" />
                         <span className="relative flex items-center justify-center w-8 h-8 -ml-4 -mt-4 bg-primary text-primary-foreground rounded-full shadow-lg transition-all duration-300 group-hover/hotspot:scale-125 group-hover/hotspot:shadow-2xl">
-                          <MapPin className="w-5 h-5" />
+                          <Bed className="w-5 h-5" />
                         </span>
                       </>
                     ) : hotspot.type === 'poi' ? (
@@ -296,7 +296,7 @@ export function InteractiveMap() {
             <div className="bg-muted/50 p-6">
               <div className="flex flex-wrap items-center justify-center gap-4 text-sm text-muted-foreground">
                 <div className="flex items-center gap-2">
-                  <MapPin className="w-4 h-4 text-primary" />
+                  <Bed className="w-4 h-4 text-primary" />
                   <span>
                     <EditableText path="interactiveMap.legend_accommodation" value={t.interactiveMap.legend_accommodation} />
                   </span>
