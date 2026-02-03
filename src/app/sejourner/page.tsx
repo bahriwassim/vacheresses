@@ -379,15 +379,9 @@ export default function SejournerPage() {
 
         <div className="relative h-full flex items-center justify-center text-center px-4">
           <div className="animate-in fade-in slide-in-from-bottom-8 duration-1000 max-w-4xl text-white">
-            <h1 className="text-5xl md:text-7xl font-headline font-bold drop-shadow-2xl">
+            <h1 className="text-4xl md:text-6xl font-headline font-bold drop-shadow-2xl">
               <EditableText path="stay.intro_title" value={t.stay.intro_title} />
             </h1>
-            <p className="text-xl md:text-2xl tracking-wider uppercase drop-shadow-lg mt-4 mb-6">
-              <EditableText path="stay.subtitle" value={t.stay.subtitle} />
-            </p>
-            <p className="text-lg md:text-xl max-w-2xl mx-auto whitespace-pre-line drop-shadow-lg">
-              <EditableText path="stay.intro_description" value={t.stay.intro_description.split('\n\n')[0]} multiline />
-            </p>
           </div>
         </div>
       </div>

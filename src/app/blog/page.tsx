@@ -81,50 +81,8 @@ export default function BlogPage() {
             </div>
           )}
 
-          {/* Press Section Link */}
-          <div className="mb-16 text-center animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-500">
-            <Card className="inline-block max-w-2xl mx-auto p-8 hover:shadow-lg transition-all duration-300">
-              <CardHeader>
-                <CardTitle className="font-headline text-2xl mb-2">{t.blog.pressTitle}</CardTitle>
-                <CardDescription>
-                  {t.blog.pressSubtitle}
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <Button asChild>
-                  <Link href="/blog/press">{t.blog.pressButton}</Link>
-                </Button>
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Photo Gallery */}
-          <div className="mb-16">
-            <h2 className="text-3xl font-headline font-bold text-center mb-4">{t.blog.momentsTitle}</h2>
-            <p className="text-muted-foreground text-center mb-8 max-w-2xl mx-auto">
-              {t.blog.momentsSubtitle}
-            </p>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              {[
-                '/vacheresses_7.jpg', '/vacheresses_13.jpg', '/vacheresses_17.jpg', '/vacheresses_20.jpg',
-                '/salle_reception_6.jpg', '/salle_reception_7.jpg', '/salle_reception_8.jpg', '/salle_reception_9.jpg',
-                '/Parc_1.jpg', '/Parc_2.jpg', '/Parc_3.jpg', '/preau_verger_1.jpg',
-                '/espace_1.jpg', '/espace_2_(1).jpg', '/espace_4.jpg', '/espace_5.jpg'
-              ].map((img, i) => (
-                <div key={i} className="relative aspect-square rounded-xl overflow-hidden group">
-                  <CardImage
-                    src={overridePath(img)}
-                    alt={`Mariage ${i + 1}`}
-                    fill
-                    className="object-cover transition-transform duration-500 group-hover:scale-110"
-                  />
-                </div>
-              ))}
-            </div>
-          </div>
-
           {/* Other Posts */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-20">
             {otherPosts.map((post, index) => {
               const image = getImageById(post.imageId);
               return (
@@ -168,6 +126,50 @@ export default function BlogPage() {
                 </Card>
               );
             })}
+          </div>
+
+          {/* Press & Media Section */}
+          <div className="mt-24 pt-16 border-t border-primary/10">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl md:text-4xl font-headline font-bold mb-4">Press & Media</h2>
+              <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-8">
+                Discover the press features highlighting Domaine des Vacheresses
+              </p>
+              <Button asChild size="lg" className="shadow-lg">
+                <Link href="/blog/press">View press articles</Link>
+              </Button>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {[1, 2, 3, 4].map((i) => {
+                const imgMap: Record<number, string> = { 1: '/vacheresses_7.jpg', 2: '/vacheresses_20.jpg', 3: '/espace_1.jpg', 4: '/potager_4.jpg' };
+                return (
+                  <Card key={i} className="overflow-hidden flex flex-col h-full shadow-md hover:shadow-xl transition-all duration-300">
+                    <div className="relative h-48 w-full">
+                      <CardImage 
+                        src={imgMap[i]} 
+                        alt={`Press Article ${i}`} 
+                        fill 
+                        className="object-cover" 
+                        overrideKey={`press_article_${i}`}
+                      />
+                    </div>
+                    <CardContent className="flex-1 p-6 flex flex-col bg-card">
+                      <div className="flex justify-between items-center mb-3 text-xs text-muted-foreground uppercase tracking-wider font-semibold">
+                        <EditableText path={`press.article_${i}_pub`} value={(t.press as any)[`article_${i}_pub`]} />
+                        <EditableText path={`press.article_${i}_date`} value={(t.press as any)[`article_${i}_date`]} />
+                      </div>
+                      <h3 className="text-lg font-bold mb-3 leading-tight line-clamp-2 text-primary">
+                        <EditableText path={`press.article_${i}_title`} value={(t.press as any)[`article_${i}_title`]} />
+                      </h3>
+                      <p className="text-sm text-muted-foreground line-clamp-3 flex-1 italic">
+                        <EditableText path={`press.article_${i}_excerpt`} value={(t.press as any)[`article_${i}_excerpt`]} multiline />
+                      </p>
+                    </CardContent>
+                  </Card>
+                );
+              })}
+            </div>
           </div>
         </div>
       </main>

@@ -13,7 +13,8 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { BarChart, Users, FileText, CalendarDays, Euro, PlusCircle, Hotel, Settings, MessageSquare, Send } from "lucide-react";
+import { Separator } from "@/components/ui/separator";
+import { BarChart, Users, FileText, CalendarDays, Euro, PlusCircle, Hotel, MessageSquare, Send, Calendar, Edit, Download } from "lucide-react";
 import { Availability } from "@/components/sections/availability";
 import { useLocale } from "@/hooks/use-locale";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter, DialogClose } from "@/components/ui/dialog";
@@ -37,12 +38,17 @@ export default function AdminPage() {
   const [currentUserRole, setCurrentUserRole] = useState<string | null>(null);
   const [textOverridesJson, setTextOverridesJson] = useState<string>('');
   const [bookingIdByClient, setBookingIdByClient] = useState<Record<string, string>>({});
+  const [unavailableDate, setUnavailableDate] = useState<string>('');
+  const [isSettingUnavailable, setIsSettingUnavailable] = useState(false);
+  const [refreshKey, setRefreshKey] = useState(0);
 
   const [newContract, setNewContract] = useState({ bookingId: '', type: 'main' as 'main' | 'catering' | 'accommodation', documentName: '' });
    const [isCreatingContract, setIsCreatingContract] = useState(false);
    const [isCreateDialogOpen, setCreateDialogOpen] = useState(false);
    const [isViewDialogOpen, setViewDialogOpen] = useState(false);
    const [viewedContract, setViewedContract] = useState<any>(null);
+   const [isEditingContract, setIsEditingContract] = useState(false);
+   const [editedContract, setEditedContract] = useState<any>(null);
 
   const handleCreateContract = async () => {
     if (!supabase || !newContract.bookingId || !newContract.documentName) {
@@ -276,31 +282,51 @@ export default function AdminPage() {
   }, [locale, supabase]);
   
   const handleViewContract = (contract: any) => {
-    setViewedContract(contract);
+    // Find the associated booking for this contract to get more details
+    const booking = clients.find(c => c.name === contract.client);
+    setViewedContract({
+        ...contract,
+        bookingInfo: booking ? {
+            date: booking.date,
+            guests: booking.guests,
+            package: booking.package
+        } : null
+    });
+    setEditedContract({...contract});
+    setIsEditingContract(false);
     setViewDialogOpen(true);
   }
 
-  const handlePackagePriceChange = (packageId: string, season: 'priceHigh' | 'priceLow', newPrice: number) => {
-    const updatedPackages = packages.map(p => 
-      p.id === packageId 
-        ? { ...p, [season]: newPrice } 
-        : p
-    );
-    setPackages(updatedPackages);
-  };
+  const handleSaveContract = async () => {
+    if (!supabase || !editedContract) return;
+    
+    try {
+        const { error } = await supabase
+            .from('contracts')
+            .update({
+                document_name: editedContract.document,
+                status: editedContract.status === 'Completed' ? 'completed' : 'signed'
+            })
+            .eq('id', editedContract.id);
 
-  const handleSavePackagePrices = async () => {
-    if (!supabase) return;
-    for (const pkg of packages) {
-        await supabase
-            .from('packages')
-            .update({ base_price: pkg.priceHigh })
-            .eq('package_id', pkg.id);
+        if (error) throw error;
+
+        toast({
+            title: "Contrat mis à jour",
+            description: "Les modifications ont été enregistrées avec succès.",
+        });
+        
+        // Refresh contracts list
+        setContracts(prev => prev.map(c => c.id === editedContract.id ? editedContract : c));
+        setIsEditingContract(false);
+        setViewedContract(editedContract);
+    } catch (e: any) {
+        toast({
+            title: "Erreur",
+            description: e.message,
+            variant: "destructive"
+        });
     }
-    toast({
-          title: "Tarifs mis à jour",
-          description: "Les prix des forfaits ont été sauvegardés.",
-    });
   };
 
   const sendAdminReply = async (client: string, text: string) => {
@@ -317,6 +343,63 @@ export default function AdminPage() {
         
         // Optimistic update
         setMessages(prev => [...prev, { id: Date.now(), client, sender: 'Admin', text: text.trim() }]);
+    }
+  };
+
+  const handleSetUnavailable = async () => {
+    if (!unavailableDate || !supabase) return;
+    setIsSettingUnavailable(true);
+    try {
+      const { profile } = await authService.getCurrentUser();
+      if (!profile) throw new Error("Vous devez être connecté.");
+
+      // Check if date is already booked
+      const { data: existing } = await supabase
+        .from('bookings')
+        .select('id')
+        .eq('event_date', unavailableDate)
+        .in('status', ['booked', 'confirmed', 'paid'])
+        .maybeSingle();
+
+      if (existing) {
+        throw new Error("Cette date est déjà réservée ou bloquée.");
+      }
+
+      const bookingReference = 'VAC' + Math.floor(Math.random() * 999999).toString().padStart(6, '0');
+
+      const { error } = await supabase.from('bookings').insert({
+        event_date: unavailableDate,
+        status: 'booked',
+        notes: 'Date marquée indisponible par l\'admin',
+        total_amount: 0,
+        guest_count: 0,
+        user_id: profile.id,
+        booking_reference: bookingReference
+      });
+
+      if (error) {
+        console.error("Insert error:", error);
+        throw error;
+      }
+
+      toast({ 
+         title: "Date bloquée", 
+         description: `La date du ${new Date(unavailableDate).toLocaleDateString()} est désormais indisponible.` 
+       });
+       setUnavailableDate('');
+       setRefreshKey(prev => prev + 1);
+      
+      // Trigger a refresh of any components listening to bookings if necessary
+      // Since Availability fetches on mount, it will see the change on next visit 
+      // or we could force a refresh here if we had a global state.
+    } catch (e: any) {
+      toast({ 
+        title: "Erreur", 
+        description: e.message || "Impossible de bloquer cette date.", 
+        variant: "destructive" 
+      });
+    } finally {
+      setIsSettingUnavailable(false);
     }
   };
 
@@ -414,8 +497,7 @@ export default function AdminPage() {
               <TabsTrigger value="clients"><Users className="mr-2"/>{t.admin.tabs.clients}</TabsTrigger>
               <TabsTrigger value="contracts"><FileText className="mr-2"/>{t.admin.tabs.contracts}</TabsTrigger>
               <TabsTrigger value="calendar"><CalendarDays className="mr-2"/>{t.admin.tabs.calendar}</TabsTrigger>
-              <TabsTrigger value="messages"><MessageSquare className="mr-2"/>Messagerie</TabsTrigger>
-              <TabsTrigger value="packages"><Settings className="mr-2"/>Forfaits</TabsTrigger>
+              <TabsTrigger value="messages"><MessageSquare className="mr-2"/>Messages</TabsTrigger>
             </TabsList>
 
             <TabsContent value="dashboard" className="mt-6">
@@ -567,12 +649,25 @@ export default function AdminPage() {
 
             <TabsContent value="calendar" className="mt-6">
                 <Card>
-                    <CardHeader>
-                        <CardTitle>{t.admin.venue_calendar.title}</CardTitle>
-                        <CardDescription>{t.admin.venue_calendar.description}</CardDescription>
+                    <CardHeader className="flex flex-row items-center justify-between">
+                        <div>
+                            <CardTitle>{t.admin.venue_calendar.title}</CardTitle>
+                            <CardDescription>{t.admin.venue_calendar.description}</CardDescription>
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <Input 
+                                type="date" 
+                                className="w-40" 
+                                value={unavailableDate}
+                                onChange={(e) => setUnavailableDate(e.target.value)}
+                            />
+                            <Button variant="destructive" size="sm" onClick={handleSetUnavailable} disabled={isSettingUnavailable}>
+                                <Calendar className="mr-2 h-4 w-4"/> Rendre indisponible
+                            </Button>
+                        </div>
                     </CardHeader>
                     <CardContent>
-                        <Availability />
+                        <Availability key={refreshKey} />
                     </CardContent>
                 </Card>
             </TabsContent>
@@ -629,36 +724,153 @@ export default function AdminPage() {
                 </Card>
             </TabsContent>
 
-            <TabsContent value="packages" className="mt-6">
-                 <Card>
-                    <CardHeader>
-                        <CardTitle>Gestion des Forfaits</CardTitle>
-                        <CardDescription>Ajustez les prix des forfaits.</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="space-y-6">
-                            {packages.map(pkg => (
-                                <div key={pkg.id} className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end border-b pb-4">
-                                    <div>
-                                        <Label>{pkg.name}</Label>
-                                    </div>
-                                    <div>
-                                        <Label>Prix (Base)</Label>
-                                        <Input 
-                                            type="number" 
-                                            value={pkg.priceHigh} 
-                                            onChange={(e) => handlePackagePriceChange(pkg.id, 'priceHigh', Number(e.target.value))}
-                                        />
-                                    </div>
-                                </div>
-                            ))}
-                            <Button onClick={handleSavePackagePrices}>Enregistrer les tarifs</Button>
-                        </div>
-                    </CardContent>
-                </Card>
-            </TabsContent>
+        </Tabs>
 
-          </Tabs>
+          <Dialog open={isViewDialogOpen} onOpenChange={(open) => {
+            setViewDialogOpen(open);
+            if (!open) setIsEditingContract(false);
+          }}>
+            <DialogContent className="max-w-3xl">
+              <DialogHeader className="flex flex-row items-center justify-between">
+                <DialogTitle>{isEditingContract ? "Modifier le contrat" : "Détails du contrat"}</DialogTitle>
+                {!isEditingContract && (
+                    <Button variant="outline" size="sm" onClick={() => setIsEditingContract(true)}>
+                        <Edit className="h-4 w-4 mr-2"/> Modifier
+                    </Button>
+                )}
+              </DialogHeader>
+              {viewedContract && editedContract && (
+                <div className="space-y-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <Label className="text-muted-foreground">Client</Label>
+                      <p className="font-medium">{viewedContract.client}</p>
+                    </div>
+                    <div>
+                      <Label className="text-muted-foreground">Statut</Label>
+                      {isEditingContract ? (
+                        <Select 
+                            value={editedContract.status} 
+                            onValueChange={(val) => setEditedContract({...editedContract, status: val})}
+                        >
+                            <SelectTrigger className="h-8 mt-1">
+                                <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="Awaiting Signature">En attente</SelectItem>
+                                <SelectItem value="Completed">Terminé / Signé</SelectItem>
+                            </SelectContent>
+                        </Select>
+                      ) : (
+                        <div className="flex items-center gap-2 mt-1">
+                            <Badge variant={viewedContract.status === 'Completed' ? 'default' : 'destructive'}>
+                                {viewedContract.status}
+                            </Badge>
+                        </div>
+                      )}
+                    </div>
+                    <div>
+                      <Label className="text-muted-foreground">Document</Label>
+                      {isEditingContract ? (
+                        <Input 
+                            className="h-8 mt-1"
+                            value={editedContract.document}
+                            onChange={(e) => setEditedContract({...editedContract, document: e.target.value})}
+                        />
+                      ) : (
+                        <p className="font-medium">{viewedContract.document}</p>
+                      )}
+                    </div>
+                    <div>
+                      <Label className="text-muted-foreground">Envoyé le</Label>
+                      <p className="font-medium">{viewedContract.dateSent}</p>
+                    </div>
+                  </div>
+                  <Separator />
+                  <div className="bg-muted/30 p-6 rounded-lg border border-border overflow-y-auto max-h-[400px]">
+                    <div className="prose dark:prose-invert max-w-none text-xs">
+                        <div className="flex justify-between items-center mb-6">
+                            <h3 className="m-0 text-primary">CONTRAT DE PRESTATION</h3>
+                            <Badge variant={viewedContract.status === 'Completed' ? 'default' : 'destructive'}>
+                                {viewedContract.status}
+                            </Badge>
+                        </div>
+                        
+                        <div className="grid grid-cols-2 gap-8 mb-8">
+                            <div>
+                                <h4 className="font-bold border-b pb-1 mb-2">PRESTATAIRE</h4>
+                                <p className="font-semibold m-0">Domaine des Vacheresses</p>
+                                <p className="m-0">1 Rue de l'Église</p>
+                                <p className="m-0">28210 Nogent-le-Roi, France</p>
+                            </div>
+                            <div>
+                                <h4 className="font-bold border-b pb-1 mb-2">CLIENT</h4>
+                                <p className="font-semibold m-0">{viewedContract.client}</p>
+                                <p className="m-0 italic">Informations récupérées du profil client</p>
+                            </div>
+                        </div>
+
+                        <h4 className="text-center bg-muted p-2 uppercase tracking-widest">{viewedContract.document}</h4>
+                        
+                        <div className="my-4 space-y-1">
+                            <p><strong>Date de l'événement :</strong> {viewedContract.bookingInfo?.date ? new Date(viewedContract.bookingInfo.date).toLocaleDateString() : 'Non définie'}</p>
+                            <p><strong>Nombre d'invités :</strong> {viewedContract.bookingInfo?.guests || 0}</p>
+                            <p><strong>Forfait :</strong> {viewedContract.bookingInfo?.package || 'Non défini'}</p>
+                        </div>
+                        
+                        <div className="mt-6">
+                            <h5 className="font-bold">1. Objet du contrat</h5>
+                            <p>{t.dashboard.view_contract.p1.replace('{date}', viewedContract.bookingInfo?.date ? new Date(viewedContract.bookingInfo.date).toLocaleDateString() : '---')}</p>
+                            
+                            <h5 className="font-bold">2. Prestations incluses</h5>
+                            <p>{t.dashboard.view_contract.p2}</p>
+                            
+                            <h5 className="font-bold">3. Conditions d'annulation</h5>
+                            <p>{t.dashboard.view_contract.p3}</p>
+                            
+                            <h5 className="font-bold">4. Règlement</h5>
+                            <p>{t.dashboard.view_contract.p4}</p>
+                        </div>
+                        
+                        <div className="mt-8 pt-8 border-t grid grid-cols-2 gap-8 italic text-center opacity-50">
+                            <div>
+                                <p className="mb-4">Signature Prestataire</p>
+                                <div className="h-16 flex items-center justify-center border rounded bg-muted/20">
+                                    <span className="font-serif text-lg">Frédérique & Philippe</span>
+                                </div>
+                            </div>
+                            <div>
+                                <p className="mb-4">Signature Client</p>
+                                <div className="h-16 flex items-center justify-center border rounded bg-muted/20">
+                                    {viewedContract.status === 'Completed' ? (
+                                        <span className="font-serif text-lg">{viewedContract.client}</span>
+                                    ) : (
+                                        <span className="text-xs">En attente</span>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                  </div>
+                  <div className="flex justify-center">
+                    <Button variant="outline" size="sm" className="text-xs">
+                        <Download className="mr-2 h-3 w-3"/> Exporter en PDF (Bêta)
+                    </Button>
+                  </div>
+                </div>
+              )}
+              <DialogFooter>
+                {isEditingContract ? (
+                    <div className="flex gap-2">
+                        <Button variant="outline" onClick={() => setIsEditingContract(false)}>Annuler</Button>
+                        <Button onClick={handleSaveContract}>Enregistrer</Button>
+                    </div>
+                ) : (
+                    <Button onClick={() => setViewDialogOpen(false)}>Fermer</Button>
+                )}
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
         </div>
       </main>
       <Footer />

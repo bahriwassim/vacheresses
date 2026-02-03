@@ -123,7 +123,7 @@ export function InteractiveMap() {
       x: 54,
       y: 80,
       link: "/domaine/manoir",
-      type: 'poi',
+      type: 'space',
     },
     {
       id: "parking_prestataires",

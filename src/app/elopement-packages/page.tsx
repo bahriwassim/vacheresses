@@ -19,13 +19,39 @@ import { InstagramFeed } from "@/components/sections/instagram-feed";
 import { EditableText } from "@/components/ui/editable-text";
 import { loadMediaOverridesByPath } from "@/lib/supabase";
 import { useBooking } from "@/contexts/booking-context";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious, type CarouselApi } from "@/components/ui/carousel";
+import { X } from "lucide-react";
+import Image from "next/image";
 
 function ElopementContent() {
-  const { t } = useLocale();
+  const { t, locale } = useLocale();
   const router = useRouter();
   const { dates, setDates } = useBooking();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [, setRefresh] = useState(0);
+
+  const [isLightboxOpen, setIsLightboxOpen] = useState(false);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [api, setApi] = useState<CarouselApi>();
+
+  const galleryImages = [
+    "/espace_1.jpg", "/espace_2_(1).jpg", "/espace_4.jpg", 
+    "/Parc_1.jpg", "/Parc_2.jpg", 
+    "/preau_verger_1.jpg", "/preau_verger_2.jpg",
+    "/vacheresses_17.jpg"
+  ];
+
+  const openLightboxAt = (idx: number) => {
+    setCurrentIndex(idx);
+    setIsLightboxOpen(true);
+  };
+
+  useEffect(() => {
+    if (api && isLightboxOpen) {
+      api.scrollTo(currentIndex, true);
+    }
+  }, [api, isLightboxOpen, currentIndex]);
   const overridePath = (path: string) => {
     try {
       const raw = typeof window !== 'undefined' ? localStorage.getItem('imageOverridesByPath') : null;
@@ -220,15 +246,15 @@ function ElopementContent() {
           {/* Hero Section */}
           <div className="text-center mb-16 animate-in fade-in slide-in-from-bottom-8 duration-1000">
             <p className="text-sm md:text-base tracking-wider text-primary uppercase font-semibold">
-              <EditableText path="elopement.hero.kicker" value="Mariages Intimes" />
+              <EditableText path="elopement.hero.kicker" value={t.elopement.hero.kicker} />
             </p>
             <h1 className="text-4xl md:text-5xl font-headline font-bold mt-2">
-              <EditableText path="elopement.hero.title" value="Forfaits Élopement" />
+              <EditableText path="elopement.hero.title" value={t.elopement.hero.title} />
             </h1>
             <p className="mt-4 text-lg text-muted-foreground max-w-3xl mx-auto">
               <EditableText
                 path="elopement.hero.subtitle"
-                value="Célébrez votre amour dans l'intimité absolue de notre domaine enchanteur. Des expériences personnalisées pour des mariages intimes et mémorables."
+                value={t.elopement.hero.subtitle}
                 multiline
               />
             </p>
@@ -239,19 +265,19 @@ function ElopementContent() {
             <div className="grid md:grid-cols-2 gap-8 items-center">
               <div>
                 <h2 className="text-3xl font-headline font-bold mb-4">
-                  <EditableText path="elopement.intro.title" value="Mariages Intimes au Manoir" />
+                  <EditableText path="elopement.intro.title" value={t.elopement.intro.title} />
                 </h2>
                 <p className="text-muted-foreground mb-4">
                   <EditableText
                     path="elopement.intro.p1"
-                    value="Nos forfaits élopement sont conçus pour les couples qui souhaitent célébrer leur union dans un cadre intime et enchanteur. Profitez de la beauté naturelle de notre domaine sans les contraintes d'un grand mariage."
+                    value={t.elopement.intro.p1}
                     multiline
                   />
                 </p>
                 <p className="text-muted-foreground">
                   <EditableText
                     path="elopement.intro.p2"
-                    value="Tous nos forfaits incluent l'hébergement pour 2 personnes dans le domaine, contrairement à nos forfaits de mariage traditionnels où l'hébergement est en option."
+                    value={t.elopement.intro.p2}
                     multiline
                   />
                 </p>
@@ -270,10 +296,10 @@ function ElopementContent() {
           {/* Packages Section */}
           <div className="mb-16">
             <h2 className="text-3xl font-headline font-bold text-center mb-4">
-              <EditableText path="elopement.packages.title" value="Nos Forfaits Élopement" />
+              <EditableText path="elopement.packages.title" value={t.elopement.packages.title} />
             </h2>
             <p className="text-muted-foreground text-center mb-12 max-w-2xl mx-auto">
-              <EditableText path="elopement.packages.subtitle" value="Une expérience intime au cœur de la campagne française, près de Paris" />
+              <EditableText path="elopement.packages.subtitle" value={t.elopement.packages.subtitle} />
             </p>
 
             <div className="flex flex-wrap justify-center gap-6 md:gap-8">
@@ -282,7 +308,7 @@ function ElopementContent() {
                 return (
                   <Card
                     key={pkg.id}
-                    className={`flex flex-col w-full md:w-[calc(50%-1rem)] lg:w-[calc(25%-1.5rem)] min-w-[280px] max-w-[350px] transition-all duration-500 hover-lift hover-glow animate-in fade-in slide-in-from-bottom-8 ${
+                    className={`flex flex-col w-full md:w-[calc(50%-1rem)] lg:w-[calc(33.33%-1.5rem)] min-w-[280px] max-w-[400px] transition-all duration-500 hover-lift hover-glow animate-in fade-in slide-in-from-bottom-8 ${
                       pkg.highlighted 
                         ? 'border-primary shadow-lg md:scale-105 ring-2 ring-primary/20' 
                         : 'hover:shadow-lg hover:border-primary/50'
@@ -303,7 +329,7 @@ function ElopementContent() {
                           overlayContent={
                             <div className="text-center text-white">
                               <p className="text-sm font-medium">
-                                <EditableText path="elopement.packages.discover" value="Découvrir" />
+                                <EditableText path="elopement.packages.discover" value={t.elopement.packages.discover} />
                               </p>
                             </div>
                           }
@@ -326,7 +352,7 @@ function ElopementContent() {
                           <li key={feature} className="flex items-start">
                             <Check className="h-5 w-5 text-primary mr-2 flex-shrink-0 mt-0.5" />
                             <span className="text-muted-foreground">
-                              <EditableText path={`elopement.packages.${pkg.id}_feature_${feature.length}_${feature.slice(0,10)}`} value={feature} />
+                              {feature}
                             </span>
                           </li>
                         ))}
@@ -337,12 +363,11 @@ function ElopementContent() {
                       onClick={() => handlePackageClick(pkg.id)}
                       className="w-full"
                       variant={pkg.highlighted ? 'default' : 'outline'}
-                      // Button is enabled by default, will work on client-side
                     >
                       {dates ? (
-                          <EditableText path="elopement.packages.button_select" value="Voir le programme" />
+                          <EditableText path="elopement.packages.button_reserve" value={t.elopement.packages.button_reserve} />
                         ) : (
-                          <EditableText path="elopement.packages.button_choice" value="Choisir une date" />
+                          <EditableText path="elopement.packages.button_choice" value={t.elopement.packages.button_choice} />
                         )}
                     </Button>
                   </CardFooter>
@@ -359,7 +384,7 @@ function ElopementContent() {
                 <h2 className="text-3xl font-headline font-bold">Programme</h2>
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <Calendar className="h-4 w-4" />
-                  {dates?.from ? new Date(dates.from).toLocaleDateString('fr-FR') : "Date non sélectionnée"}
+                  {dates?.from ? new Date(dates.from).toLocaleDateString(locale === 'fr' ? 'fr-FR' : 'en-US') : "Date non sélectionnée"}
                 </div>
               </div>
               <ul className="space-y-3">
@@ -372,7 +397,7 @@ function ElopementContent() {
               </ul>
               <div className="mt-8 flex flex-col sm:flex-row gap-4">
                 <Button onClick={() => router.push(buildPackageUrl(selectedPackageId))} className="gap-2">
-                  Continuer
+                  <EditableText path="packages.reserve_pack" value={t.packages.reserve_pack} />
                 </Button>
                 <Button variant="outline" onClick={() => setIsProgramOpen(false)}>
                   Fermer
@@ -384,41 +409,65 @@ function ElopementContent() {
 
         <div className="mb-16">
           <h2 className="text-3xl font-headline font-bold text-center mb-4">
-            <EditableText path="elopement.gallery1.title" value="Moments Inoubliables" />
+            <EditableText path="elopement.gallery1.title" value={t.elopement.gallery1.title} />
           </h2>
           <p className="text-muted-foreground text-center mb-8 max-w-2xl mx-auto">
-              <EditableText path="elopement.gallery1.subtitle" value="Découvrez la magie de nos mariages intimes à travers ces images" />
+              <EditableText path="elopement.gallery1.subtitle" value={t.elopement.gallery1.subtitle} />
             </p>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              {[
-                "/espace_1.jpg", "/espace_2_(1).jpg", "/espace_4.jpg", 
-                "/Parc_1.jpg", "/Parc_2.jpg", 
-                "/preau_verger_1.jpg", "/preau_verger_2.jpg",
-                "/vacheresses_17.jpg"
-              ].map((img, i) => (
-                <div key={i} className="relative aspect-square rounded-xl overflow-hidden group">
+              {galleryImages.map((img, i) => (
+                <button
+                  key={i}
+                  type="button"
+                  onClick={() => openLightboxAt(i)}
+                  className="relative aspect-square rounded-xl overflow-hidden group focus:outline-none shadow-md"
+                >
                   <CardImage
                     src={overridePath(img)}
                     alt={`Mariage intime ${i + 1}`}
                     fill
                     className="object-cover transition-transform duration-500 group-hover:scale-110"
                   />
-                </div>
+                </button>
               ))}
             </div>
           </div>
 
-          <div className="bg-primary/5 rounded-xl p-8 text-center mb-16">
-            <h2 className="text-3xl font-headline font-bold mb-8">Options Disponibles</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {options.map((option, idx) => (
-                <div key={idx} className="bg-card p-6 rounded-xl border border-primary/10 shadow-sm">
-                  <h3 className="font-semibold text-primary mb-2">{option.name}</h3>
-                  <p className="text-2xl font-bold">{option.price} €</p>
-                </div>
-              ))}
-            </div>
-          </div>
+          <Dialog open={isLightboxOpen} onOpenChange={setIsLightboxOpen}>
+            <DialogContent className="max-w-none w-full h-[95vh] p-0 bg-black/95 border-none">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="absolute right-4 top-4 z-50 rounded-full bg-black/50 hover:bg-black"
+                onClick={() => setIsLightboxOpen(false)}
+              >
+                <X className="h-5 w-5 text-white" />
+              </Button>
+              <div className="relative w-full h-full">
+                <Carousel
+                  setApi={setApi}
+                  className="w-full h-full"
+                >
+                  <CarouselContent className="h-full">
+                    {galleryImages.map((img, idx) => (
+                      <CarouselItem key={idx} className="h-full">
+                        <div className="relative w-full h-full flex items-center justify-center">
+                          <Image
+                            src={overridePath(img)}
+                            alt={`Mariage intime ${idx + 1}`}
+                            fill
+                            className="object-contain"
+                          />
+                        </div>
+                      </CarouselItem>
+                    ))}
+                  </CarouselContent>
+                  <CarouselPrevious className="text-white border-white/20 bg-black/40 hover:bg-black/60" />
+                  <CarouselNext className="text-white border-white/20 bg-black/40 hover:bg-black/60" />
+                </Carousel>
+              </div>
+            </DialogContent>
+          </Dialog>
 
           {/* Contact Section */}
           <div className="bg-primary/5 rounded-xl p-8 text-center">

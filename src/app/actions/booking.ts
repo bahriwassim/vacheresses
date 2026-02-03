@@ -50,9 +50,29 @@ export async function createBooking(payload: any) {
     // Force using the service role by explicitly not setting any session
     // The client is already initialized with service role key, so it should be admin.
     
-    console.log("Attempting to insert booking with service role...");
+    // 1. Validation du nombre d'invités (Max 100 pour les mariages)
+    if (payload.guest_count > 100) {
+        return { error: "Le nombre maximum d'invités autorisé est de 100 personnes." };
+    }
 
-    // Ensure booking_reference is present
+    // 2. Check if the date is already booked
+    console.log("Checking if date is already booked:", payload.event_date);
+    const { data: existingBooking, error: checkError } = await supabase
+      .from('bookings')
+      .select('id, status')
+      .eq('event_date', payload.event_date)
+      .neq('status', 'cancelled')
+      .maybeSingle();
+
+    if (checkError) {
+        console.error("Error checking date availability:", checkError);
+    }
+
+    if (existingBooking) {
+        return { error: "Désolé, cette date est déjà réservée ou fait l'objet d'une demande en cours." };
+    }
+
+    // 3. Ensure booking_reference is present
     if (!payload.booking_reference) {
         payload.booking_reference = generateBookingReference();
     }

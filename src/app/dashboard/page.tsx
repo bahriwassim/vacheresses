@@ -26,6 +26,8 @@ export default function DashboardPage() {
   const [currentUser, setCurrentUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [profileData, setProfileData] = useState({ name: '', email: '', phone: '' });
+  const [latestBooking, setLatestBooking] = useState<any>(null);
+  const [allBookings, setAllBookings] = useState<any[]>([]);
   const [contracts, setContracts] = useState<any[]>([]);
   const [accommodations, setAccommodations] = useState<any[]>([]);
   const [isViewDialogOpen, setViewDialogOpen] = useState(false);
@@ -81,8 +83,7 @@ export default function DashboardPage() {
             guest_count,
             notes,
             status,
-            package:packages(name_fr, name_en),
-            contracts(*)
+            package:packages(name_fr, name_en)
         `)
         .eq('user_id', session.user.id)
         .order('created_at', { ascending: false });
@@ -94,13 +95,52 @@ export default function DashboardPage() {
       console.log("Dashboard bookings fetched:", bookings);
 
       if (bookings && bookings.length > 0) {
+        setAllBookings(bookings.map((b: any) => {
+            const packageData = Array.isArray(b.package) ? b.package[0] : b.package;
+            let displayPackage = locale === 'fr' ? packageData?.name_fr : packageData?.name_en;
+            if (!displayPackage && b.notes) {
+                const notesStr = String(b.notes);
+                const mElopement = notesStr.match(/Élopement:\s*([^.]+)/i);
+                const mWedding = notesStr.match(/Forfait sélectionné:\s*([^.]+)/i);
+                
+                if (mElopement && mElopement[1]) displayPackage = mElopement[1].trim();
+                else if (mWedding && mWedding[1]) {
+                    // Remove (ID: ...) if present
+                    displayPackage = mWedding[1].replace(/\s*\(ID:.*?\)\s*/i, '').trim();
+                }
+                else if (notesStr.includes('Élopement')) displayPackage = "Forfait Élopement";
+                else if (notesStr.includes('Forfait')) {
+                    const mAny = notesStr.match(/Forfait:\s*([^.]+)/i);
+                    if (mAny) displayPackage = mAny[1].trim();
+                }
+            }
+            return {
+                id: b.id,
+                date: b.event_date,
+                guests: b.guest_count,
+                package: displayPackage || 'Sur mesure',
+                status: b.status
+            };
+        }));
+
         const latestBooking = bookings[0];
         const packageData = Array.isArray(latestBooking.package) ? latestBooking.package[0] : latestBooking.package;
         const pkgName = locale === 'fr' ? packageData?.name_fr : packageData?.name_en;
         let displayPackage = pkgName;
         if (!displayPackage && latestBooking?.notes) {
-          const m = String(latestBooking.notes).match(/Élopement:\s*([^\.]+)/i);
-          if (m && m[1]) displayPackage = m[1].trim();
+          const notesStr = String(latestBooking.notes);
+          const mElopement = notesStr.match(/Élopement:\s*([^.]+)/i);
+          const mWedding = notesStr.match(/Forfait sélectionné:\s*([^.]+)/i);
+          
+          if (mElopement && mElopement[1]) displayPackage = mElopement[1].trim();
+          else if (mWedding && mWedding[1]) {
+            displayPackage = mWedding[1].replace(/\s*\(ID:.*?\)\s*/i, '').trim();
+          }
+          else if (notesStr.includes('Élopement')) displayPackage = "Forfait Élopement";
+          else if (notesStr.includes('Forfait')) {
+            const mAny = notesStr.match(/Forfait:\s*([^.]+)/i);
+            if (mAny) displayPackage = mAny[1].trim();
+          }
         }
         
         setBookingInfo({
@@ -108,19 +148,30 @@ export default function DashboardPage() {
             guests: latestBooking.guest_count,
             package: displayPackage || 'Aucun forfait'
         });
+      }
 
-        // Contracts
-        if (latestBooking.contracts) {
-            const mappedContracts = latestBooking.contracts.map((c: any) => ({
-                id: c.id,
-                document: c.document_name,
-                status: c.status === 'completed' || c.status === 'signed' ? 'Completed' : 'Awaiting Signature',
-                dateSent: new Date(c.created_at).toLocaleDateString(),
-                client: userProfile.name, // For display in dialog
-                raw: c
-            }));
-            setContracts(mappedContracts);
-        }
+      // Fetch all contracts for this user
+      const { data: contractsData } = await supabase
+        .from('contracts')
+        .select(`
+            id,
+            document_name,
+            status,
+            created_at,
+            booking_id,
+            booking:bookings!inner(user_id)
+        `)
+        .eq('booking.user_id', session.user.id);
+
+      if (contractsData) {
+        setContracts(contractsData.map((c: any) => ({
+            id: c.id,
+            document: c.document_name,
+            status: c.status === 'completed' || c.status === 'signed' ? 'Completed' : 'Awaiting Signature',
+            dateSent: new Date(c.created_at).toLocaleDateString(),
+            client: userProfile.name,
+            raw: c
+        })));
       }
 
       // Fetch Accommodations
@@ -242,11 +293,11 @@ export default function DashboardPage() {
           </div>
 
           <Tabs defaultValue="overview">
-            <TabsList className="grid w-full grid-cols-2 md:grid-cols-5">
+            <TabsList className="grid w-full grid-cols-2 md:grid-cols-6">
               <TabsTrigger value="overview"><Heart className="mr-2"/>{t.dashboard.tabs.overview}</TabsTrigger>
+              <TabsTrigger value="bookings"><Calendar className="mr-2"/>Mes Réservations</TabsTrigger>
               <TabsTrigger value="contracts"><FileText className="mr-2"/>{t.dashboard.tabs.contracts}</TabsTrigger>
               <TabsTrigger value="payments"><CreditCard className="mr-2"/>{t.dashboard.tabs.payments}</TabsTrigger>
-              {/* <TabsTrigger value="accommodations"><Hotel className="mr-2"/>Hébergements</TabsTrigger> */}
               <TabsTrigger value="messages"><MessageSquare className="mr-2"/>Messages</TabsTrigger>
               <TabsTrigger value="profile"><UserIcon className="mr-2"/>Mon Profil</TabsTrigger>
             </TabsList>
@@ -278,6 +329,52 @@ export default function DashboardPage() {
                         <p className="text-muted-foreground">{bookingInfo?.package || 'Aucun forfait'}</p>
                       </div>
                    </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value="bookings" className="mt-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Mes Réservations</CardTitle>
+                  <CardDescription>Retrouvez ici tous vos projets (Mariages, Élopements, etc.)</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid gap-4">
+                    {allBookings.length > 0 ? (
+                        allBookings.map((b) => (
+                          <div key={b.id} className="flex flex-col md:flex-row md:items-center justify-between p-4 border rounded-lg hover:bg-muted/50 transition-colors gap-4">
+                            <div className="space-y-1">
+                              <p className="font-bold text-lg">{b.package}</p>
+                              <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                                <span className="flex items-center gap-1"><Calendar className="w-3 h-3"/> {new Date(b.date).toLocaleDateString()}</span>
+                                <span className="flex items-center gap-1"><Users className="w-3 h-3"/> {b.guests} invités</span>
+                              </div>
+                            </div>
+                            <div className="flex items-center gap-3">
+                                <Badge variant={b.status === 'confirmed' || b.status === 'booked' ? 'default' : 'outline'}>
+                                    {b.status === 'confirmed' || b.status === 'booked' ? 'Confirmé' : b.status}
+                                </Badge>
+                                {b.status === 'inquiry' && (
+                                    <Button variant="outline" size="sm" asChild>
+                                        <Link href={`/configurator?package=${b.package_id || ''}&date=${b.date}&guests=${b.guests}`}>Modifier</Link>
+                                    </Button>
+                                )}
+                                <Button variant="ghost" size="sm" asChild>
+                                    <Link href="/contact">Contacter</Link>
+                                </Button>
+                            </div>
+                          </div>
+                        ))
+                    ) : (
+                        <div className="text-center py-8">
+                            <p className="text-muted-foreground italic">Aucune réservation trouvée.</p>
+                            <Button asChild className="mt-4">
+                                <Link href="/configurator">Créer mon projet</Link>
+                            </Button>
+                        </div>
+                    )}
+                  </div>
                 </CardContent>
               </Card>
             </TabsContent>
@@ -418,15 +515,70 @@ export default function DashboardPage() {
                 <DialogTitle>{viewedContract?.document}</DialogTitle>
               </DialogHeader>
               <div className="prose dark:prose-invert max-w-none max-h-[60vh] overflow-y-auto p-4 border rounded-md">
-                <h3>{viewedContract?.document} {t.dashboard.view_contract.for} {viewedContract?.client}</h3>
+                <div className="flex justify-between items-center mb-6">
+                    <h2 className="m-0 text-primary">Contrat de Prestation</h2>
+                    <Badge variant={viewedContract?.status === 'Completed' ? 'default' : 'destructive'}>
+                        {viewedContract?.status === 'Completed' ? t.dashboard.contracts.status_completed : t.dashboard.contracts.status_awaiting}
+                    </Badge>
+                </div>
+                
+                <div className="grid grid-cols-2 gap-8 mb-8 text-sm">
+                    <div>
+                        <h4 className="font-bold border-b pb-1 mb-2">PRESTATAIRE</h4>
+                        <p className="font-semibold">Domaine des Vacheresses</p>
+                        <p>1 Rue de l'Église</p>
+                        <p>28210 Nogent-le-Roi, France</p>
+                    </div>
+                    <div>
+                        <h4 className="font-bold border-b pb-1 mb-2">CLIENT</h4>
+                        <p className="font-semibold">{currentUser?.name}</p>
+                        <p>{currentUser?.email}</p>
+                        <p>{currentUser?.phone || 'Téléphone non renseigné'}</p>
+                        <Button variant="link" size="sm" className="p-0 h-auto text-xs" onClick={() => {
+                            setViewDialogOpen(false);
+                            // Switch to profile tab (we need to trigger this)
+                            const tabTrigger = document.querySelector('[value="profile"]') as HTMLButtonElement;
+                            if (tabTrigger) tabTrigger.click();
+                        }}>
+                            Modifier mes informations
+                        </Button>
+                    </div>
+                </div>
+
+                <h3>{viewedContract?.document}</h3>
+                <p><strong>Date de l'événement :</strong> {bookingInfo?.date ? new Date(bookingInfo.date).toLocaleDateString() : 'Non définie'}</p>
+                <p><strong>Nombre d'invités :</strong> {bookingInfo?.guests || 0}</p>
+                
+                <h4>1. Objet du contrat</h4>
                 <p>{t.dashboard.view_contract.p1.replace('{date}', bookingInfo?.date ? new Date(bookingInfo.date).toLocaleDateString() : '')}</p>
-                <h4>{t.dashboard.view_contract.h4_1}</h4>
+                
+                <h4>2. Prestations incluses</h4>
                 <p>{t.dashboard.view_contract.p2}</p>
-                <h4>{t.dashboard.view_contract.h4_2}</h4>
+                
+                <h4>3. Conditions d'annulation</h4>
                 <p>{t.dashboard.view_contract.p3}</p>
-                <h4>{t.dashboard.view_contract.h4_3}</h4>
+                
+                <h4>4. Règlement</h4>
                 <p>{t.dashboard.view_contract.p4}</p>
-                <p><strong>{t.dashboard.view_contract.status}:</strong> {viewedContract?.status === 'Completed' ? t.dashboard.contracts.status_completed : t.dashboard.contracts.status_awaiting}</p>
+                
+                <div className="mt-8 pt-8 border-t grid grid-cols-2 gap-8 italic text-center">
+                    <div>
+                        <p className="mb-4">Signature Prestataire</p>
+                        <div className="h-20 flex items-center justify-center border rounded bg-muted/20">
+                            <span className="font-serif text-lg opacity-50">Frédérique & Philippe</span>
+                        </div>
+                    </div>
+                    <div>
+                        <p className="mb-4">Signature Client</p>
+                        <div className="h-20 flex items-center justify-center border rounded bg-muted/20">
+                            {viewedContract?.status === 'Completed' ? (
+                                <span className="font-serif text-lg text-primary">{currentUser?.name}</span>
+                            ) : (
+                                <span className="text-xs text-muted-foreground italic">En attente de signature</span>
+                            )}
+                        </div>
+                    </div>
+                </div>
               </div>
               <DialogFooter>
                 <DialogClose asChild>

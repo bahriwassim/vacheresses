@@ -30,12 +30,13 @@ function LoginForm() {
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [redirecting, setRedirecting] = useState(true);
+  const [activeTab, setActiveTab] = useState('login');
 
   useEffect(() => {
     const run = async () => {
       try {
-        const cu = await authService.getCurrentUser();
-        const role = cu?.profile?.role;
+        const { user, profile } = await authService.getCurrentUser();
+        const role = profile?.role;
         if (role) {
           if (role === 'admin' || role === 'super_admin') {
             router.replace(next || '/admin');
@@ -114,11 +115,31 @@ function LoginForm() {
     setIsLoading(true);
 
     try {
-      const { user } = await authService.signUp(email, password, name, phone);
-      const cu = user ? await authService.getCurrentUser() : null;
+      const { user, session } = await authService.signUp(email, password, name, phone);
       
-      if (!cu || !cu.profile) {
-        throw new Error("La création du profil a échoué.");
+      if (!session) {
+        // Email confirmation is likely enabled
+        toast({
+          title: "Vérifiez vos emails",
+          description: "Un lien de confirmation vous a été envoyé. Veuillez valider votre compte avant de vous connecter."
+        });
+        setActiveTab('login'); // Switch to login mode
+        return;
+      }
+
+      // If we have a session, wait a bit for the trigger to create the user profile row
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      
+      const { profile } = await authService.getCurrentUser();
+      
+      if (!profile) {
+        // Fallback to manual login if profile not found immediately
+        toast({
+          title: "Compte créé",
+          description: "Votre compte a été créé. Veuillez vous connecter."
+        });
+        setActiveTab('login');
+        return;
       }
 
       toast({
@@ -126,7 +147,7 @@ function LoginForm() {
         description: t.login?.signup_success_desc || "Votre compte a été créé"
       });
 
-      localStorage.setItem('user', JSON.stringify(cu.profile));
+      localStorage.setItem('user', JSON.stringify(profile));
       router.push(next || "/dashboard");
     } catch (err: any) {
       setError(err.message || "Erreur lors de l'inscription");
@@ -158,7 +179,7 @@ function LoginForm() {
             <EditableText path="login.description" value={t.login.description} />
           </CardDescription>
         </CardHeader>
-        <Tabs defaultValue="login" className="w-full">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
             <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="login">
                 <EditableText path="login.login_tab" value={t.login.login_tab} />

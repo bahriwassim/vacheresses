@@ -3,24 +3,35 @@
 
 import { Calendar } from "@/components/ui/calendar";
 import { Card, CardContent } from "@/components/ui/card";
-import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { useState, useEffect } from "react";
 import { useLocale } from "@/hooks/use-locale";
+import { supabase } from "@/lib/supabase";
 
 export function Availability() {
   const [date, setDate] = useState<Date | undefined>(new Date());
+  const [bookedDates, setBookedDates] = useState<Date[]>([]);
+  const [month, setMonth] = useState<Date>(new Date());
   const { t } = useLocale();
 
-  // Mocking some booked dates
-  const bookedDates = [
-    new Date(2024, 6, 20),
-    new Date(2024, 6, 21),
-    new Date(2024, 7, 10),
-  ];
+  useEffect(() => {
+    const fetchBookings = async () => {
+      if (!supabase) return;
+      const { data, error } = await supabase
+        .from('bookings')
+        .select('event_date, status')
+        .in('status', ['confirmed', 'booked', 'paid']);
 
-  // Générer 3 mois à partir du mois actuel
-  const currentMonth = new Date();
-  const nextMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 1);
-  const thirdMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 2, 1);
+      if (data) {
+        setBookedDates(data.map(b => new Date(b.event_date)));
+      }
+    };
+    fetchBookings();
+  }, []);
+
+  // Générer les mois à afficher
+  const nextMonth = new Date(month.getFullYear(), month.getMonth() + 1, 1);
+  const thirdMonth = new Date(month.getFullYear(), month.getMonth() + 2, 1);
 
   return (
     <section id="availability" className="py-16 md:py-24 bg-secondary/50">
@@ -30,6 +41,11 @@ export function Availability() {
           <p className="mt-2 text-lg text-muted-foreground max-w-2xl mx-auto">
             {t.availability.subtitle}
           </p>
+          <div className="mt-4">
+            <Button variant="outline" size="sm" onClick={() => setMonth(new Date())}>
+                Revenir à aujourd'hui
+            </Button>
+          </div>
         </div>
         <div className="flex justify-center">
           <Card className="p-6 shadow-2xl animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-200">
@@ -42,9 +58,10 @@ export function Availability() {
                     selected={date}
                     onSelect={setDate}
                     className="rounded-md"
-                    month={currentMonth}
+                    month={month}
+                    onMonthChange={setMonth}
                     disabled={(day) =>
-                      day < new Date(new Date().setDate(new Date().getDate() - 1)) ||
+                      day < new Date(new Date().setHours(0,0,0,0)) ||
                       bookedDates.some(bookedDate =>
                         day.getFullYear() === bookedDate.getFullYear() &&
                         day.getMonth() === bookedDate.getMonth() &&
@@ -62,8 +79,9 @@ export function Availability() {
                     onSelect={setDate}
                     className="rounded-md"
                     month={nextMonth}
+                    onMonthChange={(m) => setMonth(new Date(m.getFullYear(), m.getMonth() - 1, 1))}
                     disabled={(day) =>
-                      day < new Date(new Date().setDate(new Date().getDate() - 1)) ||
+                      day < new Date(new Date().setHours(0,0,0,0)) ||
                       bookedDates.some(bookedDate =>
                         day.getFullYear() === bookedDate.getFullYear() &&
                         day.getMonth() === bookedDate.getMonth() &&
@@ -81,8 +99,9 @@ export function Availability() {
                     onSelect={setDate}
                     className="rounded-md"
                     month={thirdMonth}
+                    onMonthChange={(m) => setMonth(new Date(m.getFullYear(), m.getMonth() - 2, 1))}
                     disabled={(day) =>
-                      day < new Date(new Date().setDate(new Date().getDate() - 1)) ||
+                      day < new Date(new Date().setHours(0,0,0,0)) ||
                       bookedDates.some(bookedDate =>
                         day.getFullYear() === bookedDate.getFullYear() &&
                         day.getMonth() === bookedDate.getMonth() &&

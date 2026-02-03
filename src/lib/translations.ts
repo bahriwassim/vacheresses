@@ -713,6 +713,36 @@ export type Translation = {
     subtitle: string;
     button: string;
   };
+  elopement: {
+    hero: {
+      kicker: string;
+      title: string;
+      subtitle: string;
+    };
+    intro: {
+      title: string;
+      p1: string;
+      p2: string;
+    };
+    packages: {
+      title: string;
+      subtitle: string;
+      discover: string;
+      button_select: string;
+      button_choice: string;
+      button_reserve: string;
+    };
+    gallery1: {
+      title: string;
+      subtitle: string;
+    };
+    contact: {
+      title: string;
+      subtitle: string;
+      button_email: string;
+      button_call: string;
+    };
+  };
 };
 
 export const translations: Record<Locale, Translation> = {
@@ -765,6 +795,7 @@ export const translations: Record<Locale, Translation> = {
         ],
         button: "Select Package",
         discover: "Discover",
+        reserve_pack: "Book this pack",
     },
     visualTour: {
         title: "An Immersive Visual Tour",
@@ -841,7 +872,7 @@ export const translations: Record<Locale, Translation> = {
         {
           id: "guests",
           question: "How many guests can the Manor accommodate?",
-          answer: "Our estate can comfortably accommodate up to 200 guests for a seated dinner. The exact capacity depends on your chosen package and layout preferences. We can also arrange additional accommodations at nearby partner hotels for larger groups.",
+          answer: "Our estate can comfortably accommodate up to 100 guests for a seated dinner. The exact capacity depends on your chosen package and layout preferences. We can also arrange additional accommodations at nearby partner hotels for larger groups.",
         },
         {
           id: "catering",
@@ -1498,7 +1529,112 @@ export const translations: Record<Locale, Translation> = {
       title: "Follow us on Instagram",
       subtitle: "@manoirdevacheresses",
       button: "View on Instagram"
-    }
+    },
+    elopement: {
+      hero: {
+        kicker: "Intimate Weddings",
+        title: "Elopement Packages",
+        subtitle: "Celebrate your love in the absolute intimacy of our enchanting estate. Personalized experiences for intimate and memorable weddings.",
+      },
+      intro: {
+        title: "Intimate Weddings at the Manor",
+        p1: "Our elopement packages are designed for couples who wish to celebrate their union in an intimate and enchanting setting. Enjoy the natural beauty of our estate without the constraints of a large wedding.",
+        p2: "All our packages include accommodation for 2 people at the estate, unlike our traditional wedding packages where accommodation is optional.",
+      },
+      packages: {
+        title: "Our Elopement Packages",
+        subtitle: "An intimate experience in the heart of the French countryside, near Paris",
+        discover: "Discover",
+        button_select: "View Program",
+        button_choice: "Choose a Date",
+        button_reserve: "Book this pack",
+      },
+      gallery1: {
+        title: "Unforgettable Moments",
+        subtitle: "Discover the magic of our intimate weddings through these images",
+      },
+      contact: {
+        title: "Want a Personalized Package?",
+        subtitle: "We can create a special package tailored to your specific needs and preferences. Contact us to discuss your ideas.",
+        button_email: "Send an Email",
+        button_call: "Call the Manor",
+      },
+      configurator: {
+        title: "Customize Your Elopement",
+        subtitle: "Adjust the details of your intimate day at the Manor.",
+        back: "Back to packages",
+        inspire: "Get inspired by our weddings",
+        customize_title: "Your Preferences",
+        budget_title: "Your Elopement Budget",
+        budget_subtitle: "Real-time estimation",
+        date_label: "Elopement Date",
+        guests_label: "Number of Guests",
+        guests_value: "{count} people",
+        program_title: "Program & Options",
+        program_day: "Daily Program",
+        options_available: "Available Options",
+        base_costs: "Fixed costs ({name})",
+        variable_costs: "Variable costs ({count} guests)",
+        options_total: "Selected options",
+        total_estimate: "Estimated Total",
+        book_button: "Send Inquiry",
+        login_to_book: "Log in to book",
+        submitting: "Sending...",
+        disclaimer: "This estimation is not a final quote. No payment required now.",
+        date_change: "Change",
+        no_package_title: "No package selected",
+        no_package_button: "View elopement packages",
+        error_date_unavailable: "Date not available",
+        error_weekday_only: "This package is only available on weekdays (Monday to Friday).",
+        error_winter_only: "This package is only available in winter (November to March).",
+        success_title: "Inquiry sent!",
+        success_message: "Your elopement inquiry has been received.",
+        error_title: "Error",
+        error_message: "An error has occurred.",
+        packages: {
+          formule1_name: "Elopement Formula 1 (1 Day)",
+          formule2_name: "Elopement Formula 2 (With Overnight)",
+          formule_hiver_name: "Elopement Winter Formula (2 People)",
+          program_f1: [
+            "Morning – Arrival at the Manor",
+            "Morning – Preparations (makeup & hair)",
+            "Noon – First Look",
+            "Afternoon – Exchange of vows with celebrant",
+            "Afternoon – Champagne toast",
+            "Afternoon – Photo session (park, lounge, ext.)",
+            "Evening – Indoor or outdoor meal with private chef",
+            "End of day – Departure"
+          ],
+          program_f2: [
+            "1:00 PM – Arrival at the Manor",
+            "1:30 PM – Preparations (makeup & hair)",
+            "2:30 PM – First Look",
+            "3:00 PM – Exchange of vows with celebrant",
+            "3:30 PM – Champagne toast",
+            "Afternoon – Photo session (park, lounge, ext.)",
+            "Evening – Indoor or outdoor meal with private chef",
+            "Night – Overnight stay at the estate",
+            "Next day – Breakfast / Brunch & Departure"
+          ],
+          program_hiver: [
+            "Morning – Arrival at the Manor",
+            "Morning – Preparations (makeup & hair)",
+            "Noon – First Look",
+            "Afternoon – Exchange of vows in the Manor lounge",
+            "Afternoon – Champagne toast",
+            "Afternoon – Photo session (park, lounge, ext.)",
+            "Evening – Meal in the Manor dining room with private chef",
+            "End of day – Departure"
+          ]
+        },
+        options: {
+          videaste: "Videographer",
+          coiffure: "Bridal hair & makeup",
+          musique: "Ceremony musician",
+          rolls: "Rolls Royce or Jaguar rental"
+        }
+      },
+    },
   },
   fr: {
     header: {
@@ -1549,6 +1685,7 @@ export const translations: Record<Locale, Translation> = {
         ],
         button: "Sélectionner le forfait",
         discover: "Découvrir",
+        reserve_pack: "Réserver ce pack",
     },
     visualTour: {
         title: "Une visite visuelle immersive",
@@ -1625,7 +1762,7 @@ export const translations: Record<Locale, Translation> = {
         {
           id: "guests",
           question: "Combien d'invités le Manoir peut-il accueillir ?",
-          answer: "Notre domaine peut accueillir confortablement jusqu'à 200 invités pour un dîner assis. La capacité exacte dépend de votre forfait choisi et de vos préférences d'aménagement. Nous pouvons également organiser des hébergements supplémentaires dans des hôtels partenaires à proximité pour des groupes plus importants.",
+          answer: "Notre domaine peut accueillir confortablement jusqu'à 100 invités pour un dîner assis. La capacité exacte dépend de votre forfait choisi et de vos préférences d'aménagement. Nous pouvons également organiser des hébergements supplémentaires dans des hôtels partenaires à proximité pour des groupes plus importants.",
         },
         {
           id: "catering",
@@ -2282,6 +2419,111 @@ export const translations: Record<Locale, Translation> = {
       title: "Suivez-nous sur Instagram",
       subtitle: "@manoirdevacheresses",
       button: "Voir sur Instagram"
-    }
+    },
+    elopement: {
+      hero: {
+        kicker: "Mariages Intimes",
+        title: "Forfaits Élopement",
+        subtitle: "Célébrez votre amour dans l'intimité absolue de notre domaine enchanteur. Des expériences personnalisées pour des mariages intimes et mémorables.",
+      },
+      intro: {
+        title: "Mariages Intimes au Manoir",
+        p1: "Nos forfaits élopement sont conçus pour les couples qui souhaitent célébrer leur union dans un cadre intime et enchanteur. Profitez de la beauté naturelle de notre domaine sans les contraintes d'un grand mariage.",
+        p2: "Tous nos forfaits incluent l'hébergement pour 2 personnes dans le domaine, contrairement à nos forfaits de mariage traditionnels où l'hébergement est en option.",
+      },
+      packages: {
+        title: "Nos Forfaits Élopement",
+        subtitle: "Une expérience intime au cœur de la campagne française, près de Paris",
+        discover: "Découvrir",
+        button_select: "Voir le programme",
+        button_choice: "Choisir une date",
+        button_reserve: "Réserver ce pack",
+      },
+      gallery1: {
+        title: "Moments Inoubliables",
+        subtitle: "Découvrez la magie de nos mariages intimes à travers ces images",
+      },
+      contact: {
+        title: "Envie d'un Forfait Personnalisé ?",
+        subtitle: "Nous pouvons créer un forfait spécial adapté à vos besoins et préférences spécifiques. Contactez-nous pour discuter de vos idées.",
+        button_email: "Envoyer un Email",
+        button_call: "Appeler le Manoir",
+      },
+      configurator: {
+        title: "Personnalisez votre Élopement",
+        subtitle: "Ajustez les détails de votre journée intime au Manoir.",
+        back: "Retour aux packs",
+        inspire: "Inspirez-vous de nos mariages",
+        customize_title: "Vos Préférences",
+        budget_title: "Budget de votre Élopement",
+        budget_subtitle: "Estimation en temps réel",
+        date_label: "Date d'élopement",
+        guests_label: "Nombre d'invités",
+        guests_value: "{count} personnes",
+        program_title: "Programme & Options",
+        program_day: "Programme de la journée",
+        options_available: "Options disponibles",
+        base_costs: "Coûts fixes ({name})",
+        variable_costs: "Coûts variables ({count} pers.)",
+        options_total: "Options sélectionnées",
+        total_estimate: "Total Estimé",
+        book_button: "Envoyer la demande",
+        login_to_book: "Se connecter pour réserver",
+        submitting: "Envoi...",
+        disclaimer: "Cette estimation ne constitue pas un devis définitif. Aucun paiement requis maintenant.",
+        date_change: "Changer",
+        no_package_title: "Aucun pack sélectionné",
+        no_package_button: "Voir les packs d'élopement",
+        error_date_unavailable: "Date non disponible",
+        error_weekday_only: "Cette formule est uniquement disponible en semaine (du lundi au vendredi).",
+        error_winter_only: "Cette formule est uniquement disponible en hiver (de novembre à mars).",
+        success_title: "Demande envoyée !",
+        success_message: "Votre demande d'elopement a été reçue.",
+        error_title: "Erreur",
+        error_message: "Une erreur est survenue.",
+        packages: {
+          formule1_name: "Élopement Formule 1 (1 Journée)",
+          formule2_name: "Élopement Formule 2 (Avec Nuitée)",
+          formule_hiver_name: "Élopement Formule Hiver (2 Personnes)",
+          program_f1: [
+            "Matin – Arrivée au Manoir",
+            "Matin – Préparatifs (maquillage & coiffure)",
+            "Midi – First Look",
+            "Après-midi – Échange de vœux avec célébrant",
+            "Après-midi – Toast au champagne",
+            "Après-midi – Session photo (parc, salon, ext.)",
+            "Soir – Repas intérieur ou extérieur avec chef privé",
+            "Fin de journée – Départ"
+          ],
+          program_f2: [
+            "13h00 – Arrivée au Manoir",
+            "13h30 – Préparatifs (maquillage & coiffure)",
+            "14h30 – First Look",
+            "15h00 – Échange de vœux avec célébrant",
+            "15h30 – Toast au champagne",
+            "Après-midi – Session photo (parc, salon, ext.)",
+            "Soir – Repas intérieur ou extérieur avec chef privé",
+            "Nuit – Nuitée au domaine",
+            "Lendemain – Petit déjeuner / Brunch & Départ"
+          ],
+          program_hiver: [
+            "Matin – Arrivée au Manoir",
+            "Matin – Préparatifs (maquillage & coiffure)",
+            "Midi – First Look",
+            "Après-midi – Échange de vœux dans le salon du Manoir",
+            "Après-midi – Toast au champagne",
+            "Après-midi – Session photo (parc, salon, ext.)",
+            "Soir – Repas dans la salle à manger du Manoir avec chef privé",
+            "Fin de journée – Départ"
+          ]
+        },
+        options: {
+          videaste: "Vidéaste",
+          coiffure: "Coiffure & maquillage mariée",
+          musique: "Musicien cérémonie",
+          rolls: "Location Rolls Royce ou Jaguar"
+        }
+      },
+    },
   },
 };

@@ -4,8 +4,9 @@
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { CheckCircle, PlusCircle } from "lucide-react";
+import { CheckCircle, Music, Utensils, ExternalLink } from "lucide-react";
 import { useLocale } from "@/hooks/use-locale";
 import { Separator } from "@/components/ui/separator";
 import { getImageById } from "@/lib/vacheresses-images";
@@ -70,58 +71,69 @@ export default function ServicesPage() {
             </CardContent>
           </Card>
 
-          <Card className="shadow-lg mb-12 animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-300">
-             <CardHeader>
-              <CardTitle className="font-headline">
-                <EditableText path="services.imposed_title" value={t.services.imposed_title} />
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-                <div className="space-y-8">
-                    <div>
-                        <h3 className="text-xl font-semibold mb-2">
-                             <EditableText path="services.imposed_dj_title" value={t.services.imposed_dj_title} />
-                        </h3>
-                        <div className="flex flex-col space-y-2">
-                            <p className="text-muted-foreground">
-                                <EditableText path="services.imposed_dj_desc" value={t.services.imposed_dj_desc} />
-                            </p>
-                            <a href="https://evidanseparis.com/" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
-                                https://evidanseparis.com/
-                            </a>
-                        </div>
-                    </div>
+          <div className="mb-16 animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-300">
+            <h2 className="text-3xl font-headline font-bold mb-8 text-center">
+              <EditableText path="services.imposed_title" value={t.services.imposed_title} />
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {/* DJ Section */}
+              <Card className="shadow-lg border-primary/10 hover:border-primary/30 transition-colors">
+                <CardHeader className="flex flex-row items-center space-x-4 pb-2">
+                  <div className="p-3 bg-primary/10 rounded-full">
+                    <Music className="h-6 w-6 text-primary" />
+                  </div>
+                  <CardTitle className="font-headline text-2xl">
+                    <EditableText path="services.imposed_dj_title" value={t.services.imposed_dj_title} />
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <p className="text-muted-foreground">
+                    <EditableText path="services.imposed_dj_desc" value={t.services.imposed_dj_desc} />
+                  </p>
+                  <Button variant="outline" className="w-full group" asChild>
+                    <a href="https://evidanseparis.com/" target="_blank" rel="noopener noreferrer">
+                      Evidanse Paris
+                      <ExternalLink className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
+                    </a>
+                  </Button>
+                </CardContent>
+              </Card>
 
-                    <Separator />
-
-                    <div>
-                        <h3 className="text-xl font-semibold mb-2">
-                            <EditableText path="services.imposed_caterer_title" value={t.services.imposed_caterer_title} />
-                        </h3>
-                        <p className="text-muted-foreground mb-4">
-                            <EditableText path="services.imposed_caterer_desc" value={t.services.imposed_caterer_desc} />
-                        </p>
-                        <ul className="space-y-2">
-                            <li>
-                                <a href="https://www.gauthier-traiteur.fr/" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
-                                    Gauthier Traiteur (https://www.gauthier-traiteur.fr/)
-                                </a>
-                            </li>
-                             <li>
-                                <a href="https://grandchemintraiteur.fr/" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
-                                    Grand Chemin Traiteur (https://grandchemintraiteur.fr/)
-                                </a>
-                            </li>
-                             <li>
-                                <a href="https://www.epicura-receptions.fr/" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
-                                    Epicura Réceptions (https://www.epicura-receptions.fr/)
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </CardContent>
-          </Card>
+              {/* Caterers Section */}
+              <Card className="shadow-lg border-primary/10 hover:border-primary/30 transition-colors">
+                <CardHeader className="flex flex-row items-center space-x-4 pb-2">
+                  <div className="p-3 bg-primary/10 rounded-full">
+                    <Utensils className="h-6 w-6 text-primary" />
+                  </div>
+                  <CardTitle className="font-headline text-2xl">
+                    <EditableText path="services.imposed_caterer_title" value={t.services.imposed_caterer_title} />
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <p className="text-muted-foreground">
+                    <EditableText path="services.imposed_caterer_desc" value={t.services.imposed_caterer_desc} />
+                  </p>
+                  <div className="grid grid-cols-1 gap-2">
+                    <a href="https://www.gauthier-traiteur.fr/" target="_blank" rel="noopener noreferrer" 
+                       className="flex items-center justify-between p-3 rounded-lg bg-secondary/50 hover:bg-secondary transition-colors group text-sm">
+                      <span>Gauthier Traiteur</span>
+                      <ExternalLink className="h-3 w-3 opacity-0 group-hover:opacity-100 transition-opacity" />
+                    </a>
+                    <a href="https://grandchemintraiteur.fr/" target="_blank" rel="noopener noreferrer"
+                       className="flex items-center justify-between p-3 rounded-lg bg-secondary/50 hover:bg-secondary transition-colors group text-sm">
+                      <span>Grand Chemin Traiteur</span>
+                      <ExternalLink className="h-3 w-3 opacity-0 group-hover:opacity-100 transition-opacity" />
+                    </a>
+                    <a href="https://www.epicura-receptions.fr/" target="_blank" rel="noopener noreferrer"
+                       className="flex items-center justify-between p-3 rounded-lg bg-secondary/50 hover:bg-secondary transition-colors group text-sm">
+                      <span>Epicura Réceptions</span>
+                      <ExternalLink className="h-3 w-3 opacity-0 group-hover:opacity-100 transition-opacity" />
+                    </a>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
 
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-headline font-bold animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-400">
@@ -171,11 +183,6 @@ export default function ServicesPage() {
                          <EditableText path={`services.${service.keyPrefix}_desc`} value={service.description} />
                       </p>
                     </CardContent>
-                    <CardFooter>
-                      <p className="text-sm font-semibold text-primary">
-                        <EditableText path="services.on_request" value={t.services.on_request} />
-                      </p>
-                    </CardFooter>
                   </Card>
                 </DialogTrigger>
 
@@ -203,12 +210,6 @@ export default function ServicesPage() {
                   <div className="text-base text-foreground space-y-4">
                     <div className="text-lg leading-relaxed">
                       <EditableText path={`services.${service.keyPrefix}_desc`} value={service.description} multiline />
-                    </div>
-
-                    <div className="mt-6 p-4 bg-primary/10 rounded-lg border border-primary/20">
-                      <p className="text-sm font-semibold text-primary text-center">
-                        <EditableText path="services.on_request" value={t.services.on_request} />
-                      </p>
                     </div>
                   </div>
                 </DialogContent>

@@ -33,44 +33,6 @@ export default function Home() {
       setRefresh(x => x + 1);
     })();
   }, []);
-  const pressArticles = [
-    {
-      image: '/vacheresses_7.jpg',
-      publication: locale === 'fr' ? 'Vogue Mariages' : 'Vogue Weddings',
-      date: locale === 'fr' ? '15 Juin 2024' : 'June 15, 2024',
-      title: locale === 'fr' ? 'Un mariage de conte de fées au Manoir de Vacheresses' : 'A Fairytale Wedding at Manoir de Vacheresses',
-      excerpt: locale === 'fr'
-        ? "Découvrez comment ce couple a célébré leur union dans l'un des plus beaux domaines de France."
-        : "Discover how this couple celebrated their union at one of France’s most beautiful estates.",
-    },
-    {
-      image: '/vacheresses_20.jpg',
-      publication: 'Elle Decoration',
-      date: locale === 'fr' ? '3 Mars 2024' : 'March 3, 2024',
-      title: locale === 'fr' ? 'Les 10 plus beaux lieux de mariage en Île-de-France' : 'Top 10 Wedding Venues in Île-de-France',
-      excerpt: locale === 'fr'
-        ? "Le Manoir de Vacheresses figure parmi les destinations les plus prisées pour les mariages élégants."
-        : "Manoir de Vacheresses ranks among the most sought-after destinations for elegant weddings.",
-    },
-    {
-      image: '/espace_1.jpg',
-      publication: 'Bridal Magazine',
-      date: locale === 'fr' ? '22 Janvier 2024' : 'January 22, 2024',
-      title: locale === 'fr' ? "Destination Wedding: Le charme français à l'état pur" : 'Destination Wedding: Pure French Charm',
-      excerpt: locale === 'fr'
-        ? 'Pourquoi les couples internationaux choisissent le Manoir de Vacheresses pour leurs unions.'
-        : 'Why international couples choose Manoir de Vacheresses for their unions.',
-    },
-    {
-      image: '/potager_4.jpg',
-      publication: 'Marie Claire',
-      date: locale === 'fr' ? '8 Novembre 2023' : 'November 8, 2023',
-      title: locale === 'fr' ? 'Mariages Intimes: Une tendance en pleine expansion' : 'Intimate Weddings: A Growing Trend',
-      excerpt: locale === 'fr'
-        ? "Comment le Manoir de Vacheresses réinvente le mariage intimiste avec élégance."
-        : 'How Manoir de Vacheresses reinvents intimate weddings with elegance.',
-    },
-  ];
   const pressLogos = [
     { id: 'press-vogue', name: locale === 'fr' ? 'Vogue Mariages' : 'Vogue Weddings', src: 'https://picsum.photos/seed/vogue/200/200' },
     { id: 'press-elle', name: 'Elle Decoration', src: 'https://picsum.photos/seed/elle/200/200' },
@@ -98,7 +60,7 @@ export default function Home() {
                 <EditableText path="blog.pressSubtitle" value={t.blog.pressSubtitle} />
               </p>
             </div>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-6xl mx-auto mb-16">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-6xl mx-auto">
               {pressLogos.map((logo) => (
                 <Link key={logo.id} href="/blog/press" className="group">
                   <div className="relative aspect-square rounded-xl border bg-card hover:border-primary/40 transition-all duration-300 hover:shadow-md overflow-hidden">
@@ -113,37 +75,6 @@ export default function Home() {
                   </div>
                 </Link>
               ))}
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
-               {[1, 2, 3, 4].map((i) => {
-                  const imgMap: Record<number, string> = { 1: '/vacheresses_7.jpg', 2: '/vacheresses_20.jpg', 3: '/espace_1.jpg', 4: '/potager_4.jpg' };
-                  return (
-                  <Card key={i} className="overflow-hidden flex flex-col h-full">
-                    <div className="relative h-48 w-full">
-                       <CardImage 
-                         src={imgMap[i]} 
-                         alt={`Article ${i}`} 
-                         fill 
-                         className="object-cover" 
-                         overrideKey={`press_article_${i}`}
-                       />
-                    </div>
-                    <CardContent className="flex-1 p-6 flex flex-col">
-                      <div className="flex justify-between items-center mb-3 text-xs text-muted-foreground uppercase tracking-wider">
-                        <EditableText path={`press.article_${i}_pub`} value={(t.press as any)[`article_${i}_pub`]} />
-                        <EditableText path={`press.article_${i}_date`} value={(t.press as any)[`article_${i}_date`]} />
-                      </div>
-                      <h3 className="text-lg font-bold mb-3 leading-tight line-clamp-2">
-                         <EditableText path={`press.article_${i}_title`} value={(t.press as any)[`article_${i}_title`]} />
-                      </h3>
-                      <p className="text-sm text-muted-foreground line-clamp-4 flex-1">
-                         <EditableText path={`press.article_${i}_excerpt`} value={(t.press as any)[`article_${i}_excerpt`]} multiline />
-                      </p>
-                    </CardContent>
-                  </Card>
-                  );
-               })}
             </div>
           </div>
         </section>

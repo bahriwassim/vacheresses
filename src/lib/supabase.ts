@@ -36,6 +36,7 @@ export const authService = {
           phone,
           role: 'client', // Par défaut
         },
+        emailRedirectTo: typeof window !== 'undefined' ? `${window.location.origin}/dashboard` : 'https://weddings.manoirdevacheresses.com/dashboard',
       },
     });
 
@@ -124,7 +125,7 @@ export const authService = {
       email: user.email || '',
       name: meta.name || (user.email ? String(user.email).split('@')[0] : 'Utilisateur'),
       phone: meta.phone || undefined,
-      role: authService.normalizeRole(meta.role),
+      role: authService.normalizeRole(meta.role || 'client'),
       created_at: user.created_at,
       updated_at: user.updated_at || user.created_at,
     } as UserProfile;

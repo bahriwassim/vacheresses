@@ -55,65 +55,63 @@ function ConfiguratorContent() {
 
   useEffect(() => {
     const fetchPackages = async () => {
-      if (!supabase) return;
-      
-      const { data, error } = await supabase.from('packages').select('*');
-      
-      if (data && !error) {
-        const formattedPackages = data.map((p: any) => ({
-          id: p.id,
-          name: locale === 'fr' ? p.name_fr : p.name_en,
-          basePrice: p.base_price,
-          basePriceHigh: p.package_id === 'formule1' ? 15500 : p.base_price,
-          basePriceLow: p.package_id === 'formule1' ? 13500 : p.base_price,
+      // Primary formulas as defined in translations
+      const formulas = [
+        { 
+          id: "formule1", 
+          package_id: "formule1",
+          name: locale === 'fr' ? "Mariage Formule 1 (Week-end)" : "Wedding Formula 1 (Weekend)", 
+          basePriceHigh: 15500, // High season base
+          basePriceLow: 13500,  // Low season base
           variablePricePerPerson: 203.125,
-          maxGuests: 100
-        }));
-        setPackages(formattedPackages);
-        
-        // Restore pending package if exists
-        let pendingPackageId = null;
-        try {
-            const pending = localStorage.getItem('pendingBooking');
-            if (pending) {
-                const d = JSON.parse(pending);
-                pendingPackageId = d.packageId;
-            }
-        } catch {}
+          maxGuests: 100 
+        },
+        { 
+          id: "formule2", 
+          package_id: "formule2",
+          name: locale === 'fr' ? "Mariage Formule 2 (Semaine)" : "Wedding Formula 2 (Weekday)", 
+          basePrice: 11500, 
+          variablePricePerPerson: 203.125,
+          maxGuests: 100 
+        },
+      ];
 
-        // Select default or from URL
-        const packageId = pendingPackageId || searchParams.get('package'); 
-        
-        // Try to match by ID
-        const found = formattedPackages.find(p => p.id === packageId);
-        if (found) {
-            setSelectedPackage(found);
-        } else if (formattedPackages.length > 0) {
-            // Default to middle one
-            setSelectedPackage(formattedPackages[1] || formattedPackages[0]);
-        }
-      } else {
-        // Fallback hardcoded
-        const fallback = [
-            { 
-              id: "formule1", 
-              name: "Mariage Formule 1 (Week-end)", 
-              basePriceHigh: 15500, 
-              basePriceLow: 13500, 
-              variablePricePerPerson: 203.125,
-              maxGuests: 100 
-            },
-            { 
-              id: "formule2", 
-              name: "Mariage Formule 2 (Semaine)", 
-              basePrice: 11500, 
-              variablePricePerPerson: 203.125,
-              maxGuests: 100 
-            },
-        ];
-        setPackages(fallback);
-        setSelectedPackage(fallback[0]);
-      }
+      if (supabase) {
+        const { data, error } = await supabase.from('packages').select('*');
+        if (data && !error && data.length > 0) {
+            // If we have data, we try to find the actual UUIDs for our formulas if they exist in DB
+            // Otherwise we keep our formula objects with mock IDs for now
+            const updatedFormulas = formulas.map(f => {
+                 const dbMatch = data.find((p: any) => p.package_id === f.package_id);
+                 if (dbMatch) {
+                     return { ...f, id: dbMatch.id };
+                 }
+                 return f;
+             });
+             setPackages(updatedFormulas);
+             
+             // Selection logic
+             let pendingPackageId = null;
+             try {
+                 const pending = localStorage.getItem('pendingBooking');
+                 if (pending) {
+                     const d = JSON.parse(pending);
+                     pendingPackageId = d.packageId;
+                 }
+             } catch {}
+             
+             const packageId = pendingPackageId || searchParams.get('package');
+             const found = updatedFormulas.find(p => p.id === packageId || p.package_id === packageId);
+             setSelectedPackage(found || updatedFormulas[0]);
+         } else {
+             setPackages(formulas);
+             setSelectedPackage(formulas[0]);
+         }
+       } else {
+         setPackages(formulas);
+         setSelectedPackage(formulas[0]);
+       }
+      
       setLoadingPackages(false);
     };
 
@@ -156,10 +154,46 @@ function ConfiguratorContent() {
     );
   };
 
+  const isDateValidForPackage = (pkg: any, dateStr: string) => {
+    if (!dateStr || !pkg) return { valid: true };
+    const d = new Date(dateStr);
+    const day = d.getDay(); // 0 (Sun) to 6 (Sat)
+    
+    if (pkg.package_id === "formule1") {
+      // Week-end: Friday (5), Saturday (6), Sunday (0)
+      const isWeekend = [0, 5, 6].includes(day);
+      return { 
+        valid: isWeekend, 
+        message: locale === 'fr' 
+          ? "Le forfait Week-end est réservé aux vendredis, samedis et dimanches." 
+          : "The Weekend package is reserved for Fridays, Saturdays, and Sundays." 
+      };
+    }
+    
+    if (pkg.package_id === "formule2") {
+      // Semaine: Monday (1) to Thursday (4)
+      const isWeekday = [1, 2, 3, 4].includes(day);
+      return { 
+        valid: isWeekday, 
+        message: locale === 'fr' 
+          ? "Le forfait Semaine est réservé aux jours du lundi au jeudi." 
+          : "The Weekday package is reserved for Monday to Thursday." 
+      };
+    }
+    
+    return { valid: true };
+  };
+
   const handleBooking = async () => {
     if (!selectedPackage) return;
     if (!date) {
         toast({ title: "Date requise", description: "Veuillez sélectionner une date.", variant: "destructive" });
+        return;
+    }
+
+    const validation = isDateValidForPackage(selectedPackage, date);
+    if (!validation.valid) {
+        toast({ title: "Date non conforme", description: validation.message, variant: "destructive" });
         return;
     }
 
@@ -171,7 +205,8 @@ function ConfiguratorContent() {
             date
         };
         localStorage.setItem('pendingBooking', JSON.stringify(state));
-        router.push('/login?next=/configurator');
+        const nextUrl = encodeURIComponent(window.location.pathname + window.location.search);
+        router.push(`/login?next=${nextUrl}`);
         return;
     }
 
@@ -250,7 +285,7 @@ function ConfiguratorContent() {
     let base = selectedPackage.basePrice || 0;
     
     // Logic for Formula 1 seasons
-    if (selectedPackage.id === "formule1" && date) {
+    if (selectedPackage.package_id === "formule1" && date) {
       const d = new Date(date);
       const month = d.getMonth(); // 0-11
       const isHighSeason = month >= 5 && month <= 8; // June to Sept
@@ -409,7 +444,7 @@ function ConfiguratorContent() {
                         <p className="text-muted-foreground">{t.configurator.base_package}</p>
                         <p className="font-medium">
                           {formatCurrency(
-                            selectedPackage?.id === "formule1" && date
+                            selectedPackage?.package_id === "formule1" && date
                               ? (new Date(date).getMonth() >= 5 && new Date(date).getMonth() <= 8 ? selectedPackage.basePriceHigh : selectedPackage.basePriceLow)
                               : (selectedPackage?.basePrice || 0)
                           )}
