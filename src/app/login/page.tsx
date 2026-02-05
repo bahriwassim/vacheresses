@@ -13,7 +13,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useLocale } from "@/hooks/use-locale";
 import { authService } from "@/lib/supabase";
-import { AlertCircle } from "lucide-react";
+import { AlertCircle, Eye, EyeOff } from "lucide-react";
 import { EditableText } from "@/components/ui/editable-text";
 
 function LoginForm() {
@@ -27,6 +27,9 @@ function LoginForm() {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [redirecting, setRedirecting] = useState(true);
@@ -97,13 +100,18 @@ function LoginForm() {
     event.preventDefault();
     setError(null);
 
-    if (!name || !email || !password) {
+    if (!name || !email || !password || !confirmPassword) {
       setError("Veuillez remplir tous les champs requis");
       toast({
         variant: "destructive",
         title: t.login?.missing_info_title || "Information manquante",
         description: t.login?.missing_info_desc || "Veuillez remplir tous les champs",
       });
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      setError(t.login?.password_mismatch_error || "Les mots de passe ne correspondent pas");
       return;
     }
 
@@ -215,14 +223,25 @@ function LoginForm() {
                   <Label htmlFor="password">
                     <EditableText path="login.password_label" value={t.login?.password_label || "Mot de passe"} />
                   </Label>
-                  <Input
-                    id="password"
-                    type="password"
-                    required
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    disabled={isLoading}
-                  />
+                  <div className="relative">
+                    <Input
+                      id="password"
+                      type={showPassword ? "text" : "password"}
+                      required
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      disabled={isLoading}
+                      className="pr-10"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                      tabIndex={-1}
+                    >
+                      {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    </button>
+                  </div>
                 </div>
               </CardContent>
               <CardFooter className="flex flex-col gap-4">
@@ -290,15 +309,50 @@ function LoginForm() {
                   <Label htmlFor="password-signup">
                     <EditableText path="login.password_label" value={t.login?.password_label || "Mot de passe"} />
                   </Label>
-                  <Input
-                    id="password-signup"
-                    type="password"
-                    required
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    disabled={isLoading}
-                  />
+                  <div className="relative">
+                    <Input
+                      id="password-signup"
+                      type={showPassword ? "text" : "password"}
+                      required
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      disabled={isLoading}
+                      className="pr-10"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                      tabIndex={-1}
+                    >
+                      {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    </button>
+                  </div>
                   <p className="text-xs text-muted-foreground">Minimum 6 caractères</p>
+                </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="confirm-password-signup">
+                    <EditableText path="login.confirm_password_label" value={t.login?.confirm_password_label || "Confirmer le mot de passe"} />
+                  </Label>
+                  <div className="relative">
+                    <Input
+                      id="confirm-password-signup"
+                      type={showConfirmPassword ? "text" : "password"}
+                      required
+                      value={confirmPassword}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
+                      disabled={isLoading}
+                      className="pr-10"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                      tabIndex={-1}
+                    >
+                      {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    </button>
+                  </div>
                 </div>
               </CardContent>
               <CardFooter>

@@ -77,6 +77,7 @@ function ConfiguratorElopementContent() {
 
   const [selectedPackage, setSelectedPackage] = useState<any>(null);
   const [initializing, setInitializing] = useState(true);
+  const [dbPackages, setDbPackages] = useState<any[]>([]);
   const [date, setDate] = useState<string>("");
   const [guestCount, setGuestCount] = useState<number>(2);
   const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
@@ -90,6 +91,14 @@ function ConfiguratorElopementContent() {
 
   useEffect(() => {
     const init = async () => {
+      // 0. Fetch DB Packages to map UUIDs
+      if (supabase) {
+        const { data } = await supabase.from('packages').select('*');
+        if (data) {
+           setDbPackages(data);
+        }
+      }
+
       // 1. Check Auth
       const { profile } = await authService.getCurrentUser();
       setCurrentUser(profile);
@@ -206,9 +215,13 @@ function ConfiguratorElopementContent() {
         .join(', ');
 
       const notes = `Élopement: ${selectedPackage.name}. Invités: ${guestCount}. Options: ${selectedOptsNames || 'Aucune'}.`;
+      
+      // Try to find matching package in DB
+      const dbPackage = dbPackages.find(p => p.package_id === selectedPackage.id);
+      
       const payload = {
         user_id: currentUser.id,
-        package_id: null,
+        package_id: dbPackage ? dbPackage.id : null,
         event_date: date,
         guest_count: guestCount,
         status: "inquiry",

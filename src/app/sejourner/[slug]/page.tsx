@@ -49,8 +49,7 @@ export default function StayDetailPage() {
   const vidId = typeof window !== "undefined" ? (getLocalOverride(locale, `stay.rooms.${slug}.videoId`) || "") : "";
   const lightboxItems = [
     ...(vidId ? [{ type: "video" as const, id: vidId }] : []),
-    ...[0, 1, 2].map((i) => {
-      const originalSrc = images[i];
+    ...images.map((originalSrc, i) => {
       const displaySrc = originalSrc || "/vacheresses_20.jpg";
       return { type: "image" as const, src: overridePath(displaySrc), alt: `${room?.name || slug} ${i + 1}` };
     }),
@@ -194,8 +193,8 @@ export default function StayDetailPage() {
                       </CarouselItem>
                     ))}
                   </CarouselContent>
-                  <CarouselPrevious className="text-white border-white/20 bg-black/40 hover:bg-black/60" />
-                  <CarouselNext className="text-white border-white/20 bg-black/40 hover:bg-black/60" />
+                  <CarouselPrevious className="left-4 text-white border-white/20 bg-black/40 hover:bg-black/60" />
+                  <CarouselNext className="right-4 text-white border-white/20 bg-black/40 hover:bg-black/60" />
                 </Carousel>
               </div>
             </DialogContent>

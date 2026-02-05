@@ -48,7 +48,45 @@ export default function AdminPage() {
    const [isViewDialogOpen, setViewDialogOpen] = useState(false);
    const [viewedContract, setViewedContract] = useState<any>(null);
    const [isEditingContract, setIsEditingContract] = useState(false);
-   const [editedContract, setEditedContract] = useState<any>(null);
+  const [editedContract, setEditedContract] = useState<any>(null);
+  const [selectedClient, setSelectedClient] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!supabase) return;
+
+    const subscription = supabase
+      .channel('public:messages')
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages' }, 
+      async (payload) => {
+           const m = payload.new as any;
+           // We need to fetch the user name for this message to properly display it
+           // or we can rely on existing bookingIdByClient map if we have the booking_id
+           
+           // Simple refresh of all messages for now to ensure consistency
+           const { data: msgData } = await supabase
+            .from('messages')
+            .select(`
+                id,
+                message,
+                sender_role,
+                created_at,
+                booking:bookings(user:users(name))
+            `)
+            .order('created_at', { ascending: true });
+
+          if (msgData) {
+              setMessages(msgData.map((msg: any) => ({
+                  id: msg.id,
+                  client: msg.booking?.user?.name || 'Unknown',
+                  sender: msg.sender_role === 'admin' ? 'Admin' : 'Client',
+                  text: msg.message
+              })));
+          }
+      })
+      .subscribe();
+
+    return () => { subscription.unsubscribe(); }
+  }, [supabase]);
 
   const handleCreateContract = async () => {
     if (!supabase || !newContract.bookingId || !newContract.documentName) {
@@ -684,34 +722,49 @@ export default function AdminPage() {
                                 <h3 className="font-semibold mb-4">Clients</h3>
                                 <div className="space-y-2">
                                     {Object.keys(bookingIdByClient).map(clientName => (
-                                        <div key={clientName} className="p-3 bg-muted rounded-lg cursor-pointer hover:bg-muted/80">
+                                        <div 
+                                          key={clientName} 
+                                          className={`p-3 rounded-lg cursor-pointer hover:bg-muted/80 ${selectedClient === clientName ? 'bg-primary text-primary-foreground' : 'bg-muted'}`}
+                                          onClick={() => setSelectedClient(clientName)}
+                                        >
                                             <p className="font-medium">{clientName}</p>
-                                            <p className="text-xs text-muted-foreground">Cliquez pour voir la conversation</p>
+                                            <p className={`text-xs ${selectedClient === clientName ? 'text-primary-foreground/80' : 'text-muted-foreground'}`}>Cliquez pour voir la conversation</p>
                                         </div>
                                     ))}
                                 </div>
                             </div>
                             <div className="border rounded-lg p-4 h-[600px] flex flex-col col-span-2">
-                                <h3 className="font-semibold mb-4">Conversation</h3>
+                                <h3 className="font-semibold mb-4">
+                                  {selectedClient ? `Conversation avec ${selectedClient}` : 'Sélectionnez un client'}
+                                </h3>
                                 <div className="flex-1 overflow-y-auto space-y-4 mb-4">
-                                    {messages.map((msg, i) => (
+                                    {selectedClient ? (
+                                      messages.filter(m => m.client === selectedClient).map((msg, i) => (
                                         <div key={i} className={`flex ${msg.sender === 'Admin' ? 'justify-end' : 'justify-start'}`}>
                                             <div className={`p-3 rounded-lg max-w-[70%] ${msg.sender === 'Admin' ? 'bg-primary text-primary-foreground' : 'bg-muted'}`}>
-                                                <p className="text-xs opacity-70 mb-1">{msg.sender} - {msg.client}</p>
+                                                <p className="text-xs opacity-70 mb-1">{msg.sender}</p>
                                                 <p>{msg.text}</p>
                                             </div>
                                         </div>
-                                    ))}
+                                      ))
+                                    ) : (
+                                      <div className="h-full flex items-center justify-center text-muted-foreground">
+                                        Sélectionnez un client à gauche pour voir les messages.
+                                      </div>
+                                    )}
                                 </div>
                                 <div className="flex gap-2">
-                                    <Textarea placeholder="Répondre..." id="admin-reply-input" />
-                                    <Button onClick={() => {
+                                    <Textarea 
+                                      placeholder={selectedClient ? "Répondre..." : "Sélectionnez un client d'abord"} 
+                                      id="admin-reply-input" 
+                                      disabled={!selectedClient}
+                                    />
+                                    <Button 
+                                      disabled={!selectedClient}
+                                      onClick={() => {
                                         const el = document.getElementById('admin-reply-input') as HTMLTextAreaElement;
-                                        // Simple hack: grab the first client from messages or need state for selected client
-                                        // For demo, we just reply to the client of the last message or first available
-                                        const targetClient = messages.length > 0 ? messages[messages.length-1].client : Object.keys(bookingIdByClient)[0];
-                                        if (el && targetClient) {
-                                            sendAdminReply(targetClient, el.value);
+                                        if (el && selectedClient) {
+                                            sendAdminReply(selectedClient, el.value);
                                             el.value = '';
                                         }
                                     }}>

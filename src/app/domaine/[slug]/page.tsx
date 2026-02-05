@@ -49,8 +49,7 @@ export default function DomainSpacePage() {
   const videoId = typeof window !== "undefined" ? (getLocalOverride(locale, `domain.poi.${slug}.videoId`) || "") : "";
   const lightboxItems = [
     ...(videoId ? [{ type: "video" as const, id: videoId }] : []),
-    ...[0, 1, 2].map((i) => {
-      const originalSrc = images[i];
+    ...images.map((originalSrc, i) => {
       const displaySrc = originalSrc || "/vacheresses_20.jpg";
       return { type: "image" as const, src: overridePath(displaySrc), alt: `${poi?.title || slug} ${i + 1}` };
     }),
@@ -197,8 +196,8 @@ export default function DomainSpacePage() {
                       </CarouselItem>
                     ))}
                   </CarouselContent>
-                  <CarouselPrevious className="text-white border-white/20 bg-black/40 hover:bg-black/60" />
-                  <CarouselNext className="text-white border-white/20 bg-black/40 hover:bg-black/60" />
+                  <CarouselPrevious className="left-4 text-white border-white/20 bg-black/40 hover:bg-black/60" />
+                  <CarouselNext className="right-4 text-white border-white/20 bg-black/40 hover:bg-black/60" />
                 </Carousel>
               </div>
             </DialogContent>

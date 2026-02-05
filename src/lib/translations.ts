@@ -168,6 +168,8 @@ export type Translation = {
     signup_success_desc: string;
     missing_info_title: string;
     missing_info_desc: string;
+    confirm_password_label: string;
+    password_mismatch_error: string;
   };
   footer: {
     copyright: string;
@@ -977,6 +979,8 @@ export const translations: Record<Locale, Translation> = {
         signup_success_desc: "Welcome! Redirecting to your dashboard...",
         missing_info_title: "Missing Information",
         missing_info_desc: "Please fill out all fields to register.",
+        confirm_password_label: "Confirm Password",
+        password_mismatch_error: "Passwords do not match",
     },
     footer: {
       copyright: "© {year} Domaine des Vacheresses. All rights reserved.",
@@ -1867,6 +1871,8 @@ export const translations: Record<Locale, Translation> = {
         signup_success_desc: "Bienvenue ! Redirection vers votre tableau de bord...",
         missing_info_title: "Informations manquantes",
         missing_info_desc: "Veuillez remplir tous les champs pour vous inscrire.",
+        confirm_password_label: "Confirmer le mot de passe",
+        password_mismatch_error: "Les mots de passe ne correspondent pas",
     },
     footer: {
       copyright: "© {year} Domaine des Vacheresses. Tous droits réservés.",
