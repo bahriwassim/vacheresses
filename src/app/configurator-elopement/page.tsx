@@ -79,6 +79,7 @@ function ConfiguratorElopementContent() {
   const [initializing, setInitializing] = useState(true);
   const [dbPackages, setDbPackages] = useState<any[]>([]);
   const [date, setDate] = useState<string>("");
+  const [bookedDates, setBookedDates] = useState<Date[]>([]);
   const [guestCount, setGuestCount] = useState<number>(2);
   const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
   const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
@@ -97,7 +98,20 @@ function ConfiguratorElopementContent() {
         if (data) {
            setDbPackages(data);
         }
-      }
+
+        // Fetch booked dates
+        const { data: bookings } = await supabase
+          .from('bookings')
+          .select('event_date, status')
+          .in('status', ['confirmed', 'booked', 'paid']);
+        
+        if (bookings) {
+            setBookedDates(bookings.map(b => {
+                const [year, month, day] = b.event_date.split('-').map(Number);
+                return new Date(year, month - 1, day);
+            }));
+         }
+        }
 
       // 1. Check Auth
       const { profile } = await authService.getCurrentUser();
@@ -137,6 +151,34 @@ function ConfiguratorElopementContent() {
 
     init();
   }, [searchParams, packages]);
+
+  const isDateDisabled = (date: Date) => {
+    // 1. Past dates
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    if (date < today) return true;
+
+    // 2. Booked dates
+    if (bookedDates.some(bookedDate => 
+        date.getFullYear() === bookedDate.getFullYear() &&
+        date.getMonth() === bookedDate.getMonth() &&
+        date.getDate() === bookedDate.getDate()
+    )) return true;
+
+    // 3. Package restrictions
+    if (selectedPackage) {
+        if (selectedPackage.isWeekdayOnly) {
+            const day = date.getDay();
+            if (day === 0 || day === 6) return true;
+        }
+        if (selectedPackage.isWinterOnly) {
+             const month = date.getMonth();
+             if (month > 2 && month < 10) return true; // April (3) to Oct (9) are disallowed
+        }
+    }
+    
+    return false;
+  };
 
   const handleDateChange = (newDate: Date) => {
     const day = newDate.getDay();
@@ -445,6 +487,7 @@ function ConfiguratorElopementContent() {
                         min={new Date().toISOString().split('T')[0]}
                         onChange={(e) => setDate(e.target.value)}
                         className="p-2 border rounded-md w-full text-sm"
+                        disabled
                       />
                       <Button
                         type="button"
@@ -518,6 +561,7 @@ function ConfiguratorElopementContent() {
         open={isDatePickerOpen}
         onOpenChange={setIsDatePickerOpen}
         onDateSelected={handleDateChange}
+        disabled={isDateDisabled}
       />
       <Footer />
     </div>

@@ -9,9 +9,10 @@ import { Check } from "lucide-react";
 import { useLocale } from "@/hooks/use-locale";
 import { useBooking } from "@/contexts/booking-context";
 import { DatePickerDialog } from "./date-picker-dialog";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { EditableText } from "@/components/ui/editable-text";
+import { supabase } from "@/lib/supabase";
 
 const packagesData = (t: any) => [
   {
@@ -40,6 +41,57 @@ export function Packages() {
   const packages = packagesData(t);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedPackageId, setSelectedPackageId] = useState<string | null>(null);
+  const [bookedDates, setBookedDates] = useState<Date[]>([]);
+
+  useEffect(() => {
+    const fetchBookings = async () => {
+      if (supabase) {
+        const { data: bookings } = await supabase
+          .from('bookings')
+          .select('event_date, status')
+          .in('status', ['confirmed', 'booked', 'paid']);
+        
+        if (bookings) {
+           setBookedDates(bookings.map(b => {
+               const [year, month, day] = b.event_date.split('-').map(Number);
+               return new Date(year, month - 1, day);
+           }));
+        }
+      }
+    };
+    fetchBookings();
+  }, []);
+
+  const isDateDisabled = (date: Date) => {
+    // 1. Past dates
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    if (date < today) return true;
+
+    // 2. Booked dates
+    if (bookedDates.some(bookedDate => 
+        date.getFullYear() === bookedDate.getFullYear() &&
+        date.getMonth() === bookedDate.getMonth() &&
+        date.getDate() === bookedDate.getDate()
+    )) return true;
+
+    // 3. Package restrictions
+    if (selectedPackageId) {
+        if (selectedPackageId === "formule1") {
+            // Week-end: Friday (5), Saturday (6), Sunday (0)
+            const day = date.getDay();
+            if (![0, 5, 6].includes(day)) return true;
+        }
+        
+        if (selectedPackageId === "formule2") {
+            // Semaine: Monday (1) to Thursday (4)
+            const day = date.getDay();
+            if (![1, 2, 3, 4].includes(day)) return true;
+        }
+    }
+    
+    return false;
+  };
 
   const buildPackageUrl = (packageId: string) => {
     const params = new URLSearchParams({ package: packageId });
@@ -159,6 +211,7 @@ export function Packages() {
         open={isDialogOpen}
         onOpenChange={setIsDialogOpen}
         onDateSelected={handleDateSelected}
+        disabled={isDateDisabled}
       />
     </section>
   );

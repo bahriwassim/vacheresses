@@ -13,17 +13,20 @@ import {
 } from '@/components/ui/dialog';
 import { useLocale } from '@/hooks/use-locale';
 
+import { Matcher } from 'react-day-picker';
+
 interface DatePickerDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onDateSelected: (date: Date) => void;
+  disabled?: Matcher | Matcher[];
 }
 
 function monthStart(d: Date): Date {
   return new Date(d.getFullYear(), d.getMonth(), 1);
 }
 
-export function DatePickerDialog({ open, onOpenChange, onDateSelected }: DatePickerDialogProps) {
+export function DatePickerDialog({ open, onOpenChange, onDateSelected, disabled }: DatePickerDialogProps) {
   const { t } = useLocale();
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
   const todayStart = useMemo(() => monthStart(new Date()), []);
@@ -64,11 +67,7 @@ export function DatePickerDialog({ open, onOpenChange, onDateSelected }: DatePic
               onSelect={handleDateSelect}
               month={currentMonth}
               onMonthChange={setCurrentMonth}
-              disabled={(day) => {
-                const today = new Date();
-                today.setHours(0, 0, 0, 0);
-                return day < today;
-              }}
+              disabled={disabled}
               className="p-0"
               classNames={{
                 nav_button_previous: 'absolute left-1',

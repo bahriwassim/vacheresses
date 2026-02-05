@@ -19,6 +19,7 @@ import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious
 import { CardImage } from "@/components/ui/animated-image";
 import { Separator } from "@/components/ui/separator";
 import { useLocale } from "@/hooks/use-locale";
+import { DatePickerDialog } from "@/components/sections/date-picker-dialog";
 import type { Translation } from "@/lib/translations";
 import { supabase, authService } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
@@ -50,6 +51,8 @@ function ConfiguratorContent() {
   const [guestCount, setGuestCount] = useState<number>(50);
   const [selectedAddons, setSelectedAddons] = useState<string[]>([]);
   const [date, setDate] = useState<string>("");
+  const [bookedDates, setBookedDates] = useState<Date[]>([]);
+  const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
   const [currentUser, setCurrentUser] = useState<any>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -112,6 +115,21 @@ function ConfiguratorContent() {
          setSelectedPackage(formulas[0]);
        }
       
+       // Fetch booked dates
+       if (supabase) {
+        const { data: bookings } = await supabase
+          .from('bookings')
+          .select('event_date, status')
+          .in('status', ['confirmed', 'booked', 'paid']);
+        
+        if (bookings) {
+            setBookedDates(bookings.map(b => {
+                const [year, month, day] = b.event_date.split('-').map(Number);
+                return new Date(year, month - 1, day);
+            }));
+         }
+        }
+
       setLoadingPackages(false);
     };
 
@@ -182,6 +200,48 @@ function ConfiguratorContent() {
     }
     
     return { valid: true };
+  };
+
+  const isDateDisabled = (date: Date) => {
+    // 1. Past dates
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    if (date < today) return true;
+
+    // 2. Booked dates
+    if (bookedDates.some(bookedDate => 
+        date.getFullYear() === bookedDate.getFullYear() &&
+        date.getMonth() === bookedDate.getMonth() &&
+        date.getDate() === bookedDate.getDate()
+    )) return true;
+
+    // 3. Package restrictions
+    if (selectedPackage) {
+        if (selectedPackage.package_id === "formule1") {
+            // Week-end: Friday (5), Saturday (6), Sunday (0)
+            const day = date.getDay();
+            if (![0, 5, 6].includes(day)) return true;
+        }
+        
+        if (selectedPackage.package_id === "formule2") {
+            // Semaine: Monday (1) to Thursday (4)
+            const day = date.getDay();
+            if (![1, 2, 3, 4].includes(day)) return true;
+        }
+    }
+    
+    return false;
+  };
+
+  const handleDateSelected = (newDate: Date) => {
+      // Validate again just in case
+      const validation = isDateValidForPackage(selectedPackage, newDate.toISOString().split('T')[0]);
+      if (!validation.valid) {
+          toast({ title: "Date non conforme", description: validation.message, variant: "destructive" });
+          return;
+      }
+      setDate(newDate.toISOString().split('T')[0]);
+      setIsDatePickerOpen(false);
   };
 
   const handleBooking = async () => {
@@ -381,14 +441,26 @@ function ConfiguratorContent() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-2">
                         <Label htmlFor="date">Date estimée</Label>
-                        <Input 
-                            id="date" 
-                            type="date" 
-                            value={date} 
-                            onChange={(e) => setDate(e.target.value)}
-                            min={new Date().toISOString().split('T')[0]}
-                            className="w-full"
-                        />
+                        <div className="flex items-center gap-2">
+                            <Input 
+                                id="date" 
+                                type="date" 
+                                value={date} 
+                                onChange={(e) => setDate(e.target.value)}
+                                min={new Date().toISOString().split('T')[0]}
+                                className="w-full"
+                                disabled
+                            />
+                            <Button
+                                type="button"
+                                variant="outline"
+                                size="sm"
+                                onClick={() => setIsDatePickerOpen(true)}
+                                className="shrink-0"
+                            >
+                                Choisir
+                            </Button>
+                        </div>
                     </div>
                     <div className="space-y-4">
                         <div className="flex justify-between items-center">
@@ -489,6 +561,12 @@ function ConfiguratorContent() {
           </div>
         </div>
       </main>
+      <DatePickerDialog
+        open={isDatePickerOpen}
+        onOpenChange={setIsDatePickerOpen}
+        onDateSelected={handleDateSelected}
+        disabled={isDateDisabled}
+      />
       <Footer />
     </div>
   );
