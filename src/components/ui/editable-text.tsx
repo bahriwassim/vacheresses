@@ -24,6 +24,10 @@ export function EditableText({ path, value, className, multiline, html }: Props)
   const [userRole, setUserRole] = useState<string | null>(null);
 
   useEffect(() => {
+    setDraft(value);
+  }, [value]);
+
+  useEffect(() => {
     // Check role using authService + localStorage fallback
     const checkRole = async () => {
       try {

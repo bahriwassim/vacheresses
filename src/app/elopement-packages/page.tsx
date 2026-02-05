@@ -29,6 +29,11 @@ function ElopementContent() {
   const router = useRouter();
   const { dates, setDates } = useBooking();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  if (!t || !t.elopement) {
+     return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
+  }
+
   const [, setRefresh] = useState(0);
 
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);

@@ -106,11 +106,34 @@ export const LocaleProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     if (!localeOverrides) return base;
     const merge = (target: any, source: any): any => {
       if (!source) return target;
+      
+      // If target is array and source is object (sparse array from overrides), merge by index
+      if (Array.isArray(target) && source && typeof source === 'object' && !Array.isArray(source)) {
+         const result = [...target];
+         Object.keys(source).forEach((key) => {
+             const index = parseInt(key, 10);
+             if (!isNaN(index)) {
+                 if (index < result.length) {
+                     // Existing item: recursive merge
+                     result[index] = merge(result[index], source[key]);
+                 } else {
+                     // New item (append? or just set if we want to allow extending arrays)
+                     // For now, let's assume we are overriding existing items primarily
+                     result[index] = source[key];
+                 }
+             }
+         });
+         return result;
+      }
+
       const result: any = Array.isArray(target) ? [...target] : { ...target };
       Object.keys(source).forEach((key) => {
         const srcVal = source[key];
         const tgtVal = (target as any)[key];
-        if (srcVal && typeof srcVal === 'object' && !Array.isArray(srcVal) && tgtVal && typeof tgtVal === 'object' && !Array.isArray(tgtVal)) {
+        
+        // Recursive merge for objects
+        // Allow merge if both are objects, OR if target is array and source is object (sparse array override)
+        if (srcVal && typeof srcVal === 'object' && !Array.isArray(srcVal) && tgtVal && typeof tgtVal === 'object') {
           result[key] = merge(tgtVal, srcVal);
         } else {
           result[key] = srcVal;

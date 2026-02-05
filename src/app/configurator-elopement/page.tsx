@@ -85,8 +85,8 @@ function ConfiguratorElopementContent() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [currentUser, setCurrentUser] = useState<any>(null);
 
-  const packages = useMemo(() => getElopementPackages(t), [t]);
-  const elopementOptions = useMemo(() => getElopementOptions(t), [t]);
+  const packages = useMemo(() => t?.elopement ? getElopementPackages(t) : [], [t]);
+  const elopementOptions = useMemo(() => t?.elopement ? getElopementOptions(t) : [], [t]);
   const galleryImages = getGalleryImages().slice(0, 6);
 
   useEffect(() => {
@@ -256,6 +256,10 @@ function ConfiguratorElopementContent() {
   };
 
   const programs = useMemo(() => getProgramsByPackage(selectedPackage?.id || "", t), [selectedPackage?.id, t]);
+
+  if (!t || !t.elopement) {
+    return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
+  }
 
   if (initializing) {
     return (

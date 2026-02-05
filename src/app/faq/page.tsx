@@ -9,9 +9,44 @@ import { Mail, Phone, Calendar } from "lucide-react";
 import { useLocale } from "@/hooks/use-locale";
 import Link from "next/link";
 import { EditableText } from "@/components/ui/editable-text";
+import { useMemo } from "react";
 
 export default function FAQPage() {
   const { t, locale } = useLocale();
+
+  // Ensure items is always an array to prevent errors
+  const faqItems = useMemo(() => {
+    const rawItems = t?.faq?.items;
+    
+    if (Array.isArray(rawItems)) {
+        return rawItems;
+    }
+
+    // Handle case where overrides turn array into object (sparse array)
+    if (rawItems && typeof rawItems === 'object') {
+        const keys = Object.keys(rawItems).filter(k => !isNaN(Number(k)));
+        if (keys.length > 0) {
+             keys.sort((a, b) => Number(a) - Number(b));
+             return keys.map(k => (rawItems as any)[k]);
+        }
+        return Object.values(rawItems);
+    }
+
+    return [];
+  }, [t]);
+
+  if (!t || !t.faq) {
+    return (
+      <div className="flex flex-col min-h-screen">
+        <Header />
+        <main className="flex-1 py-12 md:py-20 bg-secondary/30">
+          <div className="container max-w-7xl text-center">
+            Loading...
+          </div>
+        </main>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -20,13 +55,13 @@ export default function FAQPage() {
         <div className="container max-w-7xl">
           <div className="text-center mb-16 animate-in fade-in slide-in-from-bottom-8 duration-1000">
             <p className="text-sm md:text-base tracking-wider text-primary uppercase font-semibold">
-              <EditableText path="faq.subtitle" value={t.faq?.subtitle || "FAQ"} />
+              <EditableText path="faq.subtitle" value={t.faq.subtitle || "FAQ"} />
             </p>
             <h1 className="text-4xl md:text-5xl font-headline font-bold mt-2">
-              <EditableText path="faq.title" value={t.faq?.title || "FAQ"} />
+              <EditableText path="faq.title" value={t.faq.title || "FAQ"} />
             </h1>
             <p className="mt-4 text-lg text-muted-foreground max-w-3xl mx-auto">
-              <EditableText path="faq.intro" value={t.faq?.intro || ""} />
+              <EditableText path="faq.intro" value={t.faq.intro || ""} />
             </p>
           </div>
 
@@ -34,19 +69,22 @@ export default function FAQPage() {
             <div className="md:col-span-2">
               <Card>
                 <CardContent className="p-6">
-                  <Accordion type="single" collapsible className="w-full">
-                    {t.faq?.items?.map((item, index) => (
-                      <AccordionItem key={item.id} value={item.id}>
-                        <AccordionTrigger className="text-left hover:no-underline">
-                          <EditableText path={`faq.items.${index}.question`} value={item.question} />
-                        </AccordionTrigger>
-                        <AccordionContent>
-                          <div className="text-muted-foreground">
-                            <EditableText path={`faq.items.${index}.answer`} value={item.answer} multiline />
-                          </div>
-                        </AccordionContent>
-                      </AccordionItem>
-                    ))}
+                  <Accordion type="single" collapsible className="w-full" key={`faq-accordion-${locale}`}>
+                    {faqItems.map((item: any, index: number) => {
+                      if (!item) return null;
+                      return (
+                        <AccordionItem key={item.id || `item-${index}`} value={item.id || `item-${index}`}>
+                          <AccordionTrigger className="text-left hover:no-underline">
+                            <EditableText path={`faq.items.${index}.question`} value={item.question || ""} />
+                          </AccordionTrigger>
+                          <AccordionContent>
+                            <div className="text-muted-foreground">
+                              <EditableText path={`faq.items.${index}.answer`} value={item.answer || ""} multiline />
+                            </div>
+                          </AccordionContent>
+                        </AccordionItem>
+                      );
+                    })}
                   </Accordion>
                 </CardContent>
               </Card>

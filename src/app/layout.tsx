@@ -11,6 +11,13 @@ import { BookingProvider } from '@/contexts/booking-context';
 export const metadata: Metadata = {
   title: 'Vacheresses Wedding Dream',
   description: 'Your dream wedding starts at Domaine des Vacheresses.',
+  icons: {
+    icon: [
+      { url: '/logo_white.png', sizes: 'any' }
+    ],
+    shortcut: '/logo_white.png',
+    apple: '/logo_white.png',
+  },
 };
 
 export default function RootLayout({
@@ -22,9 +29,6 @@ export default function RootLayout({
     <LocaleProvider>
       <html lang="en" suppressHydrationWarning>
         <head>
-          <link rel="icon" href="/logo_white.png" type="image/png" sizes="32x32" />
-          <link rel="shortcut icon" href="/logo_white.png" type="image/png" />
-          <link rel="apple-touch-icon" href="/logo_white.png" sizes="180x180" />
           <link rel="preconnect" href="https://fonts.googleapis.com" />
           <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
           <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=PT+Sans:wght@400;700&display=swap" rel="stylesheet" />
